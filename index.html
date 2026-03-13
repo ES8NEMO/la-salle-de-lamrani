@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Salle Doumrani | قاعة العمراني</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: sans-serif; }
+        .admin-input { border: none; background: transparent; color: white; width: 40px; text-align: center; font-size: 10px; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <div class="bg-black py-1 flex justify-center">
+        <input type="password" id="adminKey" placeholder="..." class="admin-input" oninput="checkBoss(this.value)">
+    </div>
+
+    <nav class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-50">
+        <h1 class="text-xl font-bold text-red-600">LA SALLE DOUMRANI</h1>
+        <div class="hidden md:flex gap-6 font-medium">
+            <a href="#">الرئيسية</a>
+            <a href="#sports">الرياضات</a>
+            <a href="#contact">اتصل بنا</a>
+        </div>
+    </nav>
+
+    <header class="bg-zinc-900 text-white h-[400px] flex flex-col justify-center items-center text-center px-4">
+        <h2 class="text-5xl font-black italic mb-4">CHAMPIONS DOJO</h2>
+        <p class="text-gray-400 text-xl">أقوى نادي رياضي للتدريب وبناء الأبطال</p>
+    </header>
+
+    <main id="sports" class="container mx-auto py-12 px-4">
+        <h3 class="text-3xl font-bold text-center mb-10">رياضاتنا</h3>
+        
+        <div class="grid md:grid-cols-2 gap-8">
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border">
+                <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=800" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold mb-2">KWANKIDO</h4>
+                    <p class="text-gray-600">تدريبات القوة والتركيز والدفاع عن النفس بأحدث الأساليب.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden border">
+                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800" class="w-full h-64 object-cover">
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold mb-2">TAEKWONDO</h4>
+                    <p class="text-gray-600">حصص تدريبية مخصصة للأطفال والكبار لرفع مستوى اللياقة.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer id="contact" class="bg-zinc-900 text-white py-10 text-center">
+        <p>© 2026 La Salle Doumrani - جميع الحقوق محفوظة</p>
+        <p class="text-gray-500 mt-2">العنوان: قاعة العمراني للرياضات</p>
+    </footer>
+
+    <script>
+        function checkBoss(val) {
+            if(val === "boss77") {
+                let code = prompt("أدخل رمز التأكيد:");
+                if(code === "9988") {
+                    alert("مرحباً أيها المدير! يمكنك الآن تعديل الموقع.");
+                    document.body.style.border = "5px solid gold";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
