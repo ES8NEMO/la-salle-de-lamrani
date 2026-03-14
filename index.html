@@ -1,70 +1,120 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>La Salle Doumrani | قاعة العمراني</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: sans-serif; }
-        .admin-input { border: none; background: transparent; color: white; width: 40px; text-align: center; font-size: 10px; }
+        body { font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
+        .sport-card:hover img { transform: scale(1.1); transition: 0.5s; }
+        .admin-key { position: fixed; top: 0; left: 50%; opacity: 0; z-index: 9999; width: 20px; }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 text-gray-800">
 
-    <div class="bg-black py-1 flex justify-center">
-        <input type="password" id="adminKey" placeholder="..." class="admin-input" oninput="checkBoss(this.value)">
-    </div>
+    <input type="password" class="admin-key" oninput="if(this.value==='boss77'){activateAdmin()}">
 
-    <nav class="bg-white shadow-sm p-4 flex justify-between items-center sticky top-0 z-50">
-        <h1 class="text-xl font-bold text-red-600">LA SALLE DOUMRANI</h1>
-        <div class="hidden md:flex gap-6 font-medium">
-            <a href="#">الرئيسية</a>
-            <a href="#sports">الرياضات</a>
-            <a href="#contact">اتصل بنا</a>
+    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-black text-red-600">LA SALLE DOUMRANI</h1>
+            <div class="hidden md:flex gap-6 font-bold">
+                <a href="#home" class="hover:text-red-600">الرئيسية</a>
+                <a href="#sports" class="hover:text-red-600">الرياضات</a>
+                <a href="#contact" class="hover:text-red-600">اتصل بنا</a>
+            </div>
         </div>
     </nav>
 
-    <header class="bg-zinc-900 text-white h-[400px] flex flex-col justify-center items-center text-center px-4">
-        <h2 class="text-5xl font-black italic mb-4">CHAMPIONS DOJO</h2>
-        <p class="text-gray-400 text-xl">أقوى نادي رياضي للتدريب وبناء الأبطال</p>
+    <header id="home" class="relative h-[500px] flex items-center justify-center text-white bg-zinc-900">
+        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-40">
+        <div class="relative text-center px-4">
+            <h2 class="text-5xl md:text-7xl font-black italic mb-4">CHAMPIONS DOJO</h2>
+            <p class="text-xl md:text-2xl text-gray-300">أقوى نادي رياضي للتدريب وبناء الأبطال</p>
+        </div>
     </header>
 
-    <main id="sports" class="container mx-auto py-12 px-4">
-        <h3 class="text-3xl font-bold text-center mb-10">رياضاتنا</h3>
-        
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden border">
-                <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=800" class="w-full h-64 object-cover">
+    <main class="container mx-auto py-16 px-4" id="sports">
+        <h3 class="text-4xl font-black text-center mb-16 border-b-4 border-red-600 w-fit mx-auto pb-2">برامجنا الرياضية</h3>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            
+            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
+                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=800" class="w-full h-full object-cover"></div>
                 <div class="p-6">
-                    <h4 class="text-2xl font-bold mb-2">KWANKIDO</h4>
-                    <p class="text-gray-600">تدريبات القوة والتركيز والدفاع عن النفس بأحدث الأساليب.</p>
+                    <h4 class="text-2xl font-bold text-red-600 mb-2">كوانكيدو (KWANKIDO)</h4>
+                    <p class="text-gray-600 mb-4 text-sm">فن الدفاع عن النفس التقليدي لتعزيز القوة والتركيز.</p>
+                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
+                        <p><strong>الأيام:</strong> الثلاثاء، الخميس، السبت</p>
+                        <p><strong>الوقت:</strong> 20:30 - 21:30</p>
+                    </div>
+                    <p class="font-black text-xl">100 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-md overflow-hidden border">
-                <img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800" class="w-full h-64 object-cover">
+            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
+                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800" class="w-full h-full object-cover"></div>
                 <div class="p-6">
-                    <h4 class="text-2xl font-bold mb-2">TAEKWONDO</h4>
-                    <p class="text-gray-600">حصص تدريبية مخصصة للأطفال والكبار لرفع مستوى اللياقة.</p>
+                    <h4 class="text-2xl font-bold text-red-600 mb-2">تايكواندو (TAEKWONDO)</h4>
+                    <p class="text-gray-600 mb-4 text-sm">تدريبات مخصصة لجميع الفئات العمرية لرفع اللياقة.</p>
+                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
+                        <p><strong>الأيام:</strong> الثلاثاء، الخميس، السبت</p>
+                        <p><strong>الوقت:</strong> ابتداءً من 18:30 (حسب الفئة)</p>
+                    </div>
+                    <p class="font-black text-xl">100 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
                 </div>
             </div>
+
+            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
+                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1581009146145-b5ef03a7403f?q=80&w=800" class="w-full h-full object-cover"></div>
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold text-red-600 mb-2">كمال الأجسام (رجال)</h4>
+                    <p class="text-gray-600 mb-4 text-sm">صالة مجهزة بأحدث الآليات لبناء العضلات واللياقة.</p>
+                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
+                        <p><strong>الأيام:</strong> يومياً</p>
+                        <p><strong>الوقت:</strong> 07:00 - 22:00</p>
+                    </div>
+                    <p class="font-black text-xl">150 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
+                </div>
+            </div>
+
+            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
+                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?q=80&w=800" class="w-full h-full object-cover"></div>
+                <div class="p-6">
+                    <h4 class="text-2xl font-bold text-red-600 mb-2">كمال الأجسام (نساء)</h4>
+                    <p class="text-gray-600 mb-4 text-sm">خصوصية تامة وبرامج تدريبية مخصصة للنساء.</p>
+                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
+                        <p><strong>الأيام:</strong> يومياً</p>
+                        <p><strong>الوقت:</strong> 09:00 - 22:00</p>
+                    </div>
+                    <p class="font-black text-xl">150 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
+                </div>
+            </div>
+
         </div>
     </main>
 
-    <footer id="contact" class="bg-zinc-900 text-white py-10 text-center">
-        <p>© 2026 La Salle Doumrani - جميع الحقوق محفوظة</p>
-        <p class="text-gray-500 mt-2">العنوان: قاعة العمراني للرياضات</p>
+    <footer id="contact" class="bg-zinc-900 text-white py-16 text-center">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold mb-6">اتصل بنا</h3>
+            <p class="text-gray-400 mb-8">قاعة العمراني للرياضات ترحب بكم في أي وقت</p>
+            <div class="flex justify-center gap-10 text-lg">
+                <p>📍 بن سليمان، المغرب</p>
+                <p>📞 06XXXXXXXX</p>
+            </div>
+            <p class="mt-12 text-gray-600 text-sm">© 2026 La Salle Doumrani. جميع الحقوق محفوظة.</p>
+        </div>
     </footer>
 
     <script>
-        function checkBoss(val) {
-            if(val === "boss77") {
-                let code = prompt("أدخل رمز التأكيد:");
-                if(code === "9988") {
-                    alert("مرحباً أيها المدير! يمكنك الآن تعديل الموقع.");
-                    document.body.style.border = "5px solid gold";
-                }
+        function activateAdmin() {
+            let pin = prompt("أدخل رمز التأكيد السري:");
+            if(pin === "9988") {
+                alert("مرحباً أيها المدير! يمكنك الآن الضغط على أي نص في الموقع وتعديله مباشرة.");
+                document.body.contentEditable = 'true';
+                document.body.style.border = "5px solid red";
             }
         }
     </script>
