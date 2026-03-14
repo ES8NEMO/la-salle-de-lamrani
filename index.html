@@ -1,121 +1,162 @@
-﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Salle Doumrani | قاعة العمراني</title>
+    <title>La Salle Doumrani | التميز الرياضي</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Cairo', sans-serif; scroll-behavior: smooth; }
-        .sport-card:hover img { transform: scale(1.1); transition: 0.5s; }
-        .admin-key { position: fixed; top: 0; left: 50%; opacity: 0; z-index: 9999; width: 20px; }
+        h1, h2, h3, h4, .nav-link { font-family: 'Cairo', sans-serif; }
+        p, span, li, .details { font-family: 'Cinzel', serif; }
+        .page { display: none; animation: fadeIn 0.4s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .purple-gradient { background: linear-gradient(135deg, #7e22ce 0%, #4c1d95 100%); }
+        .search-modal { display: none; background: rgba(0,0,0,0.8); }
+        .admin-box { display: none; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
+<body class="bg-gray-50 text-gray-900 overflow-x-hidden">
 
-    <input type="password" class="admin-key" oninput="if(this.value==='boss77'){activateAdmin()}">
+    <div id="searchOverlay" class="search-modal fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
+            <button onclick="toggleSearch()" class="absolute top-4 left-4 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
+            <h3 class="text-xl font-black mb-4 text-purple-700">محرك البحث الذكي</h3>
+            <input type="text" id="searchInput" oninput="handleSmartSearch(this.value)" placeholder="ابحث عن رياضة، سعر، أو عرض..." 
+                   class="w-full p-4 border-2 border-purple-100 rounded-xl outline-none focus:border-purple-600 transition-all mb-4">
+            
+            <div id="searchResults" class="max-h-40 overflow-y-auto text-sm space-y-2 mb-2"></div>
 
-    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-black text-red-600">LA SALLE DOUMRANI</h1>
-            <div class="hidden md:flex gap-6 font-bold">
-                <a href="#home" class="hover:text-red-600">الرئيسية</a>
-                <a href="#sports" class="hover:text-red-600">الرياضات</a>
-                <a href="#contact" class="hover:text-red-600">اتصل بنا</a>
+            <div id="adminLogin" class="admin-box border-t pt-4 animate-bounce">
+                <p class="text-red-600 font-bold mb-2">⚠️ منطقة المدير: أدخل الباسورد</p>
+                <input type="password" id="adminPass" placeholder="كلمة السر" class="w-full p-2 border rounded-lg mb-2">
+                <button onclick="checkAdminPass()" class="w-full bg-purple-700 text-white py-2 rounded-lg font-bold">دخول</button>
+            </div>
+
+            <div id="changePassBox" class="admin-box border-t pt-4">
+                <p class="text-purple-600 font-bold mb-2">تحديث كلمة المرور</p>
+                <input type="password" id="oldP" placeholder="الباسورد القديم" class="w-full p-2 border rounded-lg mb-2">
+                <input type="password" id="newP" placeholder="الباسورد الجديد" class="w-full p-2 border rounded-lg mb-2">
+                <input type="password" id="confP" placeholder="تأكيد الباسورد الجديد" class="w-full p-2 border rounded-lg mb-2">
+                <button onclick="updatePassword()" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold">تغيير الآن</button>
             </div>
         </div>
-    </nav>
+    </div>
 
-    <header id="home" class="relative h-[500px] flex items-center justify-center text-white bg-zinc-900">
-        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-40">
-        <div class="relative text-center px-4">
-            <h2 class="text-5xl md:text-7xl font-black italic mb-4">CHAMPIONS DOJO</h2>
-            <p class="text-xl md:text-2xl text-gray-300">أقوى نادي رياضي للتدريب وبناء الأبطال</p>
+    <header class="purple-gradient text-white shadow-xl sticky top-0 z-50">
+        <div class="container mx-auto px-4 flex justify-between items-center py-4">
+            <h1 class="text-2xl font-black italic">LA SALLE DOUMRANI</h1>
+            <button onclick="toggleSearch()" class="p-2 bg-purple-600 rounded-full hover:bg-purple-500 transition shadow-inner">
+                🔍 <span class="hidden md:inline mr-2 font-bold text-sm text-serif">بحث</span>
+            </button>
         </div>
+        <nav class="flex gap-6 py-2 justify-center text-xs md:text-sm bg-purple-900/50">
+            <button onclick="showPage('home')" class="font-bold hover:text-purple-300">الرئيسية</button>
+            <button onclick="showPage('achievements')" class="font-bold hover:text-purple-300">الإنجازات</button>
+        </nav>
     </header>
 
-    <main class="container mx-auto py-16 px-4" id="sports">
-        <h3 class="text-4xl font-black text-center mb-16 border-b-4 border-red-600 w-fit mx-auto pb-2">برامجنا الرياضية</h3>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            
-            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
-                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?q=80&w=800" class="w-full h-full object-cover"></div>
-                <div class="p-6">
-                    <h4 class="text-2xl font-bold text-red-600 mb-2">كوانكيدو (KWANKIDO)</h4>
-                    <p class="text-gray-600 mb-4 text-sm">فن الدفاع عن النفس التقليدي لتعزيز القوة والتركيز.</p>
-                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
-                        <p><strong>الأيام:</strong> الثلاثاء، الخميس، السبت</p>
-                        <p><strong>الوقت:</strong> 20:30 - 21:30</p>
-                    </div>
-                    <p class="font-black text-xl">100 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
-                </div>
+    <main id="home" class="page active container mx-auto py-12 px-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div onclick="showPage('kwankido')" class="bg-white rounded-xl shadow p-4 cursor-pointer border-b-4 border-purple-500 hover:scale-105 transition">
+                <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?w=400" class="rounded-lg mb-4 h-40 w-full object-cover">
+                <h3 class="font-black text-purple-700">الكوانكيدو</h3>
+                <p class="text-gray-500 text-sm">فن قتالي يجمع القوة والتركيز الذهني.</p>
             </div>
-
-            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
-                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1555597673-b21d5c935865?q=80&w=800" class="w-full h-full object-cover"></div>
-                <div class="p-6">
-                    <h4 class="text-2xl font-bold text-red-600 mb-2">تايكواندو (TAEKWONDO)</h4>
-                    <p class="text-gray-600 mb-4 text-sm">تدريبات مخصصة لجميع الفئات العمرية لرفع اللياقة.</p>
-                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
-                        <p><strong>الأيام:</strong> الثلاثاء، الخميس، السبت</p>
-                        <p><strong>الوقت:</strong> ابتداءً من 18:30 (حسب الفئة)</p>
-                    </div>
-                    <p class="font-black text-xl">100 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
-                </div>
             </div>
-
-            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
-                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1581009146145-b5ef03a7403f?q=80&w=800" class="w-full h-full object-cover"></div>
-                <div class="p-6">
-                    <h4 class="text-2xl font-bold text-red-600 mb-2">كمال الأجسام (رجال)</h4>
-                    <p class="text-gray-600 mb-4 text-sm">صالة مجهزة بأحدث الآليات لبناء العضلات واللياقة.</p>
-                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
-                        <p><strong>الأيام:</strong> يومياً</p>
-                        <p><strong>الوقت:</strong> 07:00 - 22:00</p>
-                    </div>
-                    <p class="font-black text-xl">150 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
-                </div>
-            </div>
-
-            <div class="sport-card bg-white rounded-2xl shadow-xl overflow-hidden border">
-                <div class="h-52 overflow-hidden"><img src="https://images.unsplash.com/photo-1518310383802-640c2de311b2?q=80&w=800" class="w-full h-full object-cover"></div>
-                <div class="p-6">
-                    <h4 class="text-2xl font-bold text-red-600 mb-2">كمال الأجسام (نساء)</h4>
-                    <p class="text-gray-600 mb-4 text-sm">خصوصية تامة وبرامج تدريبية مخصصة للنساء.</p>
-                    <div class="bg-gray-100 p-3 rounded-lg text-sm mb-4">
-                        <p><strong>الأيام:</strong> يومياً</p>
-                        <p><strong>الوقت:</strong> 09:00 - 22:00</p>
-                    </div>
-                    <p class="font-black text-xl">150 درهم <span class="text-sm font-normal text-gray-500">/ شهر</span></p>
-                </div>
-            </div>
-
-        </div>
     </main>
 
-    <footer id="contact" class="bg-zinc-900 text-white py-16 text-center">
-        <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold mb-6">اتصل بنا</h3>
-            <p class="text-gray-400 mb-8">قاعة العمراني للرياضات ترحب بكم في أي وقت</p>
-            <div class="flex justify-center gap-10 text-lg">
-                <p>📍 بن سليمان، المغرب</p>
-                <p>📞 06XXXXXXXX</p>
+    <section id="achievements" class="page container mx-auto py-12 px-4">
+        <h2 class="text-3xl font-black text-center text-purple-700 mb-8">معرض الصور (99+)</h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="photoGrid">
             </div>
-            <p class="mt-12 text-gray-600 text-sm">© 2026 La Salle Doumrani. جميع الحقوق محفوظة.</p>
+    </section>
+
+    <section id="kwankido" class="page container mx-auto py-12 px-4">
+        <div class="bg-white p-6 rounded-2xl shadow-lg border-r-8 border-purple-700">
+            <h2 class="text-2xl font-black mb-4">برنامج الكوانكيدو</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+                <div class="bg-purple-50 p-4 rounded-xl font-bold">
+                    📅 الثلاثاء - الخميس - السبت <br> ⏰ 20:30 - 21:30
+                </div>
+                <div class="bg-gray-900 text-white p-4 rounded-xl font-black">
+                    💰 1 شهر: 100 درهم <br> 💰 3 أشهر: 250 درهم
+                </div>
+            </div>
+            <button onclick="showPage('home')" class="mt-6 text-purple-700 font-bold underline">عودة للرئيسية</button>
         </div>
-    </footer>
+    </section>
 
     <script>
-        function activateAdmin() {
-            let pin = prompt("أدخل رمز التأكيد السري:");
-            if(pin === "9988") {
-                alert("مرحباً أيها المدير! يمكنك الآن الضغط على أي نص في الموقع وتعديله مباشرة.");
-                document.body.contentEditable = 'true';
-                document.body.style.border = "5px solid red";
+        // نظام إدارة كلمات المرور (يستخدم LocalStorage ليحفظ تغييرك على جهازك)
+        let currentPass = localStorage.getItem('adminKey') || 'open9966';
+
+        function toggleSearch() {
+            const overlay = document.getElementById('searchOverlay');
+            overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
+            document.getElementById('searchInput').focus();
+        }
+
+        function handleSmartSearch(val) {
+            const results = document.getElementById('searchResults');
+            const adminLogin = document.getElementById('adminLogin');
+            const changeBox = document.getElementById('changePassBox');
+            
+            results.innerHTML = "";
+            adminLogin.style.display = "none";
+            changeBox.style.display = "none";
+
+            // الغرض 2: أوامر المطور السرية
+            if(val === 'boss77') {
+                adminLogin.style.display = "block";
+            } else if(val === 'Change password') {
+                changeBox.style.display = "block";
+            } else if(val === 'Reset') {
+                localStorage.setItem('adminKey', 'open9966');
+                currentPass = 'open9966';
+                alert("تمت إعادة تعيين الباسورد إلى الأصل: open9966");
+            } 
+            // الغرض 1: بحث الزبون
+            else if(val.length > 1) {
+                const data = ["كوانكيدو", "تايكواندو", "سعر", "عرض", "شهر", "إنجازات"];
+                data.forEach(item => {
+                    if(item.includes(val)) {
+                        results.innerHTML += `<div class="p-2 bg-purple-50 rounded cursor-pointer hover:bg-purple-200" onclick="showPage('${item === 'إنجازات' ? 'achievements' : 'kwankido'}')">${item}</div>`;
+                    }
+                });
             }
+        }
+
+        function checkAdminPass() {
+            const passInput = document.getElementById('adminPass').value;
+            if(passInput === currentPass) {
+                alert("تم الدخول لوضع المطور! يمكنك التعديل الآن.");
+                document.body.contentEditable = 'true';
+                toggleSearch();
+            } else {
+                alert("الباسورد خاطئ!");
+            }
+        }
+
+        function updatePassword() {
+            const oldP = document.getElementById('oldP').value;
+            const newP = document.getElementById('newP').value;
+            const confP = document.getElementById('confP').value;
+
+            if(oldP !== currentPass) return alert("الباسورد القديم غير صحيح!");
+            if(newP !== confP) return alert("الباسورد الجديد غير متطابق!");
+            
+            localStorage.setItem('adminKey', newP);
+            currentPass = newP;
+            alert("تم تغيير الباسورد بنجاح!");
+            toggleSearch();
+        }
+
+        function showPage(id) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            if(document.getElementById('searchOverlay').style.display === 'flex') toggleSearch();
         }
     </script>
 </body>
