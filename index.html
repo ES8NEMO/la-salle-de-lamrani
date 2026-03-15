@@ -3,161 +3,793 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Salle Doumrani | التميز الرياضي</title>
+    <title>FIVE STARS GYM | قاعة العمراني</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'gold': '#D4AF37',
+                        'gold-light': '#F5E6A3',
+                        'gold-dark': '#8B7424',
+                        'deep-black': '#0a0a0a',
+                        'card-black': '#111111',
+                    },
+                    fontFamily: {
+                        'cairo': ['Cairo', 'sans-serif'],
+                        'cinzel': ['Cinzel', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        h1, h2, h3, h4, .nav-link { font-family: 'Cairo', sans-serif; }
-        p, span, li, .details { font-family: 'Cinzel', serif; }
-        .page { display: none; animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .purple-gradient { background: linear-gradient(135deg, #7e22ce 0%, #4c1d95 100%); }
-        .search-modal { display: none; background: rgba(0,0,0,0.8); }
-        .admin-box { display: none; }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Cairo', sans-serif;
+            overflow-x: hidden;
+        }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-cairo { font-family: 'Cairo', sans-serif; }
+
+        /* ---- Gold Gradient Text ---- */
+        .gold-text {
+            background: linear-gradient(135deg, #D4AF37 0%, #F5E6A3 45%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* ---- Service Cards ---- */
+        .service-card {
+            background: #111111;
+            border: 1px solid rgba(212,175,55,0.12);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+        }
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        .service-card:hover::before { opacity: 1; }
+        .service-card:hover {
+            border-color: rgba(212,175,55,0.5);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(212,175,55,0.08), 0 0 0 1px rgba(212,175,55,0.15);
+        }
+
+        /* ---- Grayscale Gallery Images ---- */
+        .gallery-img {
+            filter: grayscale(100%);
+            transition: filter 0.6s ease, transform 0.6s ease, box-shadow 0.6s ease;
+        }
+        .gallery-img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+            box-shadow: 0 8px 30px rgba(212,175,55,0.15);
+        }
+
+        /* ---- Masonry Layout ---- */
+        .masonry { column-count: 3; column-gap: 1rem; }
+        .masonry-item { break-inside: avoid; margin-bottom: 1rem; }
+        @media (max-width: 1024px) { .masonry { column-count: 2; } }
+        @media (max-width: 640px)  { .masonry { column-count: 1; } }
+
+        /* ---- Lightbox ---- */
+        .lightbox {
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.35s ease, visibility 0.35s ease;
+        }
+        .lightbox.active { opacity: 1; visibility: visible; }
+        .lightbox img {
+            transition: transform 0.35s ease;
+            transform: scale(0.92);
+        }
+        .lightbox.active img { transform: scale(1); }
+
+        /* ---- Admin Glow ---- */
+        .admin-glow { box-shadow: inset 0 0 120px rgba(212,175,55,0.04); }
+        .admin-active .editable {
+            outline: 1px dashed rgba(212,175,55,0.25);
+            border-radius: 4px;
+            transition: outline 0.3s ease, background 0.3s ease;
+            min-height: 1.2em;
+        }
+        .admin-active .editable:focus {
+            outline: 2px solid rgba(212,175,55,0.6);
+            background: rgba(212,175,55,0.04);
+        }
+
+        /* ---- Drag-Drop Zone ---- */
+        .drop-zone {
+            border: 3px dashed rgba(212,175,55,0.35);
+            transition: all 0.3s ease;
+        }
+        .drop-zone.dragover {
+            border-color: #D4AF37;
+            background: rgba(212,175,55,0.07);
+            transform: scale(1.01);
+        }
+
+        /* ---- Toast ---- */
+        .toast {
+            transform: translateX(-120%);
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+        .toast.show { transform: translateX(0); }
+
+        /* ---- Search Box ---- */
+        .search-box {
+            max-width: 0; opacity: 0; overflow: hidden;
+            transition: max-width 0.4s ease, opacity 0.3s ease, padding 0.4s ease;
+            padding: 0;
+        }
+        .search-box.open {
+            max-width: 220px; opacity: 1; padding: 0;
+        }
+
+        /* ---- Page View Animations ---- */
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .view-enter { animation: fadeSlideIn 0.5s ease forwards; }
+
+        /* ---- Star Pulse ---- */
+        @keyframes starPulse {
+            0%, 100% { opacity: 0.75; text-shadow: 0 0 8px rgba(212,175,55,0.2); }
+            50%      { opacity: 1;    text-shadow: 0 0 25px rgba(212,175,55,0.5); }
+        }
+        .star-pulse { animation: starPulse 2.5s ease-in-out infinite; }
+
+        /* ---- Shimmer for Hero ---- */
+        @keyframes shimmer {
+            0%   { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+        .gold-shimmer {
+            background: linear-gradient(90deg, #D4AF37 0%, #F5E6A3 25%, #D4AF37 50%, #F5E6A3 75%, #D4AF37 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 6s linear infinite;
+        }
+
+        /* ---- Custom Scrollbar ---- */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F5E6A3; }
+
+        /* ---- Icon Circle ---- */
+        .icon-circle {
+            width: 3.5rem; height: 3.5rem;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(212,175,55,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
+            transition: all 0.5s ease;
+        }
+        .service-card:hover .icon-circle {
+            background: rgba(212,175,55,0.15);
+            border-color: rgba(212,175,55,0.5);
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        /* ---- Loader ---- */
+        @keyframes loaderFade {
+            0%, 80% { opacity: 1; }
+            100%    { opacity: 0; visibility: hidden; }
+        }
+        #loader { animation: loaderFade 1.8s ease-in-out forwards; }
+        @keyframes loaderScale {
+            0%   { transform: scale(0.8); opacity: 0; }
+            50%  { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .loader-content { animation: loaderScale 0.8s ease-out forwards; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 overflow-x-hidden">
+<body>
 
-    <div id="searchOverlay" class="search-modal fixed inset-0 z-[100] flex items-center justify-center p-4 backdrop-blur-sm">
-        <div class="bg-white w-full max-w-md rounded-2xl p-6 shadow-2xl relative">
-            <button onclick="toggleSearch()" class="absolute top-4 left-4 text-gray-400 hover:text-red-500 text-2xl">&times;</button>
-            <h3 class="text-xl font-black mb-4 text-purple-700">محرك البحث الذكي</h3>
-            <input type="text" id="searchInput" oninput="handleSmartSearch(this.value)" placeholder="ابحث عن رياضة، سعر، أو عرض..." 
-                   class="w-full p-4 border-2 border-purple-100 rounded-xl outline-none focus:border-purple-600 transition-all mb-4">
-            
-            <div id="searchResults" class="max-h-40 overflow-y-auto text-sm space-y-2 mb-2"></div>
+    <!-- ======================== LOADER ======================== -->
+    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center" style="background:#0a0a0a;">
+        <div class="loader-content text-center">
+            <div class="text-5xl sm:text-6xl text-gold star-pulse mb-5 tracking-widest">★★★★★</div>
+            <div class="font-cinzel gold-shimmer text-2xl sm:text-3xl tracking-widest">FIVE STARS GYM</div>
+            <div class="font-cairo text-white/30 text-sm mt-3">قاعة العمراني</div>
+        </div>
+    </div>
 
-            <div id="adminLogin" class="admin-box border-t pt-4 animate-bounce">
-                <p class="text-red-600 font-bold mb-2">⚠️ منطقة المدير: أدخل الباسورد</p>
-                <input type="password" id="adminPass" placeholder="كلمة السر" class="w-full p-2 border rounded-lg mb-2">
-                <button onclick="checkAdminPass()" class="w-full bg-purple-700 text-white py-2 rounded-lg font-bold">دخول</button>
+    <!-- ======================== TOAST ======================== -->
+    <div id="toast" class="toast fixed top-5 right-5 z-50 bg-card-black border border-gold/60 text-gold px-5 py-3 rounded-lg font-cairo text-sm shadow-2xl flex items-center gap-3 max-w-sm">
+        <span id="toast-msg"></span>
+    </div>
+
+    <!-- ======================== NAVIGATION ======================== -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-40 border-b border-gold/10 transition-all duration-300" style="background:rgba(10,10,10,0.92); backdrop-filter:blur(12px);">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-20">
+                <div class="flex items-center gap-2 cursor-pointer select-none" onclick="showView('home')">
+                    <span class="text-gold text-base sm:text-lg">★</span>
+                    <span class="font-cinzel text-gold text-xs sm:text-base tracking-widest font-bold">FIVE STARS GYM</span>
+                    <span class="text-gold text-base sm:text-lg">★</span>
+                </div>
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#" onclick="showView('home');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الرئيسية</a>
+                    <a href="#services-section" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الخدمات</a>
+                    <a href="#" onclick="showView('achievements');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الإنجازات</a>
+                    <a href="#contact-section" onclick="showView('home')" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">اتصل بنا</a>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <div id="search-container" class="search-box flex items-center">
+                            <input id="search-input" type="text" placeholder="بحث..." autocomplete="off" spellcheck="false"
+                                class="bg-card-black border border-gold/25 text-white text-sm rounded px-3 py-1.5 w-44 sm:w-48 focus:outline-none focus:border-gold font-cairo transition-colors">
+                        </div>
+                        <button id="search-btn" class="text-white/50 hover:text-gold transition-colors p-2" title="بحث">
+                            <i class="fas fa-magnifying-glass text-base"></i>
+                        </button>
+                    </div>
+                    <button id="mobile-btn" class="md:hidden text-white/50 hover:text-gold transition-colors p-2">
+                        <i class="fas fa-bars text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            <div id="mobile-menu" class="hidden md:hidden pb-5 pt-3 border-t border-gold/10">
+                <div class="flex flex-col gap-4">
+                    <a href="#" onclick="showView('home');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الرئيسية</a>
+                    <a href="#services-section" onclick="toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors">الخدمات</a>
+                    <a href="#" onclick="showView('achievements');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الإنجازات</a>
+                    <a href="#contact-section" onclick="showView('home');toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors">اتصل بنا</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ======================== HOME VIEW ======================== -->
+    <div id="home-view">
+
+        <!-- HERO -->
+        <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+            <div class="absolute inset-0" style="background:radial-gradient(ellipse at 50% 40%, rgba(212,175,55,0.07) 0%, transparent 65%);"></div>
+            <div class="absolute top-1/3 left-0 w-full h-px" style="background:linear-gradient(90deg,transparent,rgba(212,175,55,0.15),transparent);"></div>
+            <div class="absolute bottom-1/3 left-0 w-full h-px" style="background:linear-gradient(90deg,transparent,rgba(212,175,55,0.1),transparent);"></div>
+            <div class="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                <div class="text-gold text-3xl sm:text-5xl mb-6 star-pulse tracking-widest select-none">★ ★ ★ ★ ★</div>
+                <h1 class="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-bold mb-2 gold-shimmer tracking-wider leading-tight">FIVE STARS</h1>
+                <h2 class="font-cinzel text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 gold-text tracking-widest">GYM</h2>
+                <div class="w-28 h-0.5 mx-auto mb-5" style="background:linear-gradient(90deg,transparent,#D4AF37,transparent);"></div>
+                <p class="font-cairo text-xl sm:text-2xl text-white/50 mb-2 editable" id="edit-hero-subtitle">قاعة العمراني</p>
+                <p class="font-cairo text-sm sm:text-base text-white/30 max-w-lg mx-auto editable" id="edit-hero-tagline">حيث تُصنع الأبطال — تدريب احترافي، نتائج استثنائية</p>
+                <a href="#services-section" class="inline-block mt-10 font-cairo bg-gold/10 border border-gold/40 text-gold px-8 py-3 rounded-lg hover:bg-gold/20 hover:border-gold/70 transition-all duration-300 text-sm tracking-wide">اكتشف خدماتنا ↓</a>
+            </div>
+        </section>
+
+        <!-- SERVICES -->
+        <section id="services-section" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <h2 class="font-cinzel text-3xl sm:text-4xl gold-text mb-2 tracking-wider">OUR SERVICES</h2>
+                <p class="font-cairo text-white/40 text-base">خدماتنا</p>
+                <div class="w-20 h-0.5 mx-auto mt-5" style="background:linear-gradient(90deg,transparent,#D4AF37,transparent);"></div>
             </div>
 
-            <div id="changePassBox" class="admin-box border-t pt-4">
-                <p class="text-purple-600 font-bold mb-2">تحديث كلمة المرور</p>
-                <input type="password" id="oldP" placeholder="الباسورد القديم" class="w-full p-2 border rounded-lg mb-2">
-                <input type="password" id="newP" placeholder="الباسورد الجديد" class="w-full p-2 border rounded-lg mb-2">
-                <input type="password" id="confP" placeholder="تأكيد الباسورد الجديد" class="w-full p-2 border rounded-lg mb-2">
-                <button onclick="updatePassword()" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold">تغيير الآن</button>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+                <!-- CARD 1 — Kwankido -->
+                <div class="service-card rounded-xl p-6 sm:p-8">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-hand-fist"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c1-en">Kwankido</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c1-ar">كوانكيدو</h4>
+                    <div class="space-y-3 text-sm font-cairo">
+                        <div class="flex items-center gap-3 text-white/65"><i class="fas fa-calendar-days text-gold/50 w-5 text-center text-xs"></i><span class="editable" id="e-c1-sched">الثلاثاء — الخميس — السبت</span></div>
+                        <div class="flex items-center gap-3 text-white/65"><i class="fas fa-clock text-gold/50 w-5 text-center text-xs"></i><span class="editable" id="e-c1-time">20:30 — 21:30</span></div>
+                        <div class="mt-5 pt-4 border-t border-gold/10">
+                            <div class="flex items-center gap-3 text-gold"><i class="fas fa-tag text-gold/50 w-5 text-center text-xs"></i><span class="editable font-bold" id="e-c1-price">100 DH / شهر &bull; 250 DH / 3 أشهر</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD 2 — Taekwondo -->
+                <div class="service-card rounded-xl p-6 sm:p-8">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-bolt-lightning"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c2-en">Taekwondo</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-4 editable" id="e-c2-ar">التايكواندو</h4>
+                    <p class="text-gold/60 font-cairo text-xs mb-3">4 مجموعات حسب الفئة العمرية:</p>
+                    <div class="space-y-1.5 text-sm font-cairo editable" id="e-c2-groups">
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>4 — 7 سنوات</span><span class="text-gold">18:30</span></div>
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>8 — 12 سنة</span><span class="text-gold">19:30</span></div>
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>12 — 15 سنة</span><span class="text-gold">20:30</span></div>
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>+15 سنة</span><span class="text-gold">21:30</span></div>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-gold/10">
+                        <div class="flex items-center gap-3 text-gold text-sm"><i class="fas fa-tag text-gold/50 w-5 text-center text-xs"></i><span class="editable font-cairo font-bold" id="e-c2-price">ابتداءً من 100 DH</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 3 — Kickboxing -->
+                <div class="service-card rounded-xl p-6 sm:p-8">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-fire-flame-curved"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c3-en">Kickboxing</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c3-ar">الكيك بوكسينغ</h4>
+                    <p class="font-cairo text-white/60 text-sm leading-relaxed editable" id="e-c3-desc">حصص قتالية مكثفة لتطوير اللياقة البدنية والقوة الذهنية. تدريب على أعلى مستوى مع مدربين محترفين.</p>
+                    <div class="mt-5 pt-4 border-t border-gold/10">
+                        <div class="flex items-center gap-3 text-gold/60 text-sm"><i class="fas fa-phone text-gold/40 w-5 text-center text-xs"></i><span class="editable font-cairo" id="e-c3-note">للتواصل مع الإدارة للمزيد من التفاصيل</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 4 — Men's Gym -->
+                <div class="service-card rounded-xl p-6 sm:p-8">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-dumbbell"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c4-en">Men's Gym</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c4-ar">نادي الرجال</h4>
+                    <div class="space-y-3 text-sm font-cairo">
+                        <div class="flex items-center gap-3 text-white/65"><i class="fas fa-calendar-days text-gold/50 w-5 text-center text-xs"></i><span class="editable" id="e-c4-sched">يوميًا</span></div>
+                        <div class="flex items-center gap-3 text-white/65"><i class="fas fa-clock text-gold/50 w-5 text-center text-xs"></i><span class="editable" id="e-c4-time">09:00 — 22:00</span></div>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-gold/10 space-y-1.5 text-sm font-cairo editable" id="e-c4-price">
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>شهر واحد</span><span class="text-gold font-bold">150 DH</span></div>
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>3 أشهر</span><span class="text-gold font-bold">400 DH</span></div>
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-1.5"><span>سنة كاملة</span><span class="text-gold font-bold">1000 DH</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 5 — Women's Gym -->
+                <div class="service-card rounded-xl p-6 sm:p-8">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-heart-pulse"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c5-en">Women's Gym</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c5-ar">نادي النساء</h4>
+                    <p class="font-cairo text-white/60 text-sm leading-relaxed editable" id="e-c5-desc">حصص خاصة ومريحة للنساء في بيئة آمنة ومحفزة. برامج تدريبية متنوعة تناسب جميع المستويات.</p>
+                    <div class="mt-5 pt-4 border-t border-gold/10">
+                        <div class="flex items-center gap-3 text-gold/60 text-sm"><i class="fas fa-phone text-gold/40 w-5 text-center text-xs"></i><span class="editable font-cairo" id="e-c5-note">للتواصل مع الإدارة للمزيد من التفاصيل</span></div>
+                    </div>
+                </div>
+
+                <!-- CARD 6 — Achievements -->
+                <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer group" onclick="showView('achievements')">
+                    <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-trophy"></i></div>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5">Achievements</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5">الإنجازات</h4>
+                    <p class="font-cairo text-white/60 text-sm leading-relaxed">معرض الإنجازات والبطولات والميداليات. اكتشف تاريخ النجاح والتميز في قاعة العمراني.</p>
+                    <div class="mt-5 pt-4 border-t border-gold/10">
+                        <div class="flex items-center gap-3 text-gold text-sm group-hover:gap-5 transition-all duration-500">
+                            <i class="fas fa-arrow-left text-xs"></i>
+                            <span class="font-cairo font-bold">اكتشف المزيد</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER / CONTACT -->
+        <footer id="contact-section" class="border-t border-gold/10 py-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto text-center">
+                <div class="text-gold text-xl mb-4 star-pulse tracking-widest select-none">★ ★ ★ ★ ★</div>
+                <h3 class="font-cinzel text-gold text-xl tracking-wider mb-3">FIVE STARS GYM</h3>
+                <p class="font-cairo text-white/35 text-sm mb-2 editable" id="e-foot-addr">قاعة العمراني — المغرب</p>
+                <p class="font-cairo text-white/35 text-sm mb-8 editable" id="e-foot-phone">الهاتف: 0600000000</p>
+                <div class="w-20 h-px mx-auto mb-6" style="background:linear-gradient(90deg,transparent,rgba(212,175,55,0.3),transparent);"></div>
+                <p class="font-cairo text-white/15 text-xs">© 2025 Five Stars Gym — جميع الحقوق محفوظة</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ======================== ACHIEVEMENTS VIEW ======================== -->
+    <div id="achievements-view" style="display:none;">
+        <div class="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
+                    <div>
+                        <h2 class="font-cinzel text-2xl sm:text-4xl gold-text tracking-wider">ACHIEVEMENTS</h2>
+                        <p class="font-cairo text-white/40 text-sm mt-1">الإنجازات والبطولات</p>
+                    </div>
+                    <button onclick="showView('home')" class="flex items-center gap-2 text-gold/60 hover:text-gold transition-colors font-cairo text-sm border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-lg">
+                        <span>العودة للرئيسية</span>
+                        <i class="fas fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+                <div class="w-full h-px mb-10" style="background:linear-gradient(90deg,rgba(212,175,55,0.3),rgba(212,175,55,0.05),transparent);"></div>
+
+                <div id="gallery" class="masonry"></div>
+
+                <!-- Admin Upload Zone -->
+                <div id="upload-zone" style="display:none;" class="mt-12 mb-8">
+                    <div id="drop-area" class="drop-zone rounded-xl p-10 sm:p-14 text-center cursor-pointer">
+                        <i class="fas fa-cloud-arrow-up text-gold/30 text-5xl mb-4 block"></i>
+                        <p class="font-cairo text-gold/50 text-base mb-1">اسحب الصور وأفلتها هنا</p>
+                        <p class="font-cairo text-white/20 text-xs">أو انقر لاختيار ملفات — PNG, JPG, WEBP</p>
+                        <input type="file" id="file-input" multiple accept="image/*" class="hidden">
+                    </div>
+                    <div id="upload-preview" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mt-4"></div>
+                </div>
+
+                <!-- Admin Gallery Controls -->
+                <div id="admin-gallery-ctrl" style="display:none;" class="flex gap-3 mb-8 flex-wrap">
+                    <button onclick="resetGallery()" class="font-cairo text-xs bg-red-950/60 border border-red-500/25 text-red-400 px-4 py-2 rounded-lg hover:bg-red-900/60 transition-colors">
+                        <i class="fas fa-trash-alt ml-1"></i> مسح جميع الصور
+                    </button>
+                    <button onclick="resetDefaults()" class="font-cairo text-xs bg-yellow-950/40 border border-yellow-500/20 text-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-900/40 transition-colors">
+                        <i class="fas fa-rotate-left ml-1"></i> استعادة الصور الافتراضية
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <header class="purple-gradient text-white shadow-xl sticky top-0 z-50">
-        <div class="container mx-auto px-4 flex justify-between items-center py-4">
-            <h1 class="text-2xl font-black italic">LA SALLE DOUMRANI</h1>
-            <button onclick="toggleSearch()" class="p-2 bg-purple-600 rounded-full hover:bg-purple-500 transition shadow-inner">
-                🔍 <span class="hidden md:inline mr-2 font-bold text-sm text-serif">بحث</span>
-            </button>
-        </div>
-        <nav class="flex gap-6 py-2 justify-center text-xs md:text-sm bg-purple-900/50">
-            <button onclick="showPage('home')" class="font-bold hover:text-purple-300">الرئيسية</button>
-            <button onclick="showPage('achievements')" class="font-bold hover:text-purple-300">الإنجازات</button>
-        </nav>
-    </header>
+    <!-- ======================== LIGHTBOX ======================== -->
+    <div id="lightbox" class="lightbox fixed inset-0 z-50 flex items-center justify-center p-4" style="background:rgba(0,0,0,0.96);" onclick="lbClose()">
+        <button onclick="event.stopPropagation();lbClose()" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white/50 hover:text-white text-2xl z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"><i class="fas fa-xmark"></i></button>
+        <button onclick="event.stopPropagation();lbNav(-1)" class="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-xl z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"><i class="fas fa-chevron-left"></i></button>
+        <button onclick="event.stopPropagation();lbNav(1)" class="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 text-white/50 hover:text-white text-xl z-10 w-10 h-10 flex items-center justify-center rounded-full bg-white/5 hover:bg-white/10 transition-colors"><i class="fas fa-chevron-right"></i></button>
+        <img id="lb-img" src="" alt="" class="max-w-full max-h-full object-contain rounded-lg select-none" onclick="event.stopPropagation()" draggable="false">
+        <div id="lb-counter" class="absolute bottom-4 left-1/2 -translate-x-1/2 font-cairo text-white/30 text-xs"></div>
+    </div>
 
-    <main id="home" class="page active container mx-auto py-12 px-4">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div onclick="showPage('kwankido')" class="bg-white rounded-xl shadow p-4 cursor-pointer border-b-4 border-purple-500 hover:scale-105 transition">
-                <img src="https://images.unsplash.com/photo-1552072092-7f9b8d63efcb?w=400" class="rounded-lg mb-4 h-40 w-full object-cover">
-                <h3 class="font-black text-purple-700">الكوانكيدو</h3>
-                <p class="text-gray-500 text-sm">فن قتالي يجمع القوة والتركيز الذهني.</p>
-            </div>
-            </div>
-    </main>
+    <!-- ======================== ADMIN BADGE ======================== -->
+    <div id="admin-badge" style="display:none;" class="fixed bottom-4 left-4 z-40 bg-card-black border border-gold/40 text-gold pl-5 pr-2 py-2 rounded-full font-cairo text-xs flex items-center gap-3 shadow-2xl">
+        <i class="fas fa-bolt text-yellow-400 text-xs"></i>
+        <span>وضع الإدارة — التغييرات تُحفظ عند التحديث</span>
+        <button onclick="resetAllData()" class="text-red-400/60 hover:text-red-400 transition-colors px-2 py-1 rounded" title="مسح كل البيانات المحفوظة"><i class="fas fa-database text-xs"></i></button>
+        <button onclick="adminLogout()" class="text-white/40 hover:text-white transition-colors px-2 py-1 rounded" title="خروج"><i class="fas fa-right-from-bracket text-xs"></i></button>
+    </div>
 
-    <section id="achievements" class="page container mx-auto py-12 px-4">
-        <h2 class="text-3xl font-black text-center text-purple-700 mb-8">معرض الصور (99+)</h2>
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="photoGrid">
-            </div>
-    </section>
-
-    <section id="kwankido" class="page container mx-auto py-12 px-4">
-        <div class="bg-white p-6 rounded-2xl shadow-lg border-r-8 border-purple-700">
-            <h2 class="text-2xl font-black mb-4">برنامج الكوانكيدو</h2>
-            <div class="grid md:grid-cols-2 gap-4">
-                <div class="bg-purple-50 p-4 rounded-xl font-bold">
-                    📅 الثلاثاء - الخميس - السبت <br> ⏰ 20:30 - 21:30
-                </div>
-                <div class="bg-gray-900 text-white p-4 rounded-xl font-black">
-                    💰 1 شهر: 100 درهم <br> 💰 3 أشهر: 250 درهم
-                </div>
-            </div>
-            <button onclick="showPage('home')" class="mt-6 text-purple-700 font-bold underline">عودة للرئيسية</button>
-        </div>
-    </section>
-
+    <!-- ======================== JAVASCRIPT ======================== -->
     <script>
-        // نظام إدارة كلمات المرور (يستخدم LocalStorage ليحفظ تغييرك على جهازك)
-        let currentPass = localStorage.getItem('adminKey') || 'open9966';
+    (function() {
+        'use strict';
 
-        function toggleSearch() {
-            const overlay = document.getElementById('searchOverlay');
-            overlay.style.display = (overlay.style.display === 'flex') ? 'none' : 'flex';
-            document.getElementById('searchInput').focus();
+        /* ========== STATE ========== */
+        let isAdmin = false;
+        let galleryImages = [];
+        let pendingUploads = [];
+        let lbIndex = 0;
+        const STORAGE_KEY = 'fiveStarsGymData_v1';
+
+        /* ========== DEFAULT GALLERY ========== */
+        function makeDefaults() {
+            const items = [
+                { t:'🥇 بطولة وطنية 2023',    h:300, c1:'#1a1508', c2:'#0d0a04' },
+                { t:'🏆 كأس المدينة',          h:380, c1:'#0f1a0f', c2:'#060d06' },
+                { t:'🥋 تدريبات الفريق',        h:260, c1:'#1a1010', c2:'#0d0808' },
+                { t:'⭐ ميدالية ذهبية',         h:340, c1:'#10101a', c2:'#08080d' },
+                { t:'💪 بطولة إقليمية',         h:280, c1:'#1a1a0f', c2:'#0d0d08' },
+                { t:'🏅 إنجاز 2024',            h:320, c1:'#0f1a1a', c2:'#080d0d' },
+                { t:'🔥 حصة تدريبية مكثفة',     h:240, c1:'#1a0f1a', c2:'#0d080d' },
+                { t:'⚡ منافسات دولية',          h:360, c1:'#15150a', c2:'#0a0a05' },
+                { t:'🎯 التأهل الوطني',         h:290, c1:'#0f150f', c2:'#080a08' },
+            ];
+            return items.map(function(item) {
+                var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="'+item.h+'">'
+                    + '<defs><linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">'
+                    + '<stop offset="0%" style="stop-color:'+item.c1+'"/>'
+                    + '<stop offset="100%" style="stop-color:'+item.c2+'"/>'
+                    + '</linearGradient></defs>'
+                    + '<rect fill="url(#bg)" width="100%" height="100%" rx="10"/>'
+                    + '<rect fill="none" stroke="rgba(212,175,55,0.18)" stroke-width="1" x="10" y="10" width="380" height="'+(item.h-20)+'" rx="8"/>'
+                    + '<text fill="rgba(212,175,55,0.75)" font-size="20" text-anchor="middle" x="200" y="'+(item.h/2-8)+'" font-family="sans-serif">'+item.t+'</text>'
+                    + '<text fill="rgba(255,255,255,0.12)" font-size="10" text-anchor="middle" x="200" y="'+(item.h/2+18)+'" font-family="sans-serif">FIVE STARS GYM ★★★★★</text>'
+                    + '</svg>';
+                return 'data:image/svg+xml,' + encodeURIComponent(svg);
+            });
+        }
+        var defaultImages = makeDefaults();
+
+        /* ========== INIT ========== */
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStorage();
+            setupSearch();
+            setupMobile();
+            setupDragDrop();
+            setupMutationObserver();
+            setupBeforeUnload();
+            renderGallery();
+        });
+
+        /* ========== STORAGE ========== */
+        function loadStorage() {
+            try {
+                var raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) { galleryImages = defaultImages.slice(); return; }
+                var data = JSON.parse(raw);
+                if (data.editable) {
+                    Object.keys(data.editable).forEach(function(id) {
+                        var el = document.getElementById(id);
+                        if (el) el.innerHTML = data.editable[id];
+                    });
+                }
+                galleryImages = (data.gallery && data.gallery.length > 0) ? data.gallery : defaultImages.slice();
+            } catch(e) {
+                galleryImages = defaultImages.slice();
+            }
         }
 
-        function handleSmartSearch(val) {
-            const results = document.getElementById('searchResults');
-            const adminLogin = document.getElementById('adminLogin');
-            const changeBox = document.getElementById('changePassBox');
-            
-            results.innerHTML = "";
-            adminLogin.style.display = "none";
-            changeBox.style.display = "none";
-
-            // الغرض 2: أوامر المطور السرية
-            if(val === 'boss77') {
-                adminLogin.style.display = "block";
-            } else if(val === 'Change password') {
-                changeBox.style.display = "block";
-            } else if(val === 'Reset') {
-                localStorage.setItem('adminKey', 'open9966');
-                currentPass = 'open9966';
-                alert("تمت إعادة تعيين الباسورد إلى الأصل: open9966");
-            } 
-            // الغرض 1: بحث الزبون
-            else if(val.length > 1) {
-                const data = ["كوانكيدو", "تايكواندو", "سعر", "عرض", "شهر", "إنجازات"];
-                data.forEach(item => {
-                    if(item.includes(val)) {
-                        results.innerHTML += `<div class="p-2 bg-purple-50 rounded cursor-pointer hover:bg-purple-200" onclick="showPage('${item === 'إنجازات' ? 'achievements' : 'kwankido'}')">${item}</div>`;
-                    }
+        function saveStorage() {
+            try {
+                var editable = {};
+                document.querySelectorAll('.editable').forEach(function(el) {
+                    if (el.id) editable[el.id] = el.innerHTML;
                 });
+                if (pendingUploads.length > 0) {
+                    galleryImages = galleryImages.concat(pendingUploads);
+                    pendingUploads = [];
+                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    editable: editable,
+                    gallery: galleryImages,
+                    ts: Date.now()
+                }));
+            } catch(e) { console.warn('Storage save failed', e); }
+        }
+
+        /* ========== BEFORE UNLOAD ========== */
+        function setupBeforeUnload() {
+            window.addEventListener('beforeunload', function() {
+                if (isAdmin) saveStorage();
+            });
+        }
+
+        /* ========== MUTATION OBSERVER ========== */
+        function setupMutationObserver() {
+            new MutationObserver(function() {}).observe(document.body, {
+                childList: true, subtree: true, characterData: true
+            });
+        }
+
+        /* ========== SEARCH / ADMIN TRIGGER ========== */
+        function setupSearch() {
+            var btn = document.getElementById('search-btn');
+            var box = document.getElementById('search-container');
+            var inp = document.getElementById('search-input');
+            var open = false, awaitPw = false;
+
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                open = !open;
+                if (open) { box.classList.add('open'); setTimeout(function(){ inp.focus(); }, 100); }
+                else { closeSearch(); }
+            });
+
+            inp.addEventListener('input', function() {
+                if (!awaitPw && inp.value === 'boss77') {
+                    awaitPw = true;
+                    inp.value = '';
+                    inp.type = 'password';
+                    inp.placeholder = '🔒 كلمة المرور...';
+                    inp.style.borderColor = '#D4AF37';
+                }
+            });
+
+            inp.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && awaitPw) {
+                    if (inp.value === 'open9966') {
+                        activateAdmin();
+                        closeSearch();
+                    } else {
+                        inp.value = '';
+                        toast('❌ كلمة السر غير صحيحة');
+                    }
+                }
+            });
+
+            document.addEventListener('click', function(e) {
+                if (open && !btn.contains(e.target) && !box.contains(e.target)) closeSearch();
+            });
+
+            function closeSearch() {
+                open = false; awaitPw = false;
+                box.classList.remove('open');
+                inp.value = ''; inp.type = 'text';
+                inp.placeholder = 'بحث...';
+                inp.style.borderColor = '';
             }
         }
 
-        function checkAdminPass() {
-            const passInput = document.getElementById('adminPass').value;
-            if(passInput === currentPass) {
-                alert("تم الدخول لوضع المطور! يمكنك التعديل الآن.");
-                document.body.contentEditable = 'true';
-                toggleSearch();
+        /* ========== ADMIN MODE ========== */
+        function activateAdmin() {
+            isAdmin = true;
+            document.body.classList.add('admin-active', 'admin-glow');
+            document.getElementById('admin-badge').style.display = 'flex';
+            document.querySelectorAll('.editable').forEach(function(el) {
+                el.setAttribute('contenteditable', 'true');
+            });
+            document.getElementById('upload-zone').style.display = 'block';
+            document.getElementById('admin-gallery-ctrl').style.display = 'flex';
+            toast('⚡ وضع الإدارة مفعّل — حرّر المحتوى ثم حدّث الصفحة للحفظ');
+        }
+
+        window.adminLogout = function() {
+            isAdmin = false;
+            document.body.classList.remove('admin-active', 'admin-glow');
+            document.getElementById('admin-badge').style.display = 'none';
+            document.querySelectorAll('.editable').forEach(function(el) {
+                el.removeAttribute('contenteditable');
+            });
+            document.getElementById('upload-zone').style.display = 'none';
+            document.getElementById('admin-gallery-ctrl').style.display = 'none';
+            toast('تم الخروج من وضع الإدارة');
+        };
+
+        window.resetAllData = function() {
+            if (!isAdmin) return;
+            try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+            toast('🗑️ تم مسح جميع البيانات — يتم إعادة التحميل...');
+            isAdmin = false;
+            setTimeout(function() { location.reload(); }, 800);
+        };
+
+        /* ========== MOBILE MENU ========== */
+        function setupMobile() {
+            document.getElementById('mobile-btn').addEventListener('click', function() {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+        }
+        window.toggleMobile = function() {
+            document.getElementById('mobile-menu').classList.add('hidden');
+        };
+
+        /* ========== VIEW SWITCHING ========== */
+        window.showView = function(view) {
+            var home = document.getElementById('home-view');
+            var ach  = document.getElementById('achievements-view');
+            if (view === 'home') {
+                home.style.display = ''; ach.style.display = 'none';
+                home.classList.add('view-enter');
+                setTimeout(function(){ home.classList.remove('view-enter'); }, 500);
             } else {
-                alert("الباسورد خاطئ!");
+                home.style.display = 'none'; ach.style.display = '';
+                ach.classList.add('view-enter');
+                setTimeout(function(){ ach.classList.remove('view-enter'); }, 500);
+                renderGallery();
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        /* ========== GALLERY ========== */
+        function renderGallery() {
+            var container = document.getElementById('gallery');
+            if (!container) return;
+            var all = galleryImages.concat(pendingUploads);
+            if (all.length === 0) {
+                container.innerHTML = '<div class="text-center py-20" style="column-span:all;"><i class="fas fa-image text-gold/15 text-6xl mb-4 block"></i><p class="font-cairo text-white/25">لا توجد صور بعد</p></div>';
+                return;
+            }
+            container.innerHTML = all.map(function(src, i) {
+                return '<div class="masonry-item"><img src="'+src+'" alt="إنجاز '+(i+1)+'" class="gallery-img w-full rounded-lg cursor-pointer border border-gold/10 hover:border-gold/30" onclick="lbOpen('+i+')" loading="lazy"></div>';
+            }).join('');
         }
 
-        function updatePassword() {
-            const oldP = document.getElementById('oldP').value;
-            const newP = document.getElementById('newP').value;
-            const confP = document.getElementById('confP').value;
+        window.resetGallery = function() {
+            if (!isAdmin) return;
+            galleryImages = [];
+            pendingUploads = [];
+            document.getElementById('upload-preview').innerHTML = '';
+            renderGallery();
+            toast('🗑️ تم مسح جميع الصور');
+        };
 
-            if(oldP !== currentPass) return alert("الباسورد القديم غير صحيح!");
-            if(newP !== confP) return alert("الباسورد الجديد غير متطابق!");
-            
-            localStorage.setItem('adminKey', newP);
-            currentPass = newP;
-            alert("تم تغيير الباسورد بنجاح!");
-            toggleSearch();
+        window.resetDefaults = function() {
+            if (!isAdmin) return;
+            galleryImages = defaultImages.slice();
+            pendingUploads = [];
+            document.getElementById('upload-preview').innerHTML = '';
+            renderGallery();
+            toast('✅ تم استعادة الصور الافتراضية');
+        };
+
+        /* ========== DRAG & DROP ========== */
+        function setupDragDrop() {
+            var drop = document.getElementById('drop-area');
+            var fileIn = document.getElementById('file-input');
+            if (!drop || !fileIn) return;
+
+            drop.addEventListener('click', function() { fileIn.click(); });
+            drop.addEventListener('dragover', function(e) { e.preventDefault(); drop.classList.add('dragover'); });
+            drop.addEventListener('dragleave', function() { drop.classList.remove('dragover'); });
+            drop.addEventListener('drop', function(e) {
+                e.preventDefault(); drop.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            fileIn.addEventListener('change', function() {
+                handleFiles(fileIn.files); fileIn.value = '';
+            });
         }
 
-        function showPage(id) {
-            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            if(document.getElementById('searchOverlay').style.display === 'flex') toggleSearch();
+        function handleFiles(files) {
+            Array.from(files).forEach(function(f) {
+                if (!f.type.startsWith('image/')) return;
+                compressImg(f, function(url) {
+                    pendingUploads.push(url);
+                    renderGallery();
+                    addPreview(url);
+                    toast('📷 صورة جاهزة — حدّث الصفحة للحفظ');
+                });
+            });
         }
+
+        function compressImg(file, cb) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    var c = document.createElement('canvas');
+                    var max = 1200, w = img.width, h = img.height;
+                    if (w > max || h > max) {
+                        if (w > h) { h = Math.round(h * max / w); w = max; }
+                        else       { w = Math.round(w * max / h); h = max; }
+                    }
+                    c.width = w; c.height = h;
+                    c.getContext('2d').drawImage(img, 0, 0, w, h);
+                    cb(c.toDataURL('image/jpeg', 0.72));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function addPreview(url) {
+            var d = document.createElement('div');
+            d.className = 'relative rounded-lg overflow-hidden border border-gold/15';
+            d.innerHTML = '<img src="'+url+'" class="w-full h-20 object-cover"><div class="absolute inset-0 bg-black/40 flex items-center justify-center"><i class="fas fa-check-circle text-green-400"></i></div>';
+            document.getElementById('upload-preview').appendChild(d);
+        }
+
+        /* ========== LIGHTBOX ========== */
+        window.lbOpen = function(i) {
+            var all = galleryImages.concat(pendingUploads);
+            lbIndex = i;
+            document.getElementById('lb-img').src = all[i];
+            document.getElementById('lb-counter').textContent = (i+1) + ' / ' + all.length;
+            document.getElementById('lightbox').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.lbClose = function() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        window.lbNav = function(dir) {
+            var all = galleryImages.concat(pendingUploads);
+            lbIndex = (lbIndex + dir + all.length) % all.length;
+            document.getElementById('lb-img').src = all[lbIndex];
+            document.getElementById('lb-counter').textContent = (lbIndex+1) + ' / ' + all.length;
+        };
+
+        document.addEventListener('keydown', function(e) {
+            if (!document.getElementById('lightbox').classList.contains('active')) return;
+            if (e.key === 'Escape') lbClose();
+            if (e.key === 'ArrowLeft')  lbNav(1);
+            if (e.key === 'ArrowRight') lbNav(-1);
+        });
+
+        /* ========== TOAST ========== */
+        function toast(msg) {
+            var t = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            t.classList.add('show');
+            clearTimeout(t._tid);
+            t._tid = setTimeout(function() { t.classList.remove('show'); }, 3500);
+        }
+        window.toast = toast;
+
+    })();
     </script>
 </body>
 </html>
