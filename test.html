@@ -10,7 +10,116 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
+    <div id="sport-gallery-view" style="display:none;" class="min-h-screen pt-24 pb-16 px-4">
+    <div class="max-w-7xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h2 id="current-sport-title" class="font-cinzel text-3xl gold-text"></h2>
+            <button onclick="showView('home')" class="text-gold border border-gold/30 px-4 py-2 rounded">Retour / عودة</button>
+        </div>
+        
+        <div id="admin-upload-zone" style="display:none;" class="mb-10 p-10 border-2 border-dashed border-gold/30 rounded-xl text-center cursor-pointer hover:bg-gold/5" onclick="document.getElementById('sport-file-input').click()">
+            <i class="fas fa-plus text-3xl text-gold/50 mb-3"></i>
+            <p class="font-cairo text-white/50">Cliquez ou glissez les photos ici / اضغط أو اسحب الصور هنا</p>
+            <input type="file" id="sport-file-input" multiple accept="image/*" class="hidden" onchange="handleSportUpload(this.files)">
+        </div>
+
+        <div id="sport-images-grid" class="masonry"></div>
+        
+        <button onclick="saveAllChanges()" class="fixed bottom-10 right-10 bg-gold text-black px-6 py-3 rounded-full font-bold shadow-2xl">Enregistrer / حفظ التغييرات</button>
+    </div>
+</div> 
+
+
+    
     <script>
+        // --- نظام إدارة معرض الصور الجديد ---
+let sportsData = JSON.parse(localStorage.getItem('sportsGalleryData')) || {
+    'Kwankido': [], 
+    'Taekwondo': [], 
+    'Kickboxing': [], 
+    'Mens Gym': [], 
+    'Womens Gym': [],
+    'Achievements': []
+};
+
+let activeSport = '';
+
+// وظيفة لفتح معرض الصور الخاص بكل رياضة
+function openSportGallery(sportName) {
+    activeSport = sportName;
+    
+    // إخفاء الواجهة الرئيسية وإظهار واجهة المعرض
+    document.getElementById('home-view').style.display = 'none';
+    document.getElementById('achievements-view').style.display = 'none'; // إخفاء الإنجازات القديمة إن وجدت
+    document.getElementById('sport-gallery-view').style.display = 'block';
+    
+    // تحديث العنوان
+    document.getElementById('current-sport-title').innerText = sportName;
+    
+    // إظهار منطقة الرفع دائماً (بما أنك المطور)
+    document.getElementById('admin-upload-zone').style.display = 'block';
+    
+    renderSportImages();
+    window.scrollTo(0, 0); // العودة لأعلى الصفحة
+}
+
+// وظيفة معالجة الصور المرفوعة
+function handleSportUpload(files) {
+    Array.from(files).forEach(file => {
+        // ضغط بسيط للصور لتوفير الرام (4GB RAM)
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            sportsData[activeSport].push(e.target.result);
+            renderSportImages();
+        };
+        reader.readAsDataURL(file);
+    });
+}
+
+// وظيفة عرض الصور في الشبكة
+function renderSportImages() {
+    const grid = document.getElementById('sport-images-grid');
+    grid.innerHTML = sportsData[activeSport].map((img, index) => `
+        <div class="masonry-item relative group">
+            <img src="${img}" class="rounded-lg gallery-img w-full border border-gold/10 shadow-lg">
+            <button onclick="deleteSportImg(${index})" class="absolute top-2 right-2 bg-red-600/80 text-white w-8 h-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+        </div>
+    `).join('');
+}
+
+// وظيفة حذف صورة
+function deleteSportImg(index) {
+    if(confirm('Supprimer cette image ? / هل تريد حذف هذه الصورة؟')) {
+        sportsData[activeSport].splice(index, 1);
+        renderSportImages();
+    }
+}
+
+// وظيفة حفظ التغييرات في ذاكرة المتصفح
+function saveAllChanges() {
+    try {
+        localStorage.setItem('sportsGalleryData', JSON.stringify(sportsData));
+        alert('Modifications enregistrées ! / تم حفظ التغييرات بنجاح');
+    } catch (e) {
+        alert('Erreur: Espace plein ! / خطأ: الذاكرة ممتلئة، قلل حجم الصور.');
+    }
+}
+
+// تعديل وظيفة showView للعودة للرئيسية
+function showView(viewId) {
+    if(viewId === 'home') {
+        document.getElementById('sport-gallery-view').style.display = 'none';
+        document.getElementById('achievements-view').style.display = 'none';
+        document.getElementById('home-view').style.display = 'block';
+    }
+}
+        function toggleMobile() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+}
+
+// اربطها بالزر في الأعلى إذا لم تكن قد فعلت ذلك
+document.getElementById('mobile-btn').onclick = toggleMobile;
         tailwind.config = {
             theme: {
                 extend: {
@@ -294,7 +403,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
 
                 <!-- CARD 1 — Kwankido -->
-                <div class="service-card rounded-xl p-6 sm:p-8">
+               <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="openSportGallery('Kwankido')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-hand-fist"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c1-en">Kwankido</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c1-ar">كوانكيدو</h4>
@@ -308,7 +417,7 @@
                 </div>
 
                 <!-- CARD 2 — Taekwondo -->
-                <div class="service-card rounded-xl p-6 sm:p-8">
+               <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="openSportGallery('Taekwondo')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-bolt-lightning"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c2-en">Taekwondo</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-4 editable" id="e-c2-ar">التايكواندو</h4>
@@ -325,7 +434,7 @@
                 </div>
 
                 <!-- CARD 3 — Kickboxing -->
-                <div class="service-card rounded-xl p-6 sm:p-8">
+               <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="openSportGallery('Kickboxing')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-fire-flame-curved"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c3-en">Kickboxing</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c3-ar">الكيك بوكسينغ</h4>
@@ -336,7 +445,7 @@
                 </div>
 
                 <!-- CARD 4 — Men's Gym -->
-                <div class="service-card rounded-xl p-6 sm:p-8">
+               <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="openSportGallery('Men's Gym')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-dumbbell"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c4-en">Men's Gym</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c4-ar">نادي الرجال</h4>
@@ -352,7 +461,7 @@
                 </div>
 
                 <!-- CARD 5 — Women's Gym -->
-                <div class="service-card rounded-xl p-6 sm:p-8">
+                 <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="openSportGallery('Women's Gym')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-heart-pulse"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5 editable" id="e-c5-en">Women's Gym</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5 editable" id="e-c5-ar">نادي النساء</h4>
@@ -363,7 +472,7 @@
                 </div>
 
                 <!-- CARD 6 — Achievements -->
-                <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer group" onclick="showView('achievements')">
+                <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer group" onclick="openSportGallery('Achievements')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas fa-trophy"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5">Achievements</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5">الإنجازات</h4>
