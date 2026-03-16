@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FIVE STARS GYM | قاعة العمراني - نظام إدارة متكامل</title>
+    <title>FIVE STARS GYM | قاعة العمراني</title>
     
     <!-- Preconnect for faster loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -56,7 +56,7 @@
             background-clip: text;
         }
 
-        /* ---- Service Cards (مع تفاعل الضغط) ---- */
+        /* ---- Service Cards ---- */
         .service-card {
             background: #111111;
             border: 1px solid rgba(212,175,55,0.12);
@@ -388,24 +388,6 @@
             transform: scale(1.1);
         }
 
-        /* ---- Duplicate Counter ---- */
-        .duplicate-counter {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            background: #D4AF37;
-            color: #0a0a0a;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            z-index: 2;
-        }
-
         /* ---- Info Card in Sport Page ---- */
         .info-card {
             background: #111111;
@@ -452,7 +434,7 @@
         </button>
     </div>
 
-    <!-- ======================== CLOSE BUTTON (للصفحات الداخلية) ======================== -->
+    <!-- ======================== CLOSE BUTTON ======================== -->
     <div id="close-btn" class="close-btn" style="display: none;" onclick="closeSportPage()">
         <i class="fas fa-times"></i>
     </div>
@@ -471,8 +453,8 @@
                 <!-- القائمة الرئيسية -->
                 <div class="hidden md:flex items-center gap-8">
                     <a href="#" onclick="showHome();return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الرئيسية</a>
-                    <a href="#" onclick="document.getElementById('home-view').scrollIntoView({behavior: 'smooth'});return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الخدمات</a>
-                    <a href="#" onclick="window.openSportPage('achievements');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الإنجازات</a>
+                    <a href="#" onclick="document.getElementById('services-section').scrollIntoView({behavior: 'smooth'});return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الخدمات</a>
+                    <a href="#" onclick="openSportPage('achievements');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الإنجازات</a>
                     <a href="#" onclick="document.getElementById('contact-section').scrollIntoView({behavior: 'smooth'});return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">اتصل بنا</a>
                 </div>
                 
@@ -497,8 +479,8 @@
             <div id="mobile-menu" class="hidden md:hidden pb-5 pt-3 border-t border-gold/10">
                 <div class="flex flex-col gap-4">
                     <a href="#" onclick="showHome();toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الرئيسية</a>
-                    <a href="#" onclick="document.getElementById('home-view').scrollIntoView({behavior: 'smooth'});toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الخدمات</a>
-                    <a href="#" onclick="window.openSportPage('achievements');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الإنجازات</a>
+                    <a href="#" onclick="document.getElementById('services-section').scrollIntoView({behavior: 'smooth'});toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الخدمات</a>
+                    <a href="#" onclick="openSportPage('achievements');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الإنجازات</a>
                     <a href="#" onclick="document.getElementById('contact-section').scrollIntoView({behavior: 'smooth'});toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">اتصل بنا</a>
                 </div>
             </div>
@@ -578,7 +560,7 @@
         </footer>
     </div>
 
-    <!-- ======================== SPORT DETAIL PAGE (قالب الصفحة الداخلية) ======================== -->
+    <!-- ======================== SPORT DETAIL PAGE ======================== -->
     <div id="sport-detail-page" class="sport-detail-page">
         <div class="max-w-7xl mx-auto">
             <!-- رأس الصفحة -->
@@ -614,7 +596,7 @@
                 </div>
             </div>
 
-            <!-- الفئات العمرية (إذا وجدت) -->
+            <!-- الفئات العمرية -->
             <div id="age-groups-container" class="info-card mb-8" style="display: none;">
                 <h3 class="info-title"><i class="fas fa-users ml-2"></i>الفئات العمرية</h3>
                 <div id="age-groups-list" class="space-y-2"></div>
@@ -800,7 +782,7 @@
             if (!container) return;
             
             container.innerHTML = state.sports.map(sport => `
-                <div class="service-card rounded-xl p-6 sm:p-8" onclick="window.openSportPage('${sport.id}')">
+                <div class="service-card rounded-xl p-6 sm:p-8" data-sport-id="${sport.id}">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas ${sport.icon}"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.name.en}</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5">${sport.name.ar}</h4>
@@ -822,6 +804,29 @@
                     </div>
                 </div>
             `).join('');
+            
+            // إعادة ربط أحداث النقر للبطاقات
+            attachCardClickEvents();
+        }
+
+        /* ========== ATTACH CARD CLICK EVENTS ========== */
+        function attachCardClickEvents() {
+            const cards = document.querySelectorAll('.service-card');
+            cards.forEach(card => {
+                // إزالة أي أحداث سابقة لمنع التكرار
+                card.removeEventListener('click', handleCardClick);
+                // إضافة حدث النقر الجديد
+                card.addEventListener('click', handleCardClick);
+            });
+        }
+
+        /* ========== HANDLE CARD CLICK ========== */
+        function handleCardClick(event) {
+            const card = event.currentTarget;
+            const sportId = card.getAttribute('data-sport-id');
+            if (sportId) {
+                openSportPage(sportId);
+            }
         }
 
         /* ========== OPEN SPORT PAGE ========== */
@@ -869,6 +874,11 @@
             $('close-btn').style.display = 'none';
             document.body.style.overflow = '';
             state.currentSport = null;
+            
+            // عند العودة للصفحة الرئيسية، نعيد ربط أحداث البطاقات
+            setTimeout(() => {
+                attachCardClickEvents();
+            }, 100);
         };
 
         /* ========== RENDER PRICES ========== */
@@ -924,7 +934,7 @@
                         <img src="${img}" alt="صورة ${index + 1}">
                         ${state.isAdmin ? `
                             <div class="image-overlay">
-                                <button onclick="window.deleteImage(${index})" title="حذف">
+                                <button onclick="deleteImage(${index})" title="حذف">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -936,7 +946,7 @@
             // إضافة زر إضافة صورة في وضع المطور
             if (state.isAdmin) {
                 html += `
-                    <div class="add-image-btn" onclick="window.triggerImageUpload()">
+                    <div class="add-image-btn" onclick="triggerImageUpload()">
                         <i class="fas fa-plus-circle"></i>
                         <span class="text-sm">إضافة صورة</span>
                     </div>
