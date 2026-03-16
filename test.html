@@ -112,11 +112,11 @@
 
         </section>
     </div>
-<footer class="py-12 border-t border-gold/10 bg-black/50 backdrop-blur-sm relative z-10">
+<footer id="main-footer" class="py-12 border-t border-gold/10 bg-black/50 backdrop-blur-sm relative z-10">
     <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
         <h3 class="font-cinzel gold-text text-xl mb-8 tracking-[0.2em]">CONNECT WITH US</h3>
-        
         <div class="flex flex-wrap justify-center gap-10 md:gap-16 mb-12 items-center">
+            
             <a href="https://wa.me/212662024858" target="_blank" class="group flex flex-col items-center gap-3">
                 <i class="fab fa-whatsapp text-3xl text-white/40 group-hover:text-[#25D366] group-hover:scale-125 transition-all duration-500"></i>
                 <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold tracking-widest uppercase transition-colors">WhatsApp</span>
@@ -128,15 +128,14 @@
             </a>
 
             <a href="mailto:amrani.mustapha1982@gmail.com" class="group flex flex-col items-center gap-3">
-                <div class="w-9 h-9 flex items-center justify-center group-hover:scale-125 transition-transform duration-500">
-                    <svg class="w-full h-full opacity-100 group-hover:opacity-0 transition-opacity duration-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.387l-9 6.463-9-6.463V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.425.162-.8.431-1.068C.7 3.16 1.075 3 1.5 3H3.6l8.4 6.012L20.4 3h2.1c.425 0 .8.162 1.069.432.27.268.431.643.431 1.068z" fill="white" fill-opacity="0.4"/>
-                    </svg>
-                    <svg class="w-full h-full absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22.5 3h-2.1L12 9.012 3.6 3H1.5C.65 3 0 3.65 0 4.5V19.5c0 .85.65 1.5 1.5 1.5H3.6V7.387L12 13.45l8.4-6.063V21h2.1c.85 0 1.5-.65 1.5-1.5V4.5c0-.85-.65-1.5-1.5-1.5z" fill="#EA4335"/>
-                        <path d="M22.5 3h-2.1L12 9.012 3.6 3H1.5C.65 3 0 3.65 0 4.5V7.387l12 8.613 12-8.613V4.5c0-.85-.65-1.5-1.5-1.5z" fill="#4285F4"/>
-                        <path d="M12 13.45L3.6 7.387V19.5C3.6 20.35 2.95 21 2.1 21H3.6V7.387L12 13.45z" fill="#FBBC05"/>
-                        <path d="M20.4 7.387V21H21.9c.85 0 1.5-.65 1.5-1.5V7.387L12 13.45l8.4-6.063z" fill="#34A853"/>
+                <div class="w-10 h-8 relative group-hover:scale-125 transition-all duration-500">
+                    <svg viewBox="0 0 24 24" class="w-full h-full">
+                        <path d="M20 18h2V5c0-1.1-.9-2-2-2h-3l-5 4-5-4H4c-1.1 0-2 .9-2 2v13h2V7l8 6 8-6v11z" class="fill-white/40 group-hover:hidden"></path>
+                        <path d="M4 20h3V11L4 8.5V20z" fill="#FBBC05" class="hidden group-hover:block"></path>
+                        <path d="M20 20h3V8.5L20 11v9z" fill="#34A853" class="hidden group-hover:block"></path>
+                        <path d="M12 14.5l8-6V5l-8 6-8-6v3.5l8 6z" fill="#EA4335" class="hidden group-hover:block"></path>
+                        <path d="M4 5v3.5L12 14.5V11L4 5z" fill="#C5221F" class="hidden group-hover:block"></path>
+                        <path d="M20 5v3.5L12 14.5V11L20 5z" fill="#4285F4" class="hidden group-hover:block"></path>
                     </svg>
                 </div>
                 <span class="text-[9px] font-cinzel text-white/20 group-hover:text-[#EA4335] tracking-widest uppercase transition-colors">Gmail</span>
@@ -153,7 +152,7 @@
                 <i class="fas fa-map-marker-alt text-xs"></i>
                 <p class="font-cairo text-sm leading-relaxed text-white/70">
                     بنسليمان، قيسارية القدس، توسعة الطابق الأول<br>
-                    <span class="text-[10px] text-white/30 uppercase tracking-widest">Benslimane, Morocco</span>
+                    <span class="text-[10px] text-white/30 tracking-widest uppercase">Benslimane, Morocco</span>
                 </p>
             </div>
             <div class="flex items-center justify-center gap-3 text-gold/60">
@@ -161,8 +160,6 @@
                 <a href="tel:0662024858" class="text-sm font-bold tracking-[0.2em] text-white/80 hover:text-gold transition-colors">0662024858</a>
             </div>
         </div>
-
-        <p class="mt-12 text-white/10 text-[9px] font-cinzel tracking-[0.3em] uppercase">© 2026 EL AMRANI GYM - FIVE STARS LUXURY</p>
     </div>
 </footer>
 
@@ -204,17 +201,26 @@
         };
 
         function showView(v) { 
-            const home = document.getElementById('home-view');
-            const gallery = document.getElementById('achievements-view');
-            if (v === 'home') {
-                home.style.display = 'block';
-                gallery.style.display = 'none';
-            } else {
-                home.style.display = 'none';
-                gallery.style.display = 'block';
-            }
-            window.scrollTo(0,0);
-        }
+    // هذه الأسطر الثلاثة هي التي تمسك عناصر الصفحة
+    const home = document.getElementById('home-view');
+    const gallery = document.getElementById('achievements-view');
+    const footer = document.getElementById('main-footer'); 
+
+    if (v === 'home') {
+        // إذا ضغطنا على "الرئيسية": اظهر البطاقات والفوتر، واخفِ المعرض
+        home.style.display = 'block';
+        gallery.style.display = 'none';
+        if(footer) footer.style.display = 'block'; 
+    } else {
+        // إذا ضغطنا على "بطاقة رياضة": اخفِ البطاقات والفوتر، واظهر المعرض
+        home.style.display = 'none';
+        gallery.style.display = 'block';
+        if(footer) footer.style.display = 'none'; 
+    }
+    // العودة دائماً لأعلى الصفحة عند التبديل
+    window.scrollTo(0,0);
+}
+
         
         function showGalleryView(cat, ar) { 
             currentCategory = cat; 
