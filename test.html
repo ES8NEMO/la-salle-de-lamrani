@@ -804,25 +804,26 @@
                     </div>
                 </div>
             `).join('');
+        }
+
+        /* ========== EVENT DELEGATION FOR CARDS (الحل النهائي) ========== */
+        function setupCardEventDelegation() {
+            // ربط الحدث بالحاوية (sports-container) بدلاً من البطاقات نفسها
+            const container = $('sports-container');
+            if (!container) return;
             
-            // ربط أحداث النقر للبطاقات
-            attachCardClickEvents();
+            // إزالة أي أحداث سابقة من الحاوية
+            container.removeEventListener('click', handleContainerClick);
+            // إضافة حدث النقر إلى الحاوية
+            container.addEventListener('click', handleContainerClick);
         }
 
-        /* ========== ATTACH CARD CLICK EVENTS ========== */
-        function attachCardClickEvents() {
-            const cards = document.querySelectorAll('.service-card');
-            cards.forEach(card => {
-                // إزالة أي أحداث سابقة
-                card.removeEventListener('click', handleCardClick);
-                // إضافة حدث النقر
-                card.addEventListener('click', handleCardClick);
-            });
-        }
-
-        /* ========== HANDLE CARD CLICK ========== */
-        function handleCardClick(event) {
-            const card = event.currentTarget;
+        /* ========== HANDLE CONTAINER CLICK ========== */
+        function handleContainerClick(event) {
+            // البحث عن أقرب عنصر يحمل الكلاس service-card (الذي نقرنا عليه أو أحد أبنائه)
+            const card = event.target.closest('.service-card');
+            if (!card) return; // إذا لم ينقر على بطاقة، لا تفعل شيئاً
+            
             const sportId = card.getAttribute('data-sport-id');
             if (sportId) {
                 openSportPage(sportId);
@@ -876,8 +877,7 @@
             document.body.style.overflow = '';
             state.currentSport = null;
             
-            // إعادة ربط أحداث البطاقات فوراً
-            attachCardClickEvents();
+            // لا نحتاج لإعادة ربط الأحداث لأننا نستخدم Event Delegation!
         };
 
         /* ========== RENDER PRICES ========== */
@@ -1154,6 +1154,7 @@
         function init() {
             loadStorage();
             renderSportsCards();
+            setupCardEventDelegation(); // تفعيل تقنية Event Delegation
             setupAdminTrigger();
             setupSaveButton();
             setupExitButton();
