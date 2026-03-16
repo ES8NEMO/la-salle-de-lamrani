@@ -13,22 +13,16 @@
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .font-cinzel { font-family: 'Cinzel', serif; }
         .gold-text { color: var(--gold); text-shadow: 0 0 10px rgba(212,175,55,0.3); }
-        
-        .service-card { background: linear-gradient(145deg, #111, #080808); border: 1px solid rgba(212,175,55,0.1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; }
+        .service-card { background: linear-gradient(145deg, #111, #080808); border: 1px solid rgba(212,175,55,0.1); transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; height: 100%; }
         .service-card:hover { transform: translateY(-10px); border-color: var(--gold); box-shadow: 0 15px 35px -10px rgba(212,175,55,0.2); }
         .icon-circle { width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: rgba(212,175,55,0.05); border: 1px solid rgba(212,175,55,0.1); transition: 0.5s; margin-bottom: 1.5rem; }
         .service-card:hover .icon-circle { background: var(--gold); color: black !important; transform: rotateY(360deg); }
-
         .pinterest-grid { column-count: 2; column-gap: 15px; width: 100%; }
         @media (min-width: 768px) { .pinterest-grid { column-count: 3; } }
         .pin-item { break-inside: avoid; margin-bottom: 15px; border-radius: 12px; overflow: hidden; border: 1px solid rgba(212,175,55,0.1); position: relative; background: #111; }
         .pin-item img { width: 100%; display: block; cursor: zoom-in; transition: 0.4s; }
-        .pin-item:hover img { transform: scale(1.03); }
-
-        .delete-btn { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #ee4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; z-index: 100; opacity: 0; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .delete-btn { position: absolute; top: 10px; right: 10px; width: 30px; height: 30px; background: #ee4444; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white; z-index: 100; opacity: 0; transition: 0.3s; }
         .pin-item:hover .delete-btn { opacity: 1; }
-        .delete-btn:hover { background: #cc0000; transform: scale(1.1); }
-
         #lightbox { position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 2000; display: none; align-items: center; justify-content: center; padding: 20px; }
     </style>
 </head>
@@ -54,10 +48,10 @@
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-dragon"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">KWANKIDO</h3>
                 <p class="text-white/50 text-xs mb-4">الثلاثاء — الخميس — السبت</p>
-                <p class="text-white/70 text-sm leading-relaxed mb-6">فن قتالي فيتنامي يجمع بين القوة والمرونة والروحانية. يركز على تطوير الجسم والعقل معاً.</p>
+                <p class="text-white/70 text-sm leading-relaxed mb-6">فن قتالي فيتنامي يجمع بين القوة والمرونة. يركز على تطوير الجسم والعقل معاً.</p>
                 <div class="bg-white/5 p-4 rounded-xl text-xs text-gold/80 space-y-2 border border-white/5">
                     <div class="flex justify-between"><span>المواعيد:</span><span>20:30 - 21:30</span></div>
-                    <div class="flex justify-between pt-2 border-t border-white/10 font-bold"><span>1 شهر / 3 أشهر:</span><span>100 / 250 درهم</span></div>
+                    <div class="flex justify-between pt-2 border-t border-white/10 font-bold"><span>شهر/3أشهر:</span><span>100/250 درهم</span></div>
                 </div>
             </div>
 
@@ -65,125 +59,80 @@
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-user-ninja"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">TAEKWONDO</h3>
                 <p class="text-white/50 text-xs mb-4">الثلاثاء — الخميس — السبت</p>
-                <p class="text-white/70 text-sm leading-relaxed mb-6 font-cairo text-xs">فن قتالي كوري يشتهر بركلاته السريعة. يعزز اللياقة البدنية والانضباط الذاتي.</p>
                 <div class="space-y-1 text-[10px] mb-4">
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 1 (4-7 سنين)</span><span>18:30 - 19:30</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 2 (8-12 سنة)</span><span>19:30 - 20:30</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 3 (12-15 سنة)</span><span>20:30 - 21:30</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 4 (15+ سنة)</span><span>21:30+</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج1(4-7س)</span><span>18:30-19:30</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج2(8-12س)</span><span>19:30-20:30</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج3(12-15س)</span><span>20:30-21:30</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج4(15+س)</span><span>21:30+</span></div>
                 </div>
                 <div class="pt-2 border-t border-white/10 text-gold font-bold text-xs flex justify-between">
-                    <span>100 درهم / شهر</span><span>250 درهم / 3 أشهر</span>
+                    <span>100 درهم/شهر</span><span>250 درهم/3أشهر</span>
                 </div>
             </div>
 
             <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('kickboxing', 'الكيك بوكسينغ')">
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-fire"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">KICKBOXING</h3>
-                <p class="text-white/50 text-xs mb-4 font-cairo">الاثنين — الأربعاء — الجمعة</p>
-                <p class="text-white/70 text-sm leading-relaxed mb-6 text-xs">رياضة قتالية تجمع بين الملاكمة وفنون الركل. تحرق السعرات وتبني القوة.</p>
+                <p class="text-white/50 text-xs mb-4">الاثنين — الأربعاء — الجمعة</p>
                 <div class="space-y-1 text-[10px] mb-4">
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 1 (4-7 سنين)</span><span>19:00 - 20:00</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 2 (8-12 سنة)</span><span>20:00 - 21:00</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 px-2 rounded"><span>فوج 3 (12-15 سنة)</span><span>21:00 - 22:00</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج1(4-7س)</span><span>19:00-20:00</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج2(8-12س)</span><span>20:00-21:00</span></div>
+                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج3(12-15س)</span><span>21:00-22:00</span></div>
                 </div>
                 <div class="pt-2 border-t border-white/10 text-gold font-bold text-xs flex justify-between">
-                    <span>100 درهم / شهر</span><span>250 درهم / 3 أشهر</span>
+                    <span>100 درهم/شهر</span><span>250 درهم/3أشهر</span>
                 </div>
             </div>
 
-<div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('men_gym', 'نادي الرجال')">
-    <div class="icon-circle text-gold text-xl">
-        <i class="fas fa-dumbbell"></i>
-    </div>
-    <h3 class="font-cinzel text-gold text-xl mb-1 uppercase">Men's Club</h3>
-    <p class="text-white/50 text-xs mb-4 font-cairo">مفتوح كل يوم</p>
-    <p class="text-white/70 text-sm leading-relaxed mb-6 font-cairo">
-        نادي رياضي مجهز بأحدث الأجهزة والمعدات لبناء العضلات واللياقة البدنية في بيئة احترافية.
-    </p>
-    
-    <div class="bg-white/5 p-4 rounded-xl border border-white/5 font-cairo space-y-3">
-        <div class="flex justify-between text-xs text-gold">
-            <span>المواعيد اليومية:</span>
-            <span class="font-bold">07:00 - 22:00</span>
-        </div>
-        <div class="h-px bg-white/10"></div>
-        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-            <div>
-                <p class="text-white/40 mb-1 italic">شهر</p>
-                <p class="text-gold font-bold">150 DH</p>
+            <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('men_gym', 'نادي الرجال')">
+                <div class="icon-circle text-gold text-xl"><i class="fas fa-dumbbell"></i></div>
+                <h3 class="font-cinzel text-gold text-xl mb-1">MEN'S CLUB</h3>
+                <p class="text-white/50 text-xs mb-4 italic">07:00 - 22:00</p>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-3">
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                        <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
+                        <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
+                        <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
+                    </div>
+                </div>
             </div>
-            <div class="border-x border-white/10">
-                <p class="text-white/40 mb-1 italic">3 أشهر</p>
-                <p class="text-gold font-bold">400 DH</p>
-            </div>
-            <div>
-                <p class="text-white/40 mb-1 italic">سنة</p>
-                <p class="text-gold font-bold">1000 DH</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('women_gym', 'نادي النساء')">
-    <div class="icon-circle text-gold text-xl">
-        <i class="fas fa-venus"></i>
-    </div>
-    <h3 class="font-cinzel text-gold text-xl mb-1 uppercase">Women's Club</h3>
-    <p class="text-white/50 text-xs mb-4 font-cairo">مفتوح كل يوم</p>
-    <p class="text-white/70 text-sm leading-relaxed mb-6 font-cairo">
-        مساحة خاصة للنساء مع أجهزة متنوعة وبيئة مريحة وآمنة للتمارين الرياضية.
-    </p>
-    
-    <div class="bg-white/5 p-4 rounded-xl border border-white/5 font-cairo space-y-3">
-        <div class="flex justify-between text-xs text-gold">
-            <span>المواعيد اليومية:</span>
-            <span class="font-bold">09:00 - 22:00</span>
-        </div>
-        <div class="h-px bg-white/10"></div>
-        <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-            <div>
-                <p class="text-white/40 mb-1 italic">شهر</p>
-                <p class="text-gold font-bold">150 DH</p>
+            <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('women_gym', 'نادي النساء')">
+                <div class="icon-circle text-gold text-xl"><i class="fas fa-venus"></i></div>
+                <h3 class="font-cinzel text-gold text-xl mb-1">WOMEN'S CLUB</h3>
+                <p class="text-white/50 text-xs mb-4 italic">09:00 - 22:00</p>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-3">
+                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
+                        <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
+                        <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
+                        <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
+                    </div>
+                </div>
             </div>
-            <div class="border-x border-white/10">
-                <p class="text-white/40 mb-1 italic">3 أشهر</p>
-                <p class="text-gold font-bold">400 DH</p>
-            </div>
-            <div>
-                <p class="text-white/40 mb-1 italic">سنة</p>
-                <p class="text-gold font-bold">1000 DH</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-    <div id="achievements-view" style="display:none;" class="min-h-screen">
+        </section>
+    </div>
+
+    <div id="achievements-view" style="display:none;" class="min-h-screen bg-black">
         <div class="pt-24 pb-16 px-4 max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-12 border-b border-gold/10 pb-6">
                 <div>
                     <h2 id="gallery-title-en" class="font-cinzel text-4xl gold-text tracking-widest uppercase">GALLERY</h2>
-                    <p id="gallery-title-ar" class="text-white/40 text-sm mt-2"></p>
+                    <p id="gallery-title-ar" class="text-white/40 text-sm mt-2 font-cairo"></p>
                 </div>
-                <button onclick="showView('home')" class="text-gold/60 border border-gold/20 px-6 py-2 rounded-full font-cairo text-sm hover:bg-gold/10">العودة للرئيسية</button>
+                <button onclick="showView('home')" class="text-gold/60 border border-gold/20 px-6 py-2 rounded-full text-sm hover:bg-gold/10">العودة للرئيسية</button>
             </div>
-
             <div id="admin-controls" class="hidden mb-12 p-6 border border-gold/20 rounded-2xl bg-[#111] flex gap-3">
-                <input type="text" id="img-url" placeholder="ضع رابط الصورة هنا..." class="flex-1 bg-black border border-gold/20 rounded-lg p-3 text-gold text-sm outline-none focus:border-gold">
-                <button onclick="addImage()" class="bg-gold text-black px-8 rounded-lg font-bold hover:bg-yellow-500 transition-all">إضافة</button>
+                <input type="text" id="img-url" placeholder="رابط الصورة..." class="flex-1 bg-black border border-gold/20 rounded-lg p-3 text-gold text-sm outline-none">
+                <button onclick="addImage()" class="bg-gold text-black px-8 rounded-lg font-bold">إضافة</button>
             </div>
-
             <div id="gallery" class="pinterest-grid"></div>
         </div>
     </div>
 
-    <div id="lightbox" onclick="this.style.display='none'">
-        <img id="lb-img" src="" class="max-w-[95%] max-h-[90vh] rounded shadow-2xl">
-    </div>
-
-    <button id="save-btn" onclick="saveAll()" class="hidden fixed bottom-6 right-6 bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-[3000] hover:scale-110 transition-all">
-        <i class="fas fa-save"></i>
-    </button>
+    <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src="" class="max-w-full max-h-full"></div>
+    
+    <button id="save-btn" onclick="saveAll()" class="hidden fixed bottom-6 right-6 bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-[3000]"><i class="fas fa-save"></i></button>
 
     <script>
         let isAdmin = false; 
@@ -193,18 +142,30 @@
 
         window.onload = () => { 
             const saved = localStorage.getItem(STORAGE_KEY); 
-            if (saved) appData = JSON.parse(saved); 
+            if (saved) {
+                appData = JSON.parse(saved);
+                // تأكد من وجود المفاتيح الجديدة لو كانت مفقودة
+                if(!appData.galleries.men_gym) appData.galleries.men_gym = [];
+                if(!appData.galleries.women_gym) appData.galleries.women_gym = [];
+            }
         };
 
         function showView(v) { 
-            document.getElementById('home-view').style.display = v==='home'?'block':'none'; 
-            document.getElementById('achievements-view').style.display = v==='achievements'?'block':'none'; 
+            const home = document.getElementById('home-view');
+            const gallery = document.getElementById('achievements-view');
+            if (v === 'home') {
+                home.style.display = 'block';
+                gallery.style.display = 'none';
+            } else {
+                home.style.display = 'none';
+                gallery.style.display = 'block';
+            }
             window.scrollTo(0,0);
         }
         
         function showGalleryView(cat, ar) { 
             currentCategory = cat; 
-            document.getElementById('gallery-title-en').innerText = cat.replace('_',' '); 
+            document.getElementById('gallery-title-en').innerText = cat.replace('_',' ').toUpperCase(); 
             document.getElementById('gallery-title-ar').innerText = 'معرض ' + ar;
             renderGallery(); 
             showView('achievements');
@@ -215,7 +176,6 @@
             const container = document.getElementById('gallery');
             container.innerHTML = '';
             const images = appData.galleries[currentCategory] || [];
-            
             images.forEach((src, idx) => {
                 const div = document.createElement('div');
                 div.className = 'pin-item group';
@@ -227,22 +187,16 @@
             });
         }
 
-        function openLightbox(s) { 
-            document.getElementById('lb-img').src = s; 
-            document.getElementById('lightbox').style.display='flex'; 
-        }
+        function openLightbox(s) { document.getElementById('lb-img').src = s; document.getElementById('lightbox').style.display='flex'; }
         
         function toggleAdmin() {
-            const pass = prompt("كلمة السر:");
-            if (pass === "123") {
+            if (prompt("كلمة السر:") === "123") {
                 isAdmin = true; 
                 document.getElementById('save-btn').classList.remove('hidden');
                 document.getElementById('lock-btn').classList.add('text-gold'); 
                 renderGallery();
-                if(document.getElementById('achievements-view').style.display === 'block') {
-                    document.getElementById('admin-controls').classList.remove('hidden');
-                }
-                alert("تم تفعيل وضع المطور بنجاح.");
+                if(document.getElementById('achievements-view').style.display === 'block') document.getElementById('admin-controls').classList.remove('hidden');
+                alert("تم تفعيل وضع المطور.");
             }
         }
 
@@ -256,15 +210,12 @@
         }
 
         function deleteImg(idx) {
-            if(confirm('هل تريد حذف هذه الصورة نهائياً؟')) { 
-                appData.galleries[currentCategory].splice(idx, 1); 
-                renderGallery(); 
-            }
+            if(confirm('حذف؟')) { appData.galleries[currentCategory].splice(idx, 1); renderGallery(); }
         }
 
         function saveAll() { 
             localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); 
-            alert("تم حفظ جميع التعديلات والصور بنجاح!"); 
+            alert("تم الحفظ!"); 
         }
     </script>
 </body>
