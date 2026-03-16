@@ -805,7 +805,7 @@
                 </div>
             `).join('');
             
-            // إعادة ربط أحداث النقر للبطاقات
+            // ربط أحداث النقر للبطاقات
             attachCardClickEvents();
         }
 
@@ -813,9 +813,9 @@
         function attachCardClickEvents() {
             const cards = document.querySelectorAll('.service-card');
             cards.forEach(card => {
-                // إزالة أي أحداث سابقة لمنع التكرار
+                // إزالة أي أحداث سابقة
                 card.removeEventListener('click', handleCardClick);
-                // إضافة حدث النقر الجديد
+                // إضافة حدث النقر
                 card.addEventListener('click', handleCardClick);
             });
         }
@@ -869,16 +869,15 @@
             }
         };
 
+        /* ========== CLOSE SPORT PAGE ========== */
         window.closeSportPage = function() {
             $('sport-detail-page').classList.remove('active');
             $('close-btn').style.display = 'none';
             document.body.style.overflow = '';
             state.currentSport = null;
             
-            // عند العودة للصفحة الرئيسية، نعيد ربط أحداث البطاقات
-            setTimeout(() => {
-                attachCardClickEvents();
-            }, 100);
+            // إعادة ربط أحداث البطاقات فوراً
+            attachCardClickEvents();
         };
 
         /* ========== RENDER PRICES ========== */
