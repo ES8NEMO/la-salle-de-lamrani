@@ -43,13 +43,11 @@
         </section>
 
         <section class="py-20 px-4 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            
             <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('kwankido', 'الكوانكيدو')">
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-dragon"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">KWANKIDO</h3>
                 <p class="text-white/50 text-xs mb-4">الثلاثاء — الخميس — السبت</p>
-                <p class="text-white/70 text-sm leading-relaxed mb-6">فن قتالي فيتنامي يجمع بين القوة والمرونة. يركز على تطوير الجسم والعقل معاً.</p>
-                <div class="bg-white/5 p-4 rounded-xl text-xs text-gold/80 space-y-2 border border-white/5">
+                <div class="bg-white/5 p-4 rounded-xl text-xs text-gold/80 space-y-2">
                     <div class="flex justify-between"><span>المواعيد:</span><span>20:30 - 21:30</span></div>
                     <div class="flex justify-between pt-2 border-t border-white/10 font-bold"><span>شهر/3أشهر:</span><span>100/250 درهم</span></div>
                 </div>
@@ -63,7 +61,6 @@
                     <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج1(4-7س)</span><span>18:30-19:30</span></div>
                     <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج2(8-12س)</span><span>19:30-20:30</span></div>
                     <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج3(12-15س)</span><span>20:30-21:30</span></div>
-                    <div class="flex justify-between bg-white/5 p-1 rounded"><span>فوج4(15+س)</span><span>21:30+</span></div>
                 </div>
                 <div class="pt-2 border-t border-white/10 text-gold font-bold text-xs flex justify-between">
                     <span>100 درهم/شهر</span><span>250 درهم/3أشهر</span>
@@ -87,83 +84,69 @@
             <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('men_gym', 'نادي الرجال')">
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-dumbbell"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">MEN'S CLUB</h3>
-                <p class="text-white/50 text-xs mb-4 italic">07:00 - 22:00</p>
-                <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-3">
-                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-                        <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
-                        <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
-                        <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
-                    </div>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/5 grid grid-cols-3 gap-2 text-center text-[10px]">
+                    <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
+                    <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
+                    <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
                 </div>
             </div>
 
             <div class="service-card rounded-2xl p-8 cursor-pointer group" onclick="showGalleryView('women_gym', 'نادي النساء')">
                 <div class="icon-circle text-gold text-xl"><i class="fas fa-venus"></i></div>
                 <h3 class="font-cinzel text-gold text-xl mb-1">WOMEN'S CLUB</h3>
-                <p class="text-white/50 text-xs mb-4 italic">09:00 - 22:00</p>
-                <div class="bg-white/5 p-4 rounded-xl border border-white/5 space-y-3">
-                    <div class="grid grid-cols-3 gap-2 text-center text-[10px]">
-                        <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
-                        <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
-                        <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
+                <div class="bg-white/5 p-4 rounded-xl border border-white/5 grid grid-cols-3 gap-2 text-center text-[10px]">
+                    <div><p class="text-white/40">شهر</p><p class="text-gold font-bold">150 DH</p></div>
+                    <div class="border-x border-white/10"><p class="text-white/40">3 أشهر</p><p class="text-gold font-bold">400 DH</p></div>
+                    <div><p class="text-white/40">سنة</p><p class="text-gold font-bold">1000 DH</p></div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="main-footer" class="py-12 border-t border-gold/10 bg-black/50 backdrop-blur-sm">
+            <div class="max-w-7xl mx-auto px-4 flex flex-col items-center text-center">
+                <h3 class="font-cinzel gold-text text-xl mb-8 tracking-[0.2em]">CONNECT WITH US</h3>
+                <div class="flex flex-wrap justify-center gap-10 md:gap-16 mb-12 items-center">
+                    <a href="https://wa.me/212662024858" target="_blank" class="group flex flex-col items-center gap-3">
+                        <i class="fab fa-whatsapp text-3xl text-white/40 group-hover:text-[#25D366] group-hover:scale-125 transition-all duration-500"></i>
+                        <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold uppercase">WhatsApp</span>
+                    </a>
+                    <a href="https://instagram.com/EL_AMRANI_MUSTAPHA" target="_blank" class="group flex flex-col items-center gap-3">
+                        <i class="fab fa-instagram text-3xl text-white/40 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-tr group-hover:from-[#f9ce34] group-hover:via-[#ee2a7b] group-hover:to-[#6228d7] group-hover:scale-125 transition-all duration-500"></i>
+                        <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold uppercase">Instagram</span>
+                    </a>
+                    <a href="mailto:amrani.mustapha1982@gmail.com" class="group flex flex-col items-center gap-3">
+                        <div class="w-10 h-8 relative group-hover:scale-125 transition-all duration-500">
+                            <svg viewBox="0 0 24 24" class="w-full h-full">
+                                <path d="M20 18h2V5c0-1.1-.9-2-2-2h-3l-5 4-5-4H4c-1.1 0-2 .9-2 2v13h2V7l8 6 8-6v11z" fill="white" fill-opacity="0.4" class="group-hover:hidden"></path>
+                                <g class="hidden group-hover:block">
+                                    <path d="M4 20h3V11L4 8.5V20z" fill="#FBBC05"></path>
+                                    <path d="M20 20h3V8.5L20 11v9z" fill="#34A853"></path>
+                                    <path d="M12 14.5l8-6V5l-8 6-8-6v3.5l8 6z" fill="#EA4335"></path>
+                                    <path d="M4 5v3.5L12 14.5V11L4 5z" fill="#C5221F"></path>
+                                    <path d="M20 5v3.5L12 14.5V11L20 5z" fill="#4285F4"></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <span class="text-[9px] font-cinzel text-white/20 group-hover:text-[#EA4335] uppercase">Gmail</span>
+                    </a>
+                    <a href="https://facebook.com/elamrani.mustapha" target="_blank" class="group flex flex-col items-center gap-3">
+                        <i class="fab fa-facebook-f text-3xl text-white/40 group-hover:text-[#1877F2] group-hover:scale-125 transition-all duration-500"></i>
+                        <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold uppercase">Facebook</span>
+                    </a>
+                </div>
+                <div class="space-y-4 border-t border-white/5 pt-8 w-full max-w-2xl">
+                    <div class="flex items-center justify-center gap-3 text-gold/60">
+                        <i class="fas fa-map-marker-alt text-xs"></i>
+                        <p class="text-sm text-white/70">بنسليمان، قيسارية القدس، توسعة الطابق الأول<br><span class="text-[10px] text-white/30 uppercase">Benslimane, Morocco</span></p>
+                    </div>
+                    <div class="flex items-center justify-center gap-3 text-gold/60">
+                        <i class="fas fa-phone-alt text-xs"></i>
+                        <a href="tel:0662024858" class="text-sm font-bold tracking-widest text-white/80 hover:text-gold transition-colors">0662024858</a>
                     </div>
                 </div>
             </div>
-
-        </section>
-    </div>
-<footer id="main-footer" class="py-12 border-t border-gold/10 bg-black/50 backdrop-blur-sm relative z-10">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col items-center">
-        <h3 class="font-cinzel gold-text text-xl mb-8 tracking-[0.2em]">CONNECT WITH US</h3>
-        <div class="flex flex-wrap justify-center gap-10 md:gap-16 mb-12 items-center">
-            
-            <a href="https://wa.me/212662024858" target="_blank" class="group flex flex-col items-center gap-3">
-                <i class="fab fa-whatsapp text-3xl text-white/40 group-hover:text-[#25D366] group-hover:scale-125 transition-all duration-500"></i>
-                <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold tracking-widest uppercase transition-colors">WhatsApp</span>
-            </a>
-
-            <a href="https://instagram.com/EL_AMRANI_MUSTAPHA" target="_blank" class="group flex flex-col items-center gap-3">
-                <i class="fab fa-instagram text-3xl text-white/40 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-tr group-hover:from-[#f9ce34] group-hover:via-[#ee2a7b] group-hover:to-[#6228d7] group-hover:scale-125 transition-all duration-500"></i>
-                <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold tracking-widest uppercase transition-colors">Instagram</span>
-            </a>
-
-            <a href="mailto:amrani.mustapha1982@gmail.com" class="group flex flex-col items-center gap-3">
-                <div class="w-10 h-8 relative group-hover:scale-125 transition-all duration-500">
-                    <svg viewBox="0 0 24 24" class="w-full h-full">
-                        <path d="M20 18h2V5c0-1.1-.9-2-2-2h-3l-5 4-5-4H4c-1.1 0-2 .9-2 2v13h2V7l8 6 8-6v11z" class="fill-white/40 group-hover:hidden"></path>
-                        <path d="M4 20h3V11L4 8.5V20z" fill="#FBBC05" class="hidden group-hover:block"></path>
-                        <path d="M20 20h3V8.5L20 11v9z" fill="#34A853" class="hidden group-hover:block"></path>
-                        <path d="M12 14.5l8-6V5l-8 6-8-6v3.5l8 6z" fill="#EA4335" class="hidden group-hover:block"></path>
-                        <path d="M4 5v3.5L12 14.5V11L4 5z" fill="#C5221F" class="hidden group-hover:block"></path>
-                        <path d="M20 5v3.5L12 14.5V11L20 5z" fill="#4285F4" class="hidden group-hover:block"></path>
-                    </svg>
-                </div>
-                <span class="text-[9px] font-cinzel text-white/20 group-hover:text-[#EA4335] tracking-widest uppercase transition-colors">Gmail</span>
-            </a>
-
-            <a href="https://facebook.com/elamrani.mustapha" target="_blank" class="group flex flex-col items-center gap-3">
-                <i class="fab fa-facebook-f text-3xl text-white/40 group-hover:text-[#1877F2] group-hover:scale-125 transition-all duration-500"></i>
-                <span class="text-[9px] font-cinzel text-white/20 group-hover:text-gold tracking-widest uppercase transition-colors">Facebook</span>
-            </a>
-        </div>
-
-        <div class="text-center space-y-4 border-t border-white/5 pt-8 w-full max-w-2xl">
-            <div class="flex items-center justify-center gap-3 text-gold/60">
-                <i class="fas fa-map-marker-alt text-xs"></i>
-                <p class="font-cairo text-sm leading-relaxed text-white/70">
-                    بنسليمان، قيسارية القدس، توسعة الطابق الأول<br>
-                    <span class="text-[10px] text-white/30 tracking-widest uppercase">Benslimane, Morocco</span>
-                </p>
-            </div>
-            <div class="flex items-center justify-center gap-3 text-gold/60">
-                <i class="fas fa-phone-alt text-xs"></i>
-                <a href="tel:0662024858" class="text-sm font-bold tracking-[0.2em] text-white/80 hover:text-gold transition-colors">0662024858</a>
-            </div>
-        </div>
-    </div>
-</footer>
-
-    <div id="achievements-view" style="display:none;" class="min-h-screen bg-black">
+        </footer>
+    </div> <div id="achievements-view" style="display:none;" class="min-h-screen bg-black">
         <div class="pt-24 pb-16 px-4 max-w-7xl mx-auto">
             <div class="flex justify-between items-end mb-12 border-b border-gold/10 pb-6">
                 <div>
@@ -181,7 +164,6 @@
     </div>
 
     <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img" src="" class="max-w-full max-h-full"></div>
-    
     <button id="save-btn" onclick="saveAll()" class="hidden fixed bottom-6 right-6 bg-green-600 text-white w-14 h-14 rounded-full shadow-2xl flex items-center justify-center z-[3000]"><i class="fas fa-save"></i></button>
 
     <script>
@@ -192,36 +174,26 @@
 
         window.onload = () => { 
             const saved = localStorage.getItem(STORAGE_KEY); 
-            if (saved) {
-                appData = JSON.parse(saved);
-                // تأكد من وجود المفاتيح الجديدة لو كانت مفقودة
-                if(!appData.galleries.men_gym) appData.galleries.men_gym = [];
-                if(!appData.galleries.women_gym) appData.galleries.women_gym = [];
-            }
+            if (saved) appData = JSON.parse(saved);
         };
 
         function showView(v) { 
-    // هذه الأسطر الثلاثة هي التي تمسك عناصر الصفحة
-    const home = document.getElementById('home-view');
-    const gallery = document.getElementById('achievements-view');
-    const footer = document.getElementById('main-footer'); 
+            const home = document.getElementById('home-view');
+            const gallery = document.getElementById('achievements-view');
+            const footer = document.getElementById('main-footer'); 
 
-    if (v === 'home') {
-        // إذا ضغطنا على "الرئيسية": اظهر البطاقات والفوتر، واخفِ المعرض
-        home.style.display = 'block';
-        gallery.style.display = 'none';
-        if(footer) footer.style.display = 'block'; 
-    } else {
-        // إذا ضغطنا على "بطاقة رياضة": اخفِ البطاقات والفوتر، واظهر المعرض
-        home.style.display = 'none';
-        gallery.style.display = 'block';
-        if(footer) footer.style.display = 'none'; 
-    }
-    // العودة دائماً لأعلى الصفحة عند التبديل
-    window.scrollTo(0,0);
-}
+            if (v === 'home') {
+                home.style.display = 'block';
+                gallery.style.display = 'none';
+                if(footer) footer.style.display = 'block'; 
+            } else {
+                home.style.display = 'none';
+                gallery.style.display = 'block';
+                if(footer) footer.style.display = 'none'; 
+            }
+            window.scrollTo(0,0);
+        }
 
-        
         function showGalleryView(cat, ar) { 
             currentCategory = cat; 
             document.getElementById('gallery-title-en').innerText = cat.replace('_',' ').toUpperCase(); 
@@ -238,10 +210,7 @@
             images.forEach((src, idx) => {
                 const div = document.createElement('div');
                 div.className = 'pin-item group';
-                div.innerHTML = `
-                    <img src="${src}" onclick="openLightbox('${src}')">
-                    ${isAdmin ? `<div onclick="event.stopPropagation(); deleteImg(${idx})" class="delete-btn"><i class="fas fa-minus"></i></div>` : ''}
-                `;
+                div.innerHTML = `<img src="${src}" onclick="openLightbox('${src}')">${isAdmin ? `<div onclick="event.stopPropagation(); deleteImg(${idx})" class="delete-btn"><i class="fas fa-minus"></i></div>` : ''}`;
                 container.appendChild(div);
             });
         }
@@ -255,29 +224,16 @@
                 document.getElementById('lock-btn').classList.add('text-gold'); 
                 renderGallery();
                 if(document.getElementById('achievements-view').style.display === 'block') document.getElementById('admin-controls').classList.remove('hidden');
-                alert("تم تفعيل وضع المطور.");
             }
         }
 
         function addImage() {
             const url = document.getElementById('img-url').value;
-            if(url) { 
-                appData.galleries[currentCategory].push(url); 
-                document.getElementById('img-url').value=''; 
-                renderGallery(); 
-            }
+            if(url) { appData.galleries[currentCategory].push(url); document.getElementById('img-url').value=''; renderGallery(); }
         }
 
-        function deleteImg(idx) {
-            if(confirm('حذف؟')) { appData.galleries[currentCategory].splice(idx, 1); renderGallery(); }
-        }
-
-        function saveAll() { 
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); 
-            alert("تم الحفظ!"); 
-        }
+        function deleteImg(idx) { if(confirm('حذف؟')) { appData.galleries[currentCategory].splice(idx, 1); renderGallery(); } }
+        function saveAll() { localStorage.setItem(STORAGE_KEY, JSON.stringify(appData)); alert("تم الحفظ!"); }
     </script>
 </body>
-
 </html>
-
