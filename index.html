@@ -802,7 +802,7 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: [] // هذه المرة سنخزن فقط { url, caption }
+                images: []
             },
             { 
                 id: 'taekwondo', 
@@ -926,7 +926,6 @@
                                 sports[index].prices = savedSport.prices || sports[index].prices;
                                 sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
                                 
-                                // استعادة الصور كروابط فقط
                                 if (savedSport.images) {
                                     sports[index].images = savedSport.images;
                                 }
@@ -976,7 +975,7 @@
                 // حفظ فقط البيانات النصية (الروابط وليس الصور)
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
                 
-                // رسالة تأكيد باستخدام نفس نظام الإشعارات
+                // رسالة تأكيد عند الضغط على زر الحفظ في شريط المطور
                 showToast('✅ تم حفظ المعلومات بنجاح');
                 
             } catch(e) {
@@ -1152,7 +1151,6 @@
                 return;
             }
             
-            // التحقق من صحة الرابط (بسيط)
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 showToast('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
                 return;
@@ -1249,7 +1247,20 @@
         // ========== SETUP BUTTONS ==========
         function setupSaveButton() {
             $('save-btn').addEventListener('click', function() {
+                // حفظ البيانات
                 saveStorage();
+                
+                // تغيير لون الزر مؤقتاً للتأكيد البصري
+                const saveBtn = $('save-btn');
+                saveBtn.style.background = '#4CAF50';
+                saveBtn.style.borderColor = '#4CAF50';
+                saveBtn.style.color = 'white';
+                
+                setTimeout(() => {
+                    saveBtn.style.background = '#D4AF37';
+                    saveBtn.style.borderColor = '#D4AF37';
+                    saveBtn.style.color = '#0a0a0a';
+                }, 500);
             });
         }
 
