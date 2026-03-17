@@ -64,6 +64,8 @@
             position: relative;
             overflow: hidden;
             cursor: pointer;
+            border-radius: 1rem;
+            padding: 1.5rem;
         }
         .service-card::before {
             content: '';
@@ -85,6 +87,10 @@
         .gallery-img {
             filter: grayscale(100%);
             transition: filter 0.6s ease, transform 0.6s ease, box-shadow 0.6s ease;
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 0.5rem;
         }
         .gallery-img:hover {
             filter: grayscale(0%);
@@ -746,7 +752,7 @@
                 
                 <!-- منطقة الإضافة (الخانات) -->
                 <div id="add-area" class="add-area">
-                    <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا" dir="ltr">
+                    <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا (مثال: https://example.com/image.jpg)" dir="ltr">
                     <img id="preview" class="preview-image" alt="معاينة">
                     <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
                     <div class="form-buttons">
@@ -796,7 +802,7 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: []
+                images: [] // هذه المرة سنخزن فقط { url, caption }
             },
             { 
                 id: 'taekwondo', 
@@ -906,7 +912,7 @@
             }, 3000);
         }
 
-        // ========== STORAGE ==========
+        // ========== STORAGE (نخزن فقط الروابط، وليس الصور) ==========
         function loadStorage() {
             try {
                 const saved = localStorage.getItem('gymData');
@@ -919,7 +925,11 @@
                                 sports[index].time = savedSport.time || sports[index].time;
                                 sports[index].prices = savedSport.prices || sports[index].prices;
                                 sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
-                                sports[index].images = savedSport.images || sports[index].images;
+                                
+                                // استعادة الصور كروابط فقط
+                                if (savedSport.images) {
+                                    sports[index].images = savedSport.images;
+                                }
                             }
                         });
                     }
@@ -963,6 +973,7 @@
                     }
                 }
                 
+                // حفظ فقط البيانات النصية (الروابط وليس الصور)
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
                 showToast('✅ تم الحفظ بنجاح');
             } catch(e) {
@@ -1094,7 +1105,7 @@
                     const caption = img.caption || '';
                     return `
                         <div class="gallery-item" onclick="window.open('${img.url}', '_blank')">
-                            <img src="${img.url}" alt="صورة">
+                            <img src="${img.url}" alt="صورة" onerror="this.src='https://via.placeholder.com/400?text=صورة+غير+متوفرة'">
                             <div class="image-caption ${caption ? '' : 'empty'}" 
                                  contenteditable="${isAdmin}" 
                                  onblur="updateCaption(${index}, this.innerText)">${caption}</div>
@@ -1135,6 +1146,12 @@
             const url = $('image-url').value.trim();
             if (!url) {
                 showToast('❌ الرابط مطلوب');
+                return;
+            }
+            
+            // التحقق من صحة الرابط (بسيط)
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                showToast('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
                 return;
             }
             
