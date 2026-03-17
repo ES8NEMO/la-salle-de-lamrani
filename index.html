@@ -975,12 +975,9 @@
                 // حفظ فقط البيانات النصية (الروابط وليس الصور)
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
                 
-                // رسالة تأكيد عند الضغط على زر الحفظ في شريط المطور
-                showToast('✅ تم حفظ المعلومات بنجاح');
-                
             } catch(e) {
                 console.warn('Save error:', e);
-                showToast('❌ فشل في الحفظ');
+                alert('❌ فشل في الحفظ');
             }
         }
 
@@ -1147,12 +1144,12 @@
         window.saveLink = function() {
             const url = $('image-url').value.trim();
             if (!url) {
-                showToast('❌ الرابط مطلوب');
+                alert('❌ الرابط مطلوب');
                 return;
             }
             
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                showToast('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
+                alert('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
                 return;
             }
             
@@ -1167,7 +1164,7 @@
             
             renderSportGallery();
             cancelAdd();
-            showToast('✅ تمت إضافة الصورة');
+            alert('✅ تمت إضافة الصورة');
         };
 
         // ========== DELETE IMAGE ==========
@@ -1175,7 +1172,7 @@
             if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                 currentSport.images.splice(index, 1);
                 renderSportGallery();
-                showToast('🗑️ تم حذف الصورة');
+                alert('🗑️ تم حذف الصورة');
             }
         };
 
@@ -1241,7 +1238,7 @@
                 preview.classList.add('show');
             });
             
-            showToast('⚡ وضع المطور مفعل');
+            alert('⚡ وضع المطور مفعل');
         }
 
         // ========== SETUP BUTTONS ==========
@@ -1249,6 +1246,9 @@
             $('save-btn').addEventListener('click', function() {
                 // حفظ البيانات
                 saveStorage();
+                
+                // نفس نظام التأكيد الذي يظهر عند حذف الصورة
+                alert('✅ تم حفظ المعلومات بنجاح');
                 
                 // تغيير لون الزر مؤقتاً للتأكيد البصري
                 const saveBtn = $('save-btn');
@@ -1281,7 +1281,7 @@
                     renderSportGallery();
                 }
                 
-                showToast('✅ تم الخروج من وضع المطور');
+                alert('✅ تم الخروج من وضع المطور');
             });
         }
 
@@ -1391,7 +1391,7 @@
             pendingUploads = [];
             $('upload-preview').innerHTML = '';
             renderAchievementsGallery();
-            showToast('🗑️ تم مسح جميع الصور');
+            alert('🗑️ تم مسح جميع الصور');
         };
 
         window.resetDefaults = function() {
@@ -1400,7 +1400,7 @@
             pendingUploads = [];
             $('upload-preview').innerHTML = '';
             renderAchievementsGallery();
-            showToast('✅ تم استعادة الصور الافتراضية');
+            alert('✅ تم استعادة الصور الافتراضية');
         };
 
         function setupDragDrop() {
@@ -1427,7 +1427,7 @@
                     pendingUploads.push(url);
                     renderAchievementsGallery();
                     addPreview(url);
-                    showToast('📷 صورة جاهزة - اضغط حفظ لتثبيتها');
+                    alert('📷 صورة جاهزة - اضغط حفظ لتثبيتها');
                 });
             });
         }
