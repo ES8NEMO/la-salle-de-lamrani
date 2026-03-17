@@ -976,7 +976,7 @@
                 // حفظ فقط البيانات النصية (الروابط وليس الصور)
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
                 
-                // رسالة تأكيد عند الضغط على زر الحفظ
+                // رسالة تأكيد باستخدام نفس نظام الإشعارات
                 showToast('✅ تم حفظ المعلومات بنجاح');
                 
             } catch(e) {
@@ -1248,7 +1248,9 @@
 
         // ========== SETUP BUTTONS ==========
         function setupSaveButton() {
-            $('save-btn').addEventListener('click', saveStorage);
+            $('save-btn').addEventListener('click', function() {
+                saveStorage();
+            });
         }
 
         function setupExitButton() {
