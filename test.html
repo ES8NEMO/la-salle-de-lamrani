@@ -501,7 +501,7 @@
     </div>
 
     <!-- ======================== CLOSE BUTTON ======================== -->
-    <div id="close-btn" class="close-btn" style="display: none;" onclick="app.closeSportPage()">
+    <div id="close-btn" class="close-btn" style="display: none;" onclick="closeSportPage()">
         <i class="fas fa-times"></i>
     </div>
 
@@ -512,8 +512,8 @@
         <img id="preview" class="preview-image" alt="معاينة">
         <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
         <div class="form-buttons">
-            <button class="admin-btn save" onclick="app.saveLink()">حفظ</button>
-            <button class="admin-btn" onclick="app.cancelLink()">إلغاء</button>
+            <button class="admin-btn save" onclick="saveLink()">حفظ</button>
+            <button class="admin-btn" onclick="cancelLink()">إلغاء</button>
         </div>
     </div>
 
@@ -686,7 +686,7 @@
             <!-- رأس الصفحة -->
             <div class="flex items-center justify-between mb-8">
                 <h1 id="sport-detail-title" class="font-cinzel text-3xl sm:text-4xl gold-text"></h1>
-                <button onclick="app.closeSportPage()" class="flex items-center gap-2 text-white/50 hover:text-gold transition-colors text-lg border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-lg">
+                <button onclick="closeSportPage()" class="flex items-center gap-2 text-white/50 hover:text-gold transition-colors text-lg border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-lg">
                     <i class="fas fa-arrow-right"></i>
                     <span>العودة للرئيسية</span>
                 </button>
@@ -727,7 +727,7 @@
                 <h3 class="info-title"><i class="fas fa-images ml-2"></i>معرض الصور</h3>
                 
                 <!-- زر إضافة صورة برابط (يظهر فقط في وضع المطور) -->
-                <button id="add-image-btn" class="add-image-btn" style="display: none;" onclick="app.showLinkForm()">
+                <button id="add-image-btn" class="add-image-btn" style="display: none;" onclick="showLinkForm()">
                     <i class="fas fa-plus-circle"></i>
                     إضافة صورة برابط
                 </button>
@@ -890,7 +890,6 @@
                 if (saved) {
                     const data = JSON.parse(saved);
                     if (data.sports) {
-                        // دمج البيانات المحفوظة مع الهيكل الأصلي
                         data.sports.forEach((savedSport, index) => {
                             if (sports[index]) {
                                 sports[index].schedule = savedSport.schedule || sports[index].schedule;
@@ -909,38 +908,6 @@
 
         function saveStorage() {
             try {
-                // تحديث البيانات من العناصر القابلة للتعديل
-                if (currentSport) {
-                    currentSport.schedule = $('sport-schedule').textContent;
-                    currentSport.time = $('sport-time').textContent;
-                    
-                    // تحديث الأسعار
-                    const priceItems = $$('#prices-container .flex');
-                    priceItems.forEach((item, index) => {
-                        if (currentSport.prices[index]) {
-                            const spans = item.querySelectorAll('span');
-                            if (spans.length >= 2) {
-                                currentSport.prices[index].name = spans[0].textContent;
-                                currentSport.prices[index].value = spans[1].textContent;
-                            }
-                        }
-                    });
-                    
-                    // تحديث الفئات العمرية
-                    if (currentSport.ageGroups) {
-                        const ageItems = $$('#age-groups-list .flex');
-                        ageItems.forEach((item, index) => {
-                            if (currentSport.ageGroups[index]) {
-                                const spans = item.querySelectorAll('span');
-                                if (spans.length >= 2) {
-                                    currentSport.ageGroups[index].range = spans[0].textContent;
-                                    currentSport.ageGroups[index].time = spans[1].textContent;
-                                }
-                            }
-                        });
-                    }
-                }
-                
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
                 showToast('✅ تم الحفظ بنجاح');
             } catch(e) {
@@ -955,7 +922,7 @@
             if (!container) return;
             
             container.innerHTML = sports.map(sport => `
-                <div class="service-card rounded-xl p-6 sm:p-8" onclick="app.openSportPage('${sport.id}')">
+                <div class="service-card rounded-xl p-6 sm:p-8" onclick="openSportPage('${sport.id}')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas ${sport.icon}"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.nameEn}</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5">${sport.nameAr}</h4>
@@ -979,183 +946,157 @@
             `).join('');
         }
 
-        // ========== APP OBJECT WITH ALL FUNCTIONS ==========
-        const app = {
-            openSportPage(sportId) {
-                const sport = sports.find(s => s.id === sportId);
-                if (!sport) return;
-                
-                currentSport = sport;
-                const page = $('sport-detail-page');
-                const closeBtn = $('close-btn');
-                
-                // تحديث العنوان
-                $('sport-detail-title').textContent = sport.nameAr;
-                
-                // تحديث المواعيد
-                $('sport-schedule').textContent = sport.schedule;
-                $('sport-time').textContent = sport.time;
-                
-                // تحديث الأسعار
-                this.renderPrices(sport);
-                
-                // تحديث الفئات العمرية
-                this.renderAgeGroups(sport);
-                
-                // تحديث معرض الصور
-                this.renderGallery();
-                
-                // إظهار الصفحة
-                page.classList.add('active');
-                closeBtn.style.display = 'flex';
-                document.body.style.overflow = 'hidden';
-                
-                // تحديث وضع التحرير
-                this.updateEditMode();
-            },
+        // ========== SPORT PAGE FUNCTIONS ==========
+        window.openSportPage = function(sportId) {
+            const sport = sports.find(s => s.id === sportId);
+            if (!sport) return;
             
-            closeSportPage() {
-                $('sport-detail-page').classList.remove('active');
-                $('close-btn').style.display = 'none';
-                $('link-form').classList.remove('show');
-                document.body.style.overflow = '';
-                currentSport = null;
-            },
+            currentSport = sport;
             
-            renderPrices(sport) {
-                const container = $('prices-container');
-                if (!container) return;
-                
-                container.innerHTML = sport.prices.map((price, index) => `
-                    <div class="flex items-center justify-between bg-deep-black/50 p-3 rounded-lg border border-gold/10">
-                        <span class="editable font-cairo" data-price-index="${index}">${price.name}</span>
-                        <span class="editable font-cinzel text-gold" data-price-index="${index}">${price.value}</span>
+            $('sport-detail-title').textContent = sport.nameAr;
+            $('sport-schedule').textContent = sport.schedule;
+            $('sport-time').textContent = sport.time;
+            
+            // الأسعار
+            const pricesContainer = $('prices-container');
+            pricesContainer.innerHTML = sport.prices.map((price, index) => `
+                <div class="flex items-center justify-between bg-deep-black/50 p-3 rounded-lg border border-gold/10">
+                    <span class="editable font-cairo">${price.name}</span>
+                    <span class="editable font-cinzel text-gold">${price.value}</span>
+                </div>
+            `).join('');
+            
+            // الفئات العمرية
+            const ageGroupsContainer = $('age-groups-container');
+            const ageGroupsList = $('age-groups-list');
+            
+            if (sport.ageGroups && sport.ageGroups.length > 0) {
+                ageGroupsContainer.style.display = 'block';
+                ageGroupsList.innerHTML = sport.ageGroups.map(group => `
+                    <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-2">
+                        <span class="editable">${group.range}</span>
+                        <span class="text-gold editable">${group.time}</span>
                     </div>
                 `).join('');
-            },
+            } else {
+                ageGroupsContainer.style.display = 'none';
+            }
             
-            renderAgeGroups(sport) {
-                const container = $('age-groups-container');
-                const list = $('age-groups-list');
-                
-                if (!container || !list) return;
-                
-                if (sport.ageGroups && sport.ageGroups.length > 0) {
-                    container.style.display = 'block';
-                    list.innerHTML = sport.ageGroups.map((group, index) => `
-                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-2">
-                            <span class="editable" data-age-index="${index}">${group.range}</span>
-                            <span class="text-gold editable" data-age-index="${index}">${group.time}</span>
+            // معرض الصور
+            renderGallery();
+            
+            $('sport-detail-page').classList.add('active');
+            $('close-btn').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // تحديث وضع التحرير
+            updateEditMode();
+        };
+
+        window.closeSportPage = function() {
+            $('sport-detail-page').classList.remove('active');
+            $('close-btn').style.display = 'none';
+            $('link-form').classList.remove('show');
+            document.body.style.overflow = '';
+            currentSport = null;
+        };
+
+        function renderGallery() {
+            const gallery = $('sport-gallery');
+            if (!currentSport) return;
+            
+            if (currentSport.images && currentSport.images.length > 0) {
+                gallery.innerHTML = currentSport.images.map((img, index) => {
+                    const caption = img.caption || '';
+                    return `
+                        <div class="gallery-item" onclick="window.open('${img.url}', '_blank')">
+                            <img src="${img.url}" alt="صورة">
+                            <div class="image-caption ${caption ? '' : 'empty'}" 
+                                 contenteditable="${isAdmin}" 
+                                 onblur="updateCaption(${index}, this.innerText)">${caption}</div>
+                            ${isAdmin ? `
+                                <div class="image-overlay" onclick="event.stopPropagation()">
+                                    <button onclick="editImage(${index})" title="تعديل"><i class="fas fa-edit"></i></button>
+                                    <button onclick="deleteImage(${index})" title="حذف"><i class="fas fa-trash"></i></button>
+                                </div>
+                            ` : ''}
                         </div>
-                    `).join('');
-                } else {
-                    container.style.display = 'none';
-                }
-            },
-            
-            renderGallery() {
-                const gallery = $('sport-gallery');
-                if (!currentSport) return;
-                
-                if (currentSport.images && currentSport.images.length > 0) {
-                    gallery.innerHTML = currentSport.images.map((img, index) => {
-                        const caption = img.caption || '';
-                        return `
-                            <div class="gallery-item" onclick="window.open('${img.url}', '_blank')">
-                                <img src="${img.url}" alt="صورة">
-                                <div class="image-caption ${caption ? '' : 'empty'}" 
-                                     contenteditable="${isAdmin}" 
-                                     onblur="app.updateCaption(${index}, this.innerText)">${caption}</div>
-                                ${isAdmin ? `
-                                    <div class="image-overlay" onclick="event.stopPropagation()">
-                                        <button onclick="app.editImage(${index})" title="تعديل">
-                                            <i class="fas fa-edit"></i>
-                                        </button>
-                                        <button onclick="app.deleteImage(${index})" title="حذف">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                ` : ''}
-                            </div>
-                        `;
-                    }).join('');
-                } else {
-                    gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">لا توجد صور بعد</p>';
-                }
-            },
-            
-            updateCaption(index, text) {
-                if (currentSport && currentSport.images[index]) {
-                    currentSport.images[index].caption = text;
-                }
-            },
-            
-            showLinkForm() {
-                editImageIndex = null;
-                $('image-url').value = '';
-                $('image-caption').value = '';
-                $('preview').classList.remove('show');
-                $('link-form').classList.add('show');
-            },
-            
-            editImage(index) {
-                editImageIndex = index;
-                const img = currentSport.images[index];
-                $('image-url').value = img.url;
-                $('image-caption').value = img.caption || '';
-                $('preview').src = img.url;
-                $('preview').classList.add('show');
-                $('link-form').classList.add('show');
-            },
-            
-            saveLink() {
-                const url = $('image-url').value.trim();
-                if (!url) {
-                    showToast('❌ الرابط مطلوب');
-                    return;
-                }
-                
-                const caption = $('image-caption').value.trim();
-                const imageData = { url, caption };
-                
-                if (editImageIndex !== null) {
-                    currentSport.images[editImageIndex] = imageData;
-                } else {
-                    currentSport.images.push(imageData);
-                }
-                
-                this.renderGallery();
-                this.cancelLink();
-                showToast('✅ تمت إضافة الصورة');
-            },
-            
-            cancelLink() {
-                $('link-form').classList.remove('show');
-                $('image-url').value = '';
-                $('image-caption').value = '';
-                $('preview').classList.remove('show');
-                editImageIndex = null;
-            },
-            
-            deleteImage(index) {
-                if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-                    currentSport.images.splice(index, 1);
-                    this.renderGallery();
-                    showToast('🗑️ تم حذف الصورة');
-                }
-            },
-            
-            updateEditMode() {
-                if (isAdmin && currentSport) {
-                    $('add-image-btn').style.display = 'inline-block';
-                } else {
-                    $('add-image-btn').style.display = 'none';
-                }
-                this.renderGallery();
+                    `;
+                }).join('');
+            } else {
+                gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">لا توجد صور بعد</p>';
+            }
+        }
+
+        window.updateCaption = function(index, text) {
+            if (currentSport && currentSport.images[index]) {
+                currentSport.images[index].caption = text;
             }
         };
 
-        window.app = app;
+        window.showLinkForm = function() {
+            editImageIndex = null;
+            $('image-url').value = '';
+            $('image-caption').value = '';
+            $('preview').classList.remove('show');
+            $('link-form').classList.add('show');
+        };
+
+        window.editImage = function(index) {
+            editImageIndex = index;
+            const img = currentSport.images[index];
+            $('image-url').value = img.url;
+            $('image-caption').value = img.caption || '';
+            $('preview').src = img.url;
+            $('preview').classList.add('show');
+            $('link-form').classList.add('show');
+        };
+
+        window.saveLink = function() {
+            const url = $('image-url').value.trim();
+            if (!url) {
+                showToast('❌ الرابط مطلوب');
+                return;
+            }
+            
+            const caption = $('image-caption').value.trim();
+            const imageData = { url, caption };
+            
+            if (editImageIndex !== null) {
+                currentSport.images[editImageIndex] = imageData;
+            } else {
+                currentSport.images.push(imageData);
+            }
+            
+            renderGallery();
+            cancelLink();
+            showToast('✅ تمت إضافة الصورة');
+        };
+
+        window.cancelLink = function() {
+            $('link-form').classList.remove('show');
+            $('image-url').value = '';
+            $('image-caption').value = '';
+            $('preview').classList.remove('show');
+            editImageIndex = null;
+        };
+
+        window.deleteImage = function(index) {
+            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+                currentSport.images.splice(index, 1);
+                renderGallery();
+                showToast('🗑️ تم حذف الصورة');
+            }
+        };
+
+        function updateEditMode() {
+            if (isAdmin && currentSport) {
+                $('add-image-btn').style.display = 'inline-block';
+            } else {
+                $('add-image-btn').style.display = 'none';
+            }
+            renderGallery();
+        }
 
         // ========== ADMIN MODE ==========
         function setupAdminTrigger() {
@@ -1192,18 +1133,15 @@
             
             $('admin-toolbar').style.display = 'flex';
             
-            // جعل العناصر قابلة للتعديل
             $$('.editable').forEach(el => {
                 el.setAttribute('contenteditable', 'true');
             });
             
-            // إظهار زر إضافة الصور
             if (currentSport) {
                 $('add-image-btn').style.display = 'inline-block';
-                app.renderGallery();
+                renderGallery();
             }
             
-            // معاينة الرابط
             $('image-url').addEventListener('input', (e) => {
                 const preview = $('preview');
                 preview.src = e.target.value;
@@ -1232,7 +1170,7 @@
                 });
                 
                 if (currentSport) {
-                    app.renderGallery();
+                    renderGallery();
                 }
                 
                 showToast('✅ تم الخروج من وضع المطور');
@@ -1296,7 +1234,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // ========== GALLERY FUNCTIONS (للإنجازات) ==========
+        // ========== GALLERY FUNCTIONS ==========
         let galleryImages = [];
         let pendingUploads = [];
         let lbIndex = 0;
@@ -1452,7 +1390,6 @@
             setupMobile();
             setupDragDrop();
             
-            // إخفاء loader
             setTimeout(() => {
                 $('loader').style.display = 'none';
             }, 1800);
