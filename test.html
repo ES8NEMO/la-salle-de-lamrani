@@ -643,10 +643,17 @@
                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                         </div>
                     </a>
-
                 </div>
 
-                <div class="max-w-md mx-auto border-t border-gold/10 mt-16 mb-8"></div>
+                <!-- العنوان الجديد في وسط السطر -->
+                <div class="text-center mt-8 mb-4">
+                    <p class="font-cairo text-gold/60 text-sm md:text-base">
+                        <i class="fas fa-map-pin ml-2" style="color: #D4AF37;"></i>
+                       بنسليمان، قيسارية القدس، توسعة الطابق الأول - Benslimane, Morocco
+                    </p>
+                </div>
+
+                <div class="max-w-md mx-auto border-t border-gold/10 mt-4 mb-8"></div>
                 <div class="text-center">
                     <p class="font-cairo text-gold/30 text-[10px] md:text-xs tracking-widest uppercase select-none">
                         © 2025 <span class="text-gold/50">Five Stars Gym</span> — ALL RIGHTS RESERVED
@@ -802,7 +809,7 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: [] // هذه المرة سنخزن فقط { url, caption }
+                images: []
             },
             { 
                 id: 'taekwondo', 
@@ -912,8 +919,63 @@
             }, 3000);
         }
 
-        // ========== STORAGE (نخزن فقط الروابط، وليس الصور) ==========
-        function loadStorage() {
+        // ========== STORAGE (تخزين سحابي باستخدام JSONBin.io) ==========
+const BIN_ID = '69b99a0aaa77b81da9f2cebf';
+const API_KEY = '$2a$10$HIZoab3tTM/2LPQAVLeK3.1P.PYxBVAFKNpWMtQOcJq/QfC3Z7/le';
+        async function loadFromCloud() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}/latest`, {
+                    headers: {
+                        'X-Master-Key': API_KEY
+                    }
+                });
+                const data = await response.json();
+                if (data.record && data.record.sports) {
+                    data.record.sports.forEach((savedSport, index) => {
+                        if (sports[index]) {
+                            sports[index].schedule = savedSport.schedule || sports[index].schedule;
+                            sports[index].time = savedSport.time || sports[index].time;
+                            sports[index].prices = savedSport.prices || sports[index].prices;
+                            sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
+                            if (savedSport.images) {
+                                sports[index].images = savedSport.images;
+                            }
+                        }
+                    });
+                }
+                showToast('✅ تم تحميل البيانات من السحابة');
+            } catch(e) {
+                console.warn('فشل تحميل البيانات من السحابة:', e);
+                // إذا فشل التحميل، استخدم البيانات المحلية
+                loadLocalStorage();
+            }
+        }
+
+        async function saveToCloud() {
+            try {
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${BIN_ID}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': API_KEY
+                    },
+                    body: JSON.stringify({ sports: sports })
+                });
+                if (response.ok) {
+                    alert('✅ تم حفظ المعلومات في السحابة بنجاح');
+                } else {
+                    alert('❌ فشل في حفظ المعلومات في السحابة');
+                }
+            } catch(e) {
+                console.warn('فشل حفظ البيانات في السحابة:', e);
+                // إذا فشل الحفظ في السحابة، احفظ محلياً
+                saveLocalStorage();
+                alert('✅ تم حفظ المعلومات محلياً');
+            }
+        }
+
+        // نسخة احتياطية محلية
+        function loadLocalStorage() {
             try {
                 const saved = localStorage.getItem('gymData');
                 if (saved) {
@@ -925,8 +987,6 @@
                                 sports[index].time = savedSport.time || sports[index].time;
                                 sports[index].prices = savedSport.prices || sports[index].prices;
                                 sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
-                                
-                                // استعادة الصور كروابط فقط
                                 if (savedSport.images) {
                                     sports[index].images = savedSport.images;
                                 }
@@ -939,49 +999,45 @@
             }
         }
 
-        function saveStorage() {
+        function saveLocalStorage() {
             try {
-                // تحديث البيانات من العناصر القابلة للتعديل
-                if (currentSport) {
-                    currentSport.schedule = $('sport-schedule').textContent;
-                    currentSport.time = $('sport-time').textContent;
-                    
-                    // تحديث الأسعار
-                    const priceItems = $$('#prices-container .flex');
-                    priceItems.forEach((item, index) => {
-                        if (currentSport.prices[index]) {
+                localStorage.setItem('gymData', JSON.stringify({ sports }));
+            } catch(e) {
+                console.warn('Save error:', e);
+            }
+        }
+
+        // تحديث البيانات من العناصر القابلة للتعديل
+        function updateSportData() {
+            if (currentSport) {
+                currentSport.schedule = $('sport-schedule').textContent;
+                currentSport.time = $('sport-time').textContent;
+                
+                // تحديث الأسعار
+                const priceItems = $$('#prices-container .flex');
+                priceItems.forEach((item, index) => {
+                    if (currentSport.prices[index]) {
+                        const spans = item.querySelectorAll('span');
+                        if (spans.length >= 2) {
+                            currentSport.prices[index].name = spans[0].textContent;
+                            currentSport.prices[index].value = spans[1].textContent;
+                        }
+                    }
+                });
+                
+                // تحديث الفئات العمرية
+                if (currentSport.ageGroups) {
+                    const ageItems = $$('#age-groups-list .flex');
+                    ageItems.forEach((item, index) => {
+                        if (currentSport.ageGroups[index]) {
                             const spans = item.querySelectorAll('span');
                             if (spans.length >= 2) {
-                                currentSport.prices[index].name = spans[0].textContent;
-                                currentSport.prices[index].value = spans[1].textContent;
+                                currentSport.ageGroups[index].range = spans[0].textContent;
+                                currentSport.ageGroups[index].time = spans[1].textContent;
                             }
                         }
                     });
-                    
-                    // تحديث الفئات العمرية
-                    if (currentSport.ageGroups) {
-                        const ageItems = $$('#age-groups-list .flex');
-                        ageItems.forEach((item, index) => {
-                            if (currentSport.ageGroups[index]) {
-                                const spans = item.querySelectorAll('span');
-                                if (spans.length >= 2) {
-                                    currentSport.ageGroups[index].range = spans[0].textContent;
-                                    currentSport.ageGroups[index].time = spans[1].textContent;
-                                }
-                            }
-                        });
-                    }
                 }
-                
-                // حفظ فقط البيانات النصية (الروابط وليس الصور)
-                localStorage.setItem('gymData', JSON.stringify({ sports }));
-                
-                // رسالة تأكيد عند الضغط على زر الحفظ
-                showToast('✅ تم حفظ المعلومات بنجاح');
-                
-            } catch(e) {
-                console.warn('Save error:', e);
-                showToast('❌ فشل في الحفظ');
             }
         }
 
@@ -1148,13 +1204,12 @@
         window.saveLink = function() {
             const url = $('image-url').value.trim();
             if (!url) {
-                showToast('❌ الرابط مطلوب');
+                alert('❌ الرابط مطلوب');
                 return;
             }
             
-            // التحقق من صحة الرابط (بسيط)
             if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                showToast('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
+                alert('❌ الرابط يجب أن يبدأ بـ http:// أو https://');
                 return;
             }
             
@@ -1169,7 +1224,7 @@
             
             renderSportGallery();
             cancelAdd();
-            showToast('✅ تمت إضافة الصورة');
+            alert('✅ تمت إضافة الصورة');
         };
 
         // ========== DELETE IMAGE ==========
@@ -1177,7 +1232,7 @@
             if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                 currentSport.images.splice(index, 1);
                 renderSportGallery();
-                showToast('🗑️ تم حذف الصورة');
+                alert('🗑️ تم حذف الصورة');
             }
         };
 
@@ -1243,12 +1298,30 @@
                 preview.classList.add('show');
             });
             
-            showToast('⚡ وضع المطور مفعل');
+            alert('⚡ وضع المطور مفعل');
         }
 
         // ========== SETUP BUTTONS ==========
         function setupSaveButton() {
-            $('save-btn').addEventListener('click', saveStorage);
+            $('save-btn').addEventListener('click', async function() {
+                // تحديث البيانات من العناصر القابلة للتعديل
+                updateSportData();
+                
+                // حفظ في السحابة
+                await saveToCloud();
+                
+                // تغيير لون الزر مؤقتاً للتأكيد البصري
+                const saveBtn = $('save-btn');
+                saveBtn.style.background = '#4CAF50';
+                saveBtn.style.borderColor = '#4CAF50';
+                saveBtn.style.color = 'white';
+                
+                setTimeout(() => {
+                    saveBtn.style.background = '#D4AF37';
+                    saveBtn.style.borderColor = '#D4AF37';
+                    saveBtn.style.color = '#0a0a0a';
+                }, 500);
+            });
         }
 
         function setupExitButton() {
@@ -1268,7 +1341,7 @@
                     renderSportGallery();
                 }
                 
-                showToast('✅ تم الخروج من وضع المطور');
+                alert('✅ تم الخروج من وضع المطور');
             });
         }
 
@@ -1378,7 +1451,7 @@
             pendingUploads = [];
             $('upload-preview').innerHTML = '';
             renderAchievementsGallery();
-            showToast('🗑️ تم مسح جميع الصور');
+            alert('🗑️ تم مسح جميع الصور');
         };
 
         window.resetDefaults = function() {
@@ -1387,7 +1460,7 @@
             pendingUploads = [];
             $('upload-preview').innerHTML = '';
             renderAchievementsGallery();
-            showToast('✅ تم استعادة الصور الافتراضية');
+            alert('✅ تم استعادة الصور الافتراضية');
         };
 
         function setupDragDrop() {
@@ -1414,7 +1487,7 @@
                     pendingUploads.push(url);
                     renderAchievementsGallery();
                     addPreview(url);
-                    showToast('📷 صورة جاهزة - اضغط حفظ لتثبيتها');
+                    alert('📷 صورة جاهزة - اضغط حفظ لتثبيتها');
                 });
             });
         }
@@ -1476,8 +1549,10 @@
         });
 
         // ========== INIT ==========
-        function init() {
-            loadStorage();
+        async function init() {
+            // تحميل البيانات من السحابة أولاً
+            await loadFromCloud();
+            
             renderSportsCards();
             setupAdminTrigger();
             setupSaveButton();
