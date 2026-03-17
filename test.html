@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⭐ Five Stars Gym - نظام الإدارة البسيط</title>
+    <title>⭐ Five Stars Gym - نظام الروابط السهل</title>
     
     <!-- موارد بسيطة -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -18,7 +18,6 @@
             font-family: 'Cairo', sans-serif;
         }
         
-        /* تصميم سهل وواضح */
         .gold-text {
             background: linear-gradient(135deg, #D4AF37, #F5E6A3);
             -webkit-background-clip: text;
@@ -38,25 +37,6 @@
             border-color: #D4AF37;
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(212,175,55,0.2);
-        }
-        
-        /* زر كبير وواضح */
-        .big-button {
-            background: #D4AF37;
-            color: black;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: bold;
-            display: inline-block;
-            cursor: pointer;
-            border: none;
-            transition: 0.3s;
-        }
-        
-        .big-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 20px rgba(212,175,55,0.4);
         }
         
         /* شريط أدوات المطور */
@@ -84,32 +64,11 @@
             cursor: pointer;
         }
         
-        .admin-btn.exit {
-            background: transparent;
-            border: 1px solid #D4AF37;
-            color: #D4AF37;
-        }
-        
-        /* منطقة سحب الصور */
-        .drop-area {
-            border: 3px dashed #D4AF37;
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            background: rgba(212,175,55,0.05);
-            cursor: pointer;
-            margin: 20px 0;
-        }
-        
-        .drop-area:hover {
-            background: rgba(212,175,55,0.1);
-        }
-        
         /* معرض الصور */
         .gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
             margin: 20px 0;
         }
         
@@ -118,6 +77,7 @@
             border-radius: 10px;
             overflow: hidden;
             border: 2px solid transparent;
+            background: #1a1a1a;
         }
         
         .gallery-item:hover {
@@ -128,35 +88,149 @@
             width: 100%;
             aspect-ratio: 1;
             object-fit: cover;
+            cursor: pointer;
         }
         
         .gallery-item .caption {
             background: rgba(0,0,0,0.8);
             color: #D4AF37;
-            padding: 8px;
+            padding: 10px;
             font-size: 14px;
             text-align: center;
+            min-height: 50px;
         }
         
-        .delete-btn {
+        .gallery-item .caption:empty {
+            display: none;
+        }
+        
+        /* أيقونة الرابط */
+        .link-icon {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            background: red;
-            color: white;
+            top: 10px;
+            left: 10px;
+            background: #D4AF37;
+            color: black;
             width: 30px;
             height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
+            font-size: 14px;
+            opacity: 0.7;
+        }
+        
+        /* أدوات المطور */
+        .admin-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
             opacity: 0;
             transition: 0.3s;
         }
         
-        .gallery-item:hover .delete-btn {
+        .gallery-item:hover .admin-controls {
             opacity: 1;
+        }
+        
+        .admin-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #D4AF37;
+            color: black;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .admin-icon.delete {
+            background: #ff4444;
+            color: white;
+        }
+        
+        /* نموذج إضافة رابط */
+        .link-form {
+            background: #1a1a1a;
+            border: 2px solid #D4AF37;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .link-form.show {
+            display: block;
+        }
+        
+        .link-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #D4AF37;
+            border-radius: 10px;
+            padding: 15px;
+            color: white;
+            margin-bottom: 15px;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        .link-input:focus {
+            outline: 2px solid #D4AF37;
+        }
+        
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .preview-image.show {
+            display: block;
+        }
+        
+        /* زر إضافة */
+        .add-btn {
+            background: #D4AF37;
+            color: black;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            display: inline-block;
+        }
+        
+        .add-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        /* رسائل المساعدة */
+        .help-box {
+            background: rgba(212,175,55,0.1);
+            border: 1px solid #D4AF37;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .help-box h4 {
+            color: #D4AF37;
+            margin-bottom: 10px;
+        }
+        
+        .help-box li {
+            color: #888;
+            margin: 5px 0;
+            list-style: none;
         }
         
         /* صفحة الرياضة */
@@ -192,28 +266,17 @@
             justify-content: center;
             cursor: pointer;
             font-size: 20px;
-            border: none;
             z-index: 1001;
-        }
-        
-        /* رسائل المساعدة */
-        .help-message {
-            background: rgba(212,175,55,0.1);
-            border-right: 4px solid #D4AF37;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 10px 0;
-            color: #D4AF37;
         }
     </style>
 </head>
 <body>
 
-    <!-- شريط أدوات المطور (يظهر فقط بعد الدخول) -->
+    <!-- شريط أدوات المطور -->
     <div id="adminBar" class="admin-bar" style="display: none;">
         <span style="color: #D4AF37;">🔧 وضع الإدارة</span>
-        <button class="admin-btn" onclick="app.saveAll()">💾 حفظ كل التغييرات</button>
-        <button class="admin-btn exit" onclick="app.exitAdminMode()">🚪 خروج</button>
+        <button class="admin-btn" onclick="app.saveAll()">💾 حفظ</button>
+        <button class="admin-btn" onclick="app.exitAdmin()">🚪 خروج</button>
     </div>
 
     <!-- زر الإغلاق -->
@@ -239,21 +302,17 @@
         
         <!-- قسم الترحيب -->
         <div style="text-align: center; padding: 50px 20px;">
-            <h1 style="font-size: 60px; margin-bottom: 10px;">
-                <span class="gold-text">FIVE STARS</span>
-            </h1>
+            <h1 style="font-size: 60px; margin-bottom: 10px;" class="gold-text">FIVE STARS</h1>
             <h2 style="font-size: 40px; color: #D4AF37;">GYM</h2>
             <p style="color: #666; margin: 20px 0;">قاعة العمراني للرياضات القتالية</p>
         </div>
 
         <!-- بطاقات الرياضات -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px;" id="sportsGrid">
-            <!-- البطاقات ستضاف هنا تلقائياً -->
-        </div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 20px;" id="sportsGrid"></div>
 
         <!-- تذييل -->
         <div style="text-align: center; padding: 50px; color: #333; border-top: 1px solid #222; margin-top: 50px;">
-            © 2025 Five Stars Gym - جميع الحقوق محفوظة
+            © 2025 Five Stars Gym
         </div>
     </div>
 
@@ -261,74 +320,85 @@
     <div id="sportPage" class="sport-page">
         <div style="max-width: 1200px; margin: 0 auto;">
             
-            <!-- عنوان الرياضة -->
             <h1 id="sportTitle" style="font-size: 40px; margin-bottom: 30px;" class="gold-text"></h1>
             
             <!-- معلومات الرياضة -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                
-                <!-- بطاقة المواعيد -->
                 <div class="card">
                     <h3 style="color: #D4AF37; margin-bottom: 15px;"><i class="fas fa-clock"></i> المواعيد</h3>
                     <p><span class="editable" id="sportSchedule">الثلاثاء - الخميس - السبت</span></p>
                     <p style="margin-top: 10px;"><span class="editable" id="sportTime">20:30 - 21:30</span></p>
                 </div>
                 
-                <!-- بطاقة الأسعار -->
                 <div class="card">
                     <h3 style="color: #D4AF37; margin-bottom: 15px;"><i class="fas fa-tag"></i> الأسعار</h3>
                     <div id="pricesList"></div>
                 </div>
             </div>
             
-            <!-- الفئات العمرية (إذا وجدت) -->
+            <!-- الفئات العمرية -->
             <div id="ageGroupsCard" class="card" style="margin-bottom: 30px; display: none;">
                 <h3 style="color: #D4AF37; margin-bottom: 15px;"><i class="fas fa-users"></i> الفئات العمرية</h3>
                 <div id="ageGroupsList"></div>
             </div>
             
-            <!-- معرض الصور مع تعليمات واضحة -->
+            <!-- معرض الصور -->
             <div class="card">
-                <h3 style="color: #D4AF37; margin-bottom: 15px;"><i class="fas fa-images"></i> ألبوم الصور</h3>
+                <h3 style="color: #D4AF37; margin-bottom: 15px;"><i class="fas fa-images"></i> معرض الصور</h3>
                 
-                <!-- رسالة تعليمية (تظهر فقط في وضع المطور) -->
-                <div id="helpMessage" class="help-message" style="display: none;">
-                    <i class="fas fa-info-circle"></i>
-                    <strong>كيف تضيف صورة؟</strong>
-                    <p>1. اضغط على الزر الأخضر "➕ إضافة صور"</p>
-                    <p>2. اختر الصور من جهازك (يمكنك اختيار عدة صور)</p>
-                    <p>3. الصور ستظهر تلقائياً في المعرض</p>
-                    <p>4. كل صورة لها وصف - اضغط على الوصف لتغيره</p>
-                    <p>5. لحذف صورة، مرر الماوس عليها واضغط على 🗑️</p>
+                <!-- صندوق المساعدة (يظهر فقط في وضع الإدارة) -->
+                <div id="helpBox" class="help-box" style="display: none;">
+                    <h4>📌 كيفية إضافة صورة:</h4>
+                    <ul>
+                        <li>1. ابحث عن صورة على الإنترنت</li>
+                        <li>2. انسخ عنوان الصورة (ينتهي بـ .jpg أو .png)</li>
+                        <li>3. اضغط على "➕ إضافة صورة برابط"</li>
+                        <li>4. الصق الرابط وأضف وصفاً (اختياري)</li>
+                        <li>5. الصورة ستظهر فوراً</li>
+                    </ul>
+                    <p style="color: #D4AF37; margin-top: 10px;">✨ مثال لروابط صور جاهزة:</p>
+                    <p style="color: #666; font-size: 12px; direction: ltr; text-align: left; background: #0a0a0a; padding: 10px; border-radius: 5px;">
+                        https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400<br>
+                        https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400<br>
+                        https://images.unsplash.com/photo-1583473848882-f9a5bc7fd2ee?w=400
+                    </p>
                 </div>
+                
+                <!-- زر إضافة صورة (يظهر في وضع الإدارة) -->
+                <button id="addImageBtn" class="add-btn" style="display: none;" onclick="app.showLinkForm()">
+                    <i class="fas fa-plus-circle"></i> ➕ إضافة صورة برابط
+                </button>
                 
                 <!-- معرض الصور -->
                 <div id="sportGallery" class="gallery"></div>
-                
-                <!-- زر إضافة صور (كبير وواضح) -->
-                <div id="addImagesBtn" style="display: none;">
-                    <div class="drop-area" onclick="document.getElementById('fileInput').click()">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 50px; color: #D4AF37; margin-bottom: 15px; display: block;"></i>
-                        <h3 style="color: #D4AF37; margin-bottom: 10px;">➕ إضافة صور جديدة</h3>
-                        <p style="color: #666;">اسحب الصور هنا أو اضغط للاختيار</p>
-                        <p style="color: #444; font-size: 12px; margin-top: 10px;">يدعم: JPG, PNG, GIF (حتى 5MB لكل صورة)</p>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
 
-    <!-- مدخل الملفات المخفي -->
-    <input type="file" id="fileInput" multiple accept="image/*" style="display: none;">
+    <!-- نموذج إضافة رابط (يظهر عند الحاجة) -->
+    <div id="linkForm" class="link-form">
+        <h3 style="color: #D4AF37; margin-bottom: 20px;">إضافة صورة برابط</h3>
+        
+        <input type="url" id="imageUrl" class="link-input" placeholder="الصق رابط الصورة هنا (مثال: https://example.com/image.jpg)" dir="ltr">
+        
+        <!-- معاينة الرابط -->
+        <img id="preview" class="preview-image" alt="معاينة">
+        
+        <input type="text" id="imageCaption" class="link-input" placeholder="وصف الصورة (اختياري)">
+        
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+            <button class="admin-btn" onclick="app.saveLink()">حفظ</button>
+            <button class="admin-btn" onclick="app.cancelLink()">إلغاء</button>
+        </div>
+    </div>
 
-    <!-- جافاسكريبت بسيط جداً -->
     <script>
         const app = {
             isAdmin: false,
             currentSport: null,
             adminClicks: 0,
+            editIndex: null,
             
-            // بيانات الرياضات
             sports: [
                 { id: 'kwankido', name: 'كوانكيدو', nameEn: 'Kwankido', icon: 'fa-hand-fist',
                   schedule: 'الثلاثاء — الخميس — السبت', time: '20:30 — 21:30',
@@ -349,37 +419,39 @@
                   prices: ['150 DH/شهر', '400 DH/3 أشهر'], images: [] },
                 { id: 'achievements', name: 'الإنجازات', nameEn: 'Achievements', icon: 'fa-trophy',
                   schedule: 'معرض دائم', time: 'مفتوح طوال الوقت',
-                  prices: ['الدخول: مجاني'], images: [] }
+                  prices: ['الدخول: مجاني'], images: [
+                      { url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400', caption: '🏆 بطولة 2023' },
+                      { url: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400', caption: '🥇 كأس المدينة' }
+                  ] }
             ],
             
-            // دوال مساعدة
             $(id) { return document.getElementById(id); },
             
-            // بدء التطبيق
             init() {
                 this.loadData();
                 this.showSports();
                 this.setupAdminTrigger();
-                this.setupFileInput();
+                
+                // معاينة الرابط عند الكتابة
+                this.$('imageUrl').addEventListener('input', (e) => {
+                    const preview = this.$('preview');
+                    preview.src = e.target.value;
+                    preview.classList.add('show');
+                });
             },
             
-            // تحميل البيانات المحفوظة
             loadData() {
                 try {
                     const saved = localStorage.getItem('gymData');
-                    if (saved) {
-                        this.sports = JSON.parse(saved);
-                    }
+                    if (saved) this.sports = JSON.parse(saved);
                 } catch(e) {}
             },
             
-            // حفظ البيانات
             saveAll() {
                 localStorage.setItem('gymData', JSON.stringify(this.sports));
-                alert('✅ تم حفظ كل التغييرات بنجاح');
+                alert('✅ تم حفظ كل التغييرات');
             },
             
-            // عرض بطاقات الرياضات
             showSports() {
                 const grid = this.$('sportsGrid');
                 grid.innerHTML = this.sports.map(s => `
@@ -395,7 +467,6 @@
                 `).join('');
             },
             
-            // فتح صفحة رياضة
             openSportPage(id) {
                 this.currentSport = this.sports.find(s => s.id === id);
                 if (!this.currentSport) return;
@@ -404,15 +475,14 @@
                 this.$('sportSchedule').innerHTML = this.currentSport.schedule;
                 this.$('sportTime').innerHTML = this.currentSport.time;
                 
-                // عرض الأسعار
-                const pricesHtml = this.currentSport.prices.map(p => 
+                // الأسعار
+                this.$('pricesList').innerHTML = this.currentSport.prices.map(p => 
                     `<div style="display: flex; justify-content: space-between; padding: 5px 0;">
                         <span class="editable">${p}</span>
                     </div>`
                 ).join('');
-                this.$('pricesList').innerHTML = pricesHtml;
                 
-                // عرض الفئات العمرية
+                // الفئات العمرية
                 if (this.currentSport.ageGroups) {
                     this.$('ageGroupsCard').style.display = 'block';
                     this.$('ageGroupsList').innerHTML = this.currentSport.ageGroups.map(a => 
@@ -424,80 +494,96 @@
                     this.$('ageGroupsCard').style.display = 'none';
                 }
                 
-                // عرض الصور
                 this.showGallery();
                 
                 this.$('sportPage').classList.add('active');
                 this.$('closeBtn').style.display = 'flex';
-                
-                // تحديث وضع التحرير
                 this.updateEditMode();
             },
             
-            // عرض معرض الصور
             showGallery() {
                 const gallery = this.$('sportGallery');
                 if (!this.currentSport) return;
                 
-                if (this.currentSport.images && this.currentSport.images.length > 0) {
+                if (this.currentSport.images?.length > 0) {
                     gallery.innerHTML = this.currentSport.images.map((img, i) => `
                         <div class="gallery-item">
-                            <img src="${img.url || img}" alt="صورة">
+                            <img src="${img.url}" alt="صورة" onclick="window.open('${img.url}', '_blank')">
+                            <div class="link-icon"><i class="fas fa-link"></i></div>
                             <div class="caption" contenteditable="${this.isAdmin}" onblur="app.updateCaption(${i}, this.innerText)">${img.caption || ''}</div>
                             ${this.isAdmin ? `
-                                <div class="delete-btn" onclick="app.deleteImage(${i})">🗑️</div>
+                                <div class="admin-controls">
+                                    <div class="admin-icon" onclick="app.editImage(${i})">✏️</div>
+                                    <div class="admin-icon delete" onclick="app.deleteImage(${i})">🗑️</div>
+                                </div>
                             ` : ''}
                         </div>
                     `).join('');
                 } else {
-                    gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">لا توجد صور بعد</p>';
+                    gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 40px;">📷 لا توجد صور بعد</p>';
                 }
             },
             
-            // تحديث وصف الصورة
             updateCaption(index, text) {
-                if (this.currentSport && this.currentSport.images[index]) {
-                    if (typeof this.currentSport.images[index] === 'string') {
-                        this.currentSport.images[index] = { url: this.currentSport.images[index], caption: text };
-                    } else {
-                        this.currentSport.images[index].caption = text;
-                    }
+                if (this.currentSport?.images[index]) {
+                    this.currentSport.images[index].caption = text;
                 }
             },
             
-            // حذف صورة
+            showLinkForm() {
+                this.editIndex = null;
+                this.$('imageUrl').value = '';
+                this.$('imageCaption').value = '';
+                this.$('preview').classList.remove('show');
+                this.$('linkForm').classList.add('show');
+            },
+            
+            editImage(index) {
+                this.editIndex = index;
+                const img = this.currentSport.images[index];
+                this.$('imageUrl').value = img.url;
+                this.$('imageCaption').value = img.caption || '';
+                this.$('preview').src = img.url;
+                this.$('preview').classList.add('show');
+                this.$('linkForm').classList.add('show');
+            },
+            
+            saveLink() {
+                const url = this.$('imageUrl').value.trim();
+                if (!url) {
+                    alert('❌ الرابط مطلوب');
+                    return;
+                }
+                
+                const caption = this.$('imageCaption').value.trim();
+                const imageData = { url, caption };
+                
+                if (this.editIndex !== null) {
+                    this.currentSport.images[this.editIndex] = imageData;
+                } else {
+                    this.currentSport.images.push(imageData);
+                }
+                
+                this.showGallery();
+                this.cancelLink();
+                alert('✅ تمت إضافة الصورة');
+            },
+            
+            cancelLink() {
+                this.$('linkForm').classList.remove('show');
+                this.$('imageUrl').value = '';
+                this.$('imageCaption').value = '';
+                this.$('preview').classList.remove('show');
+                this.editIndex = null;
+            },
+            
             deleteImage(index) {
-                if (!this.isAdmin || !this.currentSport) return;
                 if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                     this.currentSport.images.splice(index, 1);
                     this.showGallery();
                 }
             },
             
-            // إعداد رفع الملفات
-            setupFileInput() {
-                this.$('fileInput').addEventListener('change', (e) => {
-                    if (!this.isAdmin || !this.currentSport) return;
-                    
-                    Array.from(e.target.files).forEach(file => {
-                        if (!file.type.startsWith('image/')) return;
-                        
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            this.currentSport.images.push({
-                                url: e.target.result,
-                                caption: ''
-                            });
-                            this.showGallery();
-                        };
-                        reader.readAsDataURL(file);
-                    });
-                    
-                    alert(`✅ تمت إضافة ${e.target.files.length} صورة`);
-                });
-            },
-            
-            // إعداد دخول المطور
             setupAdminTrigger() {
                 this.$('adminTrigger').addEventListener('click', () => {
                     this.adminClicks++;
@@ -506,10 +592,10 @@
                         if (pass === 'open9966') {
                             this.isAdmin = true;
                             this.$('adminBar').style.display = 'flex';
-                            this.$('addImagesBtn').style.display = 'block';
-                            this.$('helpMessage').style.display = 'block';
+                            this.$('helpBox').style.display = 'block';
+                            this.$('addImageBtn').style.display = 'inline-block';
                             this.updateEditMode();
-                            alert('✅ مرحباً بك في وضع الإدارة! يمكنك الآن تعديل كل شيء.');
+                            alert('✅ مرحباً بك في وضع الإدارة');
                         }
                         this.adminClicks = 0;
                     }
@@ -517,40 +603,36 @@
                 });
             },
             
-            // تحديث وضع التحرير
             updateEditMode() {
                 if (this.isAdmin && this.currentSport) {
-                    this.$('addImagesBtn').style.display = 'block';
-                    this.$('helpMessage').style.display = 'block';
+                    this.$('helpBox').style.display = 'block';
+                    this.$('addImageBtn').style.display = 'inline-block';
                 }
                 this.showGallery();
             },
             
-            // الخروج من وضع المطور
-            exitAdminMode() {
+            exitAdmin() {
                 this.isAdmin = false;
                 this.$('adminBar').style.display = 'none';
-                this.$('addImagesBtn').style.display = 'none';
-                this.$('helpMessage').style.display = 'none';
+                this.$('helpBox').style.display = 'none';
+                this.$('addImageBtn').style.display = 'none';
+                this.cancelLink();
                 this.showGallery();
                 alert('✅ تم الخروج من وضع الإدارة');
             },
             
-            // إغلاق صفحة الرياضة
             closeSportPage() {
                 this.$('sportPage').classList.remove('active');
                 this.$('closeBtn').style.display = 'none';
                 this.currentSport = null;
             },
             
-            // العودة للرئيسية
             showHome() {
                 this.closeSportPage();
                 window.scrollTo(0, 0);
             }
         };
         
-        // تشغيل التطبيق
         window.onload = () => app.init();
     </script>
 </body>
