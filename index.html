@@ -1285,7 +1285,7 @@
                 gallery.innerHTML = currentSport.images.map((img, index) => {
                     const caption = img.caption || '';
                     return `
-                        <div class="gallery-item" onclick="openLightbox(currentSport.images, ${index})">
+                       <div class="gallery-item" onclick="event.preventDefault(); openLightbox(currentSport.images, ${index})">
                             <img src="${img.url}" alt="صورة" onerror="this.src='https://via.placeholder.com/400?text=صورة+غير+متوفرة'">
                             <div class="image-caption ${caption ? '' : 'empty'}" 
                                  contenteditable="${isAdmin}" 
