@@ -297,7 +297,7 @@
             transform: rotate(90deg);
         }
 
-        /* ---- الأيقونة الذهبية الجديدة (إضافة رابط) ---- */
+        /* ---- الأيقونة الذهبية التفاعلية ---- */
         .gold-icon-btn {
             background: #D4AF37;
             color: #0a0a0a;
@@ -312,6 +312,8 @@
             transition: all 0.3s ease;
             margin: 20px 0;
             font-size: 16px;
+            position: relative;
+            overflow: hidden;
         }
         .gold-icon-btn i {
             font-size: 20px;
@@ -328,24 +330,40 @@
         .gold-icon-btn:hover {
             background: transparent;
             color: #D4AF37;
-            box-shadow: 0 0 20px rgba(212,175,55,0.5);
+            box-shadow: 0 0 25px rgba(212,175,55,0.7);
+            transform: scale(1.05);
         }
         .gold-icon-btn:hover i {
             background: #D4AF37;
             color: #0a0a0a;
+            transform: rotate(90deg);
+        }
+        .gold-icon-btn:active {
+            transform: scale(0.95);
         }
 
-        /* ---- نموذج إضافة الرابط ---- */
-        .link-form {
+        /* ---- منطقة الإضافة (الخانات) ---- */
+        .add-area {
             background: #111111;
             border: 2px solid #D4AF37;
             border-radius: 1rem;
             padding: 1.5rem;
             margin: 1rem 0;
             display: none;
+            animation: slideDown 0.3s ease;
         }
-        .link-form.show {
+        .add-area.show {
             display: block;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
         .link-input {
             width: 100%;
@@ -356,9 +374,12 @@
             color: white;
             margin-bottom: 1rem;
             font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
         }
         .link-input:focus {
-            outline: 2px solid #D4AF37;
+            outline: none;
+            border-color: #D4AF37;
+            box-shadow: 0 0 15px rgba(212,175,55,0.3);
         }
         .preview-image {
             max-width: 200px;
@@ -366,6 +387,7 @@
             margin: 1rem 0;
             border-radius: 0.5rem;
             display: none;
+            border: 2px solid #D4AF37;
         }
         .preview-image.show {
             display: block;
@@ -374,6 +396,7 @@
             display: flex;
             gap: 0.5rem;
             justify-content: flex-end;
+            margin-top: 1rem;
         }
 
         /* ---- Image Item in Gallery ---- */
@@ -440,6 +463,11 @@
             font-size: 0.875rem;
             text-align: center;
             border-top: 1px solid rgba(212,175,55,0.3);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover .image-caption {
+            transform: translateY(0);
         }
         .image-caption:empty {
             display: none;
@@ -498,18 +526,6 @@
     <!-- ======================== CLOSE BUTTON ======================== -->
     <div id="close-btn" class="close-btn" style="display: none;" onclick="closeSportPage()">
         <i class="fas fa-times"></i>
-    </div>
-
-    <!-- ======================== نموذج إضافة الرابط (يظهر عند الضغط) ======================== -->
-    <div id="link-form" class="link-form">
-        <h3 style="color: #D4AF37; margin-bottom: 1rem;">إضافة صورة برابط</h3>
-        <input type="url" id="image-url" class="link-input" placeholder="https://example.com/image.jpg" dir="ltr">
-        <img id="preview" class="preview-image" alt="معاينة">
-        <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
-        <div class="form-buttons">
-            <button class="admin-btn save" onclick="saveLink()">حفظ</button>
-            <button class="admin-btn" onclick="cancelLink()">إلغاء</button>
-        </div>
     </div>
 
     <!-- ======================== NAVIGATION ======================== -->
@@ -722,10 +738,21 @@
             <div class="info-card">
                 <h3 class="info-title"><i class="fas fa-images ml-2"></i>معرض الصور</h3>
                 
-                <!-- الأيقونة الذهبية الجديدة (تظهر فقط في وضع المطور) -->
-                <div id="add-image-btn" class="gold-icon-btn" style="display: none;" onclick="showLinkForm()">
+                <!-- الأيقونة الذهبية التفاعلية (تظهر فقط في وضع المطور) -->
+                <div id="add-image-btn" class="gold-icon-btn" style="display: none;" onclick="toggleAddArea()">
                     <i class="fas fa-plus"></i>
                     إضافة رابط
+                </div>
+                
+                <!-- منطقة الإضافة (الخانات) -->
+                <div id="add-area" class="add-area">
+                    <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا" dir="ltr">
+                    <img id="preview" class="preview-image" alt="معاينة">
+                    <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
+                    <div class="form-buttons">
+                        <button class="admin-btn save" onclick="saveLink()">حفظ</button>
+                        <button class="admin-btn" onclick="cancelAdd()">إلغاء</button>
+                    </div>
                 </div>
                 
                 <!-- معرض الصور -->
@@ -1019,15 +1046,42 @@
             
             // تحديث وضع التحرير
             updateEditMode();
+            
+            // إخفاء منطقة الإضافة عند فتح صفحة جديدة
+            $('add-area').classList.remove('show');
         };
 
         // ========== CLOSE SPORT PAGE ==========
         window.closeSportPage = function() {
             $('sport-detail-page').classList.remove('active');
             $('close-btn').style.display = 'none';
-            $('link-form').classList.remove('show');
+            $('add-area').classList.remove('show');
             document.body.style.overflow = '';
             currentSport = null;
+        };
+
+        // ========== TOGGLE ADD AREA ==========
+        window.toggleAddArea = function() {
+            const addArea = $('add-area');
+            if (addArea.classList.contains('show')) {
+                addArea.classList.remove('show');
+            } else {
+                // إعادة تعيين الحقول
+                $('image-url').value = '';
+                $('image-caption').value = '';
+                $('preview').classList.remove('show');
+                editImageIndex = null;
+                addArea.classList.add('show');
+            }
+        };
+
+        // ========== CANCEL ADD ==========
+        window.cancelAdd = function() {
+            $('add-area').classList.remove('show');
+            $('image-url').value = '';
+            $('image-caption').value = '';
+            $('preview').classList.remove('show');
+            editImageIndex = null;
         };
 
         // ========== RENDER SPORT GALLERY ==========
@@ -1065,15 +1119,6 @@
             }
         };
 
-        // ========== SHOW LINK FORM ==========
-        window.showLinkForm = function() {
-            editImageIndex = null;
-            $('image-url').value = '';
-            $('image-caption').value = '';
-            $('preview').classList.remove('show');
-            $('link-form').classList.add('show');
-        };
-
         // ========== EDIT IMAGE ==========
         window.editImage = function(index) {
             editImageIndex = index;
@@ -1082,7 +1127,7 @@
             $('image-caption').value = img.caption || '';
             $('preview').src = img.url;
             $('preview').classList.add('show');
-            $('link-form').classList.add('show');
+            $('add-area').classList.add('show');
         };
 
         // ========== SAVE LINK ==========
@@ -1103,17 +1148,8 @@
             }
             
             renderSportGallery();
-            cancelLink();
+            cancelAdd();
             showToast('✅ تمت إضافة الصورة');
-        };
-
-        // ========== CANCEL LINK ==========
-        window.cancelLink = function() {
-            $('link-form').classList.remove('show');
-            $('image-url').value = '';
-            $('image-caption').value = '';
-            $('preview').classList.remove('show');
-            editImageIndex = null;
         };
 
         // ========== DELETE IMAGE ==========
@@ -1131,6 +1167,7 @@
                 $('add-image-btn').style.display = 'inline-flex';
             } else {
                 $('add-image-btn').style.display = 'none';
+                $('add-area').classList.remove('show');
             }
             renderSportGallery();
         }
@@ -1179,6 +1216,7 @@
                 renderSportGallery();
             }
             
+            // معاينة الرابط
             $('image-url').addEventListener('input', (e) => {
                 const preview = $('preview');
                 preview.src = e.target.value;
@@ -1200,7 +1238,7 @@
                 
                 $('admin-toolbar').style.display = 'none';
                 $('add-image-btn').style.display = 'none';
-                $('link-form').classList.remove('show');
+                $('add-area').classList.remove('show');
                 
                 $$('.editable').forEach(el => {
                     el.removeAttribute('contenteditable');
