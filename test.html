@@ -63,6 +63,7 @@
             transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
         }
         .service-card::before {
             content: '';
@@ -80,33 +81,15 @@
             box-shadow: 0 20px 50px rgba(212,175,55,0.08), 0 0 0 1px rgba(212,175,55,0.15);
         }
 
-        /* ---- Grayscale Gallery Images (معدل للروابط) ---- */
+        /* ---- Grayscale Gallery Images ---- */
         .gallery-img {
             filter: grayscale(100%);
             transition: filter 0.6s ease, transform 0.6s ease, box-shadow 0.6s ease;
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-            border-radius: 0.5rem;
         }
         .gallery-img:hover {
             filter: grayscale(0%);
             transform: scale(1.02);
             box-shadow: 0 8px 30px rgba(212,175,55,0.15);
-        }
-
-        /* ---- وصف الصورة (جديد) ---- */
-        .image-caption {
-            text-align: center;
-            color: #D4AF37;
-            font-size: 0.875rem;
-            padding: 8px;
-            background: rgba(0,0,0,0.5);
-            border-radius: 0 0 0.5rem 0.5rem;
-            margin-top: -5px;
-        }
-        .image-caption:empty {
-            display: none;
         }
 
         /* ---- Masonry Layout ---- */
@@ -115,7 +98,7 @@
         @media (max-width: 1024px) { .masonry { column-count: 2; } }
         @media (max-width: 640px)  { .masonry { column-count: 1; } }
 
-        /* ---- Lightbox (معدل للروابط) ---- */
+        /* ---- Lightbox ---- */
         .lightbox {
             opacity: 0; visibility: hidden;
             transition: opacity 0.35s ease, visibility 0.35s ease;
@@ -140,7 +123,7 @@
             background: rgba(212,175,55,0.04);
         }
 
-        /* ---- Drag-Drop Zone (للإنجازات) ---- */
+        /* ---- Drag-Drop Zone ---- */
         .drop-zone {
             border: 3px dashed rgba(212,175,55,0.35);
             transition: all 0.3s ease;
@@ -149,96 +132,6 @@
             border-color: #D4AF37;
             background: rgba(212,175,55,0.07);
             transform: scale(1.01);
-        }
-
-        /* ---- نموذج إضافة رابط (جديد) ---- */
-        .link-form {
-            background: #111111;
-            border: 2px solid #D4AF37;
-            border-radius: 1rem;
-            padding: 1.5rem;
-            margin: 1rem 0;
-            display: none;
-        }
-        .link-form.show {
-            display: block;
-        }
-        .link-input {
-            width: 100%;
-            background: #0a0a0a;
-            border: 1px solid rgba(212,175,55,0.3);
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            color: white;
-            margin-bottom: 1rem;
-            font-family: 'Cairo', sans-serif;
-        }
-        .link-input:focus {
-            outline: 2px solid #D4AF37;
-        }
-        .preview-image {
-            max-width: 200px;
-            max-height: 200px;
-            margin: 1rem 0;
-            border-radius: 0.5rem;
-            display: none;
-        }
-        .preview-image.show {
-            display: block;
-        }
-
-        /* ---- زر الإضافة (جديد) ---- */
-        .add-btn {
-            background: #D4AF37;
-            color: #0a0a0a;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            font-weight: bold;
-            cursor: pointer;
-            margin: 1rem 0;
-            display: inline-block;
-        }
-        .add-btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 20px rgba(212,175,55,0.3);
-        }
-
-        /* ---- Admin Toolbar (معدل) ---- */
-        #admin-toolbar {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 9999;
-            background: #111111;
-            border: 2px solid #D4AF37;
-            border-radius: 50px;
-            padding: 10px 20px;
-            display: none;
-            align-items: center;
-            gap: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            font-family: 'Cairo', sans-serif;
-        }
-        .admin-btn {
-            background: transparent;
-            border: 1px solid #D4AF37;
-            color: #D4AF37;
-            padding: 5px 15px;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-        .admin-btn.save {
-            background: #D4AF37;
-            color: #0a0a0a;
-            font-weight: bold;
-        }
-        .admin-btn.exit:hover {
-            background: #ff4444;
-            border-color: #ff4444;
-            color: white;
         }
 
         /* ---- Toast ---- */
@@ -320,7 +213,52 @@
         }
         .loader-content { animation: loaderScale 0.8s ease-out forwards; }
 
-        /* ---- صفحة الرياضة الداخلية (جديدة) ---- */
+        /* ---- Admin Toolbar ---- */
+        #admin-toolbar {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 9999;
+            background: #111111;
+            border: 2px solid #D4AF37;
+            border-radius: 50px;
+            padding: 10px 20px;
+            display: none;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            font-family: 'Cairo', sans-serif;
+        }
+        .admin-btn {
+            background: transparent;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            padding: 5px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .admin-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+        .admin-btn.save {
+            background: #D4AF37;
+            color: #0a0a0a;
+            font-weight: bold;
+        }
+        .admin-btn.save:hover {
+            background: #F5E6A3;
+            border-color: #F5E6A3;
+        }
+        .admin-btn.exit:hover {
+            background: #ff4444;
+            border-color: #ff4444;
+            color: white;
+        }
+
+        /* ---- Sport Detail Page ---- */
         .sport-detail-page {
             position: fixed;
             top: 0;
@@ -359,6 +297,143 @@
             color: #0a0a0a;
             transform: rotate(90deg);
         }
+
+        /* ---- Add Image Button in Gallery ---- */
+        .add-image-btn {
+            background: rgba(212,175,55,0.1);
+            border: 3px dashed rgba(212,175,55,0.3);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(212,175,55,0.5);
+            margin-top: 1rem;
+            display: inline-block;
+            width: auto;
+        }
+        .add-image-btn:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+            background: rgba(212,175,55,0.15);
+        }
+        .add-image-btn i {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        /* ---- نموذج إضافة الرابط (الجديد) ---- */
+        .link-form {
+            background: #111111;
+            border: 2px solid #D4AF37;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            display: none;
+        }
+        .link-form.show {
+            display: block;
+        }
+        .link-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
+            color: white;
+            margin-bottom: 1rem;
+            font-family: 'Cairo', sans-serif;
+        }
+        .link-input:focus {
+            outline: 2px solid #D4AF37;
+        }
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            display: none;
+        }
+        .preview-image.show {
+            display: block;
+        }
+        .form-buttons {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* ---- Image Item in Gallery ---- */
+        .gallery-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .gallery-item:hover {
+            border-color: #D4AF37;
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(212,175,55,0.2);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .image-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .admin-active .gallery-item:hover .image-overlay {
+            opacity: 1;
+        }
+        .image-overlay button {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(212,175,55,0.2);
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .image-overlay button:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+            transform: scale(1.1);
+        }
+        
+        /* ---- وصف الصورة ---- */
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.8);
+            color: #D4AF37;
+            padding: 8px;
+            font-size: 0.875rem;
+            text-align: center;
+            border-top: 1px solid rgba(212,175,55,0.3);
+        }
+        .image-caption:empty {
+            display: none;
+        }
+
+        /* ---- Info Card in Sport Page ---- */
         .info-card {
             background: #111111;
             border: 1px solid rgba(212,175,55,0.12);
@@ -374,65 +449,13 @@
             border-bottom: 1px solid rgba(212,175,55,0.2);
             padding-bottom: 0.5rem;
         }
+        
+        /* ---- معرض الصور في الصفحة الداخلية ---- */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 1rem;
             margin-top: 1rem;
-        }
-        .gallery-item {
-            position: relative;
-            border-radius: 0.5rem;
-            overflow: hidden;
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        .gallery-item:hover {
-            border-color: #D4AF37;
-            transform: scale(1.02);
-        }
-        .gallery-item img {
-            width: 100%;
-            aspect-ratio: 1;
-            object-fit: cover;
-        }
-        .gallery-caption {
-            text-align: center;
-            color: #D4AF37;
-            padding: 8px;
-            background: rgba(0,0,0,0.7);
-            font-size: 0.875rem;
-        }
-        .gallery-caption:empty {
-            display: none;
-        }
-        .admin-controls {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            display: flex;
-            gap: 5px;
-            opacity: 0;
-            transition: 0.3s;
-        }
-        .gallery-item:hover .admin-controls {
-            opacity: 1;
-        }
-        .admin-icon {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: #D4AF37;
-            color: black;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-        .admin-icon.delete {
-            background: #ff4444;
-            color: white;
         }
     </style>
 </head>
@@ -461,17 +484,17 @@
     </div>
 
     <!-- ======================== CLOSE BUTTON ======================== -->
-    <div id="close-btn" class="close-btn" onclick="app.closeSportPage()">
+    <div id="close-btn" class="close-btn" style="display: none;" onclick="app.closeSportPage()">
         <i class="fas fa-times"></i>
     </div>
 
-    <!-- ======================== نموذج إضافة رابط ======================== -->
-    <div id="link-form" class="link-form" style="display: none;">
+    <!-- ======================== نموذج إضافة الرابط (الجديد) ======================== -->
+    <div id="link-form" class="link-form">
         <h3 style="color: #D4AF37; margin-bottom: 1rem;">إضافة صورة برابط</h3>
         <input type="url" id="image-url" class="link-input" placeholder="https://example.com/image.jpg" dir="ltr">
         <img id="preview" class="preview-image" alt="معاينة">
         <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
-        <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+        <div class="form-buttons">
             <button class="admin-btn save" onclick="app.saveLink()">حفظ</button>
             <button class="admin-btn" onclick="app.cancelLink()">إلغاء</button>
         </div>
@@ -560,28 +583,35 @@
         <!-- FOOTER / CONTACT -->
         <footer id="contact-section" class="bg-[#0a0a0a] border-t border-gold/10 pt-20 pb-16 font-cairo">
             <div class="max-w-7xl mx-auto px-4">
+                
                 <div class="flex flex-wrap justify-center gap-12 md:gap-24">
+                    
                     <a href="https://instagram.com/EL_AMRANI_MUSTAPHA" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group">
                         <div class="text-gold/60 group-hover:text-gold transition-all duration-500 group-hover:-translate-y-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg>
                         </div>
                     </a>
+
                     <a href="https://wa.me/212662024858" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group">
                         <div class="text-gold/60 group-hover:text-gold transition-all duration-500 group-hover:-translate-y-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                         </div>
                     </a>
+
                     <a href="https://facebook.com/elamrani.mustapha" target="_blank" rel="noopener noreferrer" class="flex flex-col items-center group">
                         <div class="text-gold/60 group-hover:text-gold transition-all duration-500 group-hover:-translate-y-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
                         </div>
                     </a>
+
                     <a href="mailto:amrani.mustapha1982@gmail.com" class="flex flex-col items-center group">
                         <div class="text-gold/60 group-hover:text-gold transition-all duration-500 group-hover:-translate-y-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                         </div>
                     </a>
+
                 </div>
+
                 <div class="max-w-md mx-auto border-t border-gold/10 mt-16 mb-8"></div>
                 <div class="text-center">
                     <p class="font-cairo text-gold/30 text-[10px] md:text-xs tracking-widest uppercase select-none">
@@ -634,7 +664,7 @@
         </div>
     </div>
 
-    <!-- ======================== SPORT DETAIL PAGE (صفحة الرياضة الداخلية) ======================== -->
+    <!-- ======================== SPORT DETAIL PAGE ======================== -->
     <div id="sport-detail-page" class="sport-detail-page">
         <div class="max-w-7xl mx-auto">
             <!-- رأس الصفحة -->
@@ -654,11 +684,11 @@
                     <div class="space-y-4">
                         <div class="flex items-center gap-3">
                             <i class="fas fa-calendar-day text-gold/60 w-6"></i>
-                            <span class="editable font-cairo" id="sport-schedule">الثلاثاء — الخميس — السبت</span>
+                            <span class="editable font-cairo" id="sport-schedule"></span>
                         </div>
                         <div class="flex items-center gap-3">
                             <i class="fas fa-clock text-gold/60 w-6"></i>
-                            <span class="editable font-cairo" id="sport-time">20:30 — 21:30</span>
+                            <span class="editable font-cairo" id="sport-time"></span>
                         </div>
                     </div>
                 </div>
@@ -676,13 +706,14 @@
                 <div id="age-groups-list" class="space-y-2"></div>
             </div>
 
-            <!-- معرض الصور (بالروابط) -->
+            <!-- معرض الصور -->
             <div class="info-card">
                 <h3 class="info-title"><i class="fas fa-images ml-2"></i>معرض الصور</h3>
                 
-                <!-- زر إضافة صورة (يظهر فقط في وضع المطور) -->
-                <button id="add-image-btn" class="add-btn" style="display: none;" onclick="app.showLinkForm()">
-                    <i class="fas fa-plus-circle"></i> إضافة صورة برابط
+                <!-- زر إضافة صورة برابط (يظهر فقط في وضع المطور) -->
+                <button id="add-image-btn" class="add-image-btn" style="display: none;" onclick="app.showLinkForm()">
+                    <i class="fas fa-plus-circle"></i>
+                    إضافة صورة برابط
                 </button>
                 
                 <!-- معرض الصور -->
@@ -705,7 +736,7 @@
     (function() {
         'use strict';
 
-        // ========== البيانات الأساسية ==========
+        // ========== STATE ==========
         let isAdmin = false;
         let currentSport = null;
         let adminClickCount = 0;
@@ -726,7 +757,7 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: [] // مصفوفة من { url, caption }
+                images: []
             },
             { 
                 id: 'taekwondo', 
@@ -816,7 +847,7 @@
             }
         ];
 
-        // ========== دوال مساعدة ==========
+        // ========== UTILITIES ==========
         const $ = id => document.getElementById(id);
         const $$ = selector => document.querySelectorAll(selector);
 
@@ -836,7 +867,7 @@
             }, 3000);
         }
 
-        // ========== حفظ وتحميل ==========
+        // ========== STORAGE ==========
         function loadStorage() {
             try {
                 const saved = localStorage.getItem('gymData');
@@ -902,13 +933,13 @@
             }
         }
 
-        // ========== عرض بطاقات الرياضات ==========
+        // ========== RENDER SPORTS CARDS ==========
         function renderSportsCards() {
             const container = $('sports-container');
             if (!container) return;
             
             container.innerHTML = sports.map(sport => `
-                <div class="service-card rounded-xl p-6 sm:p-8 cursor-pointer" onclick="app.openSportPage('${sport.id}')">
+                <div class="service-card rounded-xl p-6 sm:p-8" onclick="app.openSportPage('${sport.id}')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas ${sport.icon}"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.nameEn}</h3>
                     <h4 class="font-cairo text-white/50 text-sm mb-5">${sport.nameAr}</h4>
@@ -932,13 +963,15 @@
             `).join('');
         }
 
-        // ========== دوال الصفحة الداخلية ==========
+        // ========== APP OBJECT WITH ALL FUNCTIONS ==========
         const app = {
             openSportPage(sportId) {
                 const sport = sports.find(s => s.id === sportId);
                 if (!sport) return;
                 
                 currentSport = sport;
+                const page = $('sport-detail-page');
+                const closeBtn = $('close-btn');
                 
                 // تحديث العنوان
                 $('sport-detail-title').textContent = sport.nameAr;
@@ -948,36 +981,18 @@
                 $('sport-time').textContent = sport.time;
                 
                 // تحديث الأسعار
-                const pricesContainer = $('prices-container');
-                pricesContainer.innerHTML = sport.prices.map((price, index) => `
-                    <div class="flex items-center justify-between bg-deep-black/50 p-3 rounded-lg border border-gold/10">
-                        <span class="editable font-cairo" data-price-index="${index}">${price.name}</span>
-                        <span class="editable font-cinzel text-gold" data-price-index="${index}">${price.value}</span>
-                    </div>
-                `).join('');
+                this.renderPrices(sport);
                 
                 // تحديث الفئات العمرية
-                const ageGroupsContainer = $('age-groups-container');
-                const ageGroupsList = $('age-groups-list');
-                
-                if (sport.ageGroups && sport.ageGroups.length > 0) {
-                    ageGroupsContainer.style.display = 'block';
-                    ageGroupsList.innerHTML = sport.ageGroups.map((group, index) => `
-                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-2">
-                            <span class="editable" data-age-index="${index}">${group.range}</span>
-                            <span class="text-gold editable" data-age-index="${index}">${group.time}</span>
-                        </div>
-                    `).join('');
-                } else {
-                    ageGroupsContainer.style.display = 'none';
-                }
+                this.renderAgeGroups(sport);
                 
                 // تحديث معرض الصور
                 this.renderGallery();
                 
                 // إظهار الصفحة
-                $('sport-detail-page').classList.add('active');
-                $('close-btn').style.display = 'flex';
+                page.classList.add('active');
+                closeBtn.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
                 
                 // تحديث وضع التحرير
                 this.updateEditMode();
@@ -987,7 +1002,39 @@
                 $('sport-detail-page').classList.remove('active');
                 $('close-btn').style.display = 'none';
                 $('link-form').classList.remove('show');
+                document.body.style.overflow = '';
                 currentSport = null;
+            },
+            
+            renderPrices(sport) {
+                const container = $('prices-container');
+                if (!container) return;
+                
+                container.innerHTML = sport.prices.map((price, index) => `
+                    <div class="flex items-center justify-between bg-deep-black/50 p-3 rounded-lg border border-gold/10">
+                        <span class="editable font-cairo" data-price-index="${index}">${price.name}</span>
+                        <span class="editable font-cinzel text-gold" data-price-index="${index}">${price.value}</span>
+                    </div>
+                `).join('');
+            },
+            
+            renderAgeGroups(sport) {
+                const container = $('age-groups-container');
+                const list = $('age-groups-list');
+                
+                if (!container || !list) return;
+                
+                if (sport.ageGroups && sport.ageGroups.length > 0) {
+                    container.style.display = 'block';
+                    list.innerHTML = sport.ageGroups.map((group, index) => `
+                        <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-2">
+                            <span class="editable" data-age-index="${index}">${group.range}</span>
+                            <span class="text-gold editable" data-age-index="${index}">${group.time}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.style.display = 'none';
+                }
             },
             
             renderGallery() {
@@ -995,20 +1042,27 @@
                 if (!currentSport) return;
                 
                 if (currentSport.images && currentSport.images.length > 0) {
-                    gallery.innerHTML = currentSport.images.map((img, index) => `
-                        <div class="gallery-item" onclick="window.open('${img.url}', '_blank')">
-                            <img src="${img.url}" alt="صورة">
-                            <div class="gallery-caption ${img.caption ? '' : 'empty'}" 
-                                 contenteditable="${isAdmin}" 
-                                 onblur="app.updateCaption(${index}, this.innerText)">${img.caption || ''}</div>
-                            ${isAdmin ? `
-                                <div class="admin-controls" onclick="event.stopPropagation()">
-                                    <div class="admin-icon" onclick="app.editImage(${index})">✏️</div>
-                                    <div class="admin-icon delete" onclick="app.deleteImage(${index})">🗑️</div>
-                                </div>
-                            ` : ''}
-                        </div>
-                    `).join('');
+                    gallery.innerHTML = currentSport.images.map((img, index) => {
+                        const caption = img.caption || '';
+                        return `
+                            <div class="gallery-item" onclick="window.open('${img.url}', '_blank')">
+                                <img src="${img.url}" alt="صورة">
+                                <div class="image-caption ${caption ? '' : 'empty'}" 
+                                     contenteditable="${isAdmin}" 
+                                     onblur="app.updateCaption(${index}, this.innerText)">${caption}</div>
+                                ${isAdmin ? `
+                                    <div class="image-overlay" onclick="event.stopPropagation()">
+                                        <button onclick="app.editImage(${index})" title="تعديل">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button onclick="app.deleteImage(${index})" title="حذف">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `;
+                    }).join('');
                 } else {
                     gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">لا توجد صور بعد</p>';
                 }
@@ -1087,7 +1141,7 @@
 
         window.app = app;
 
-        // ========== إعداد مشغل وضع المطور ==========
+        // ========== ADMIN MODE ==========
         function setupAdminTrigger() {
             const trigger = $('admin-trigger');
             if (!trigger) return;
@@ -1143,7 +1197,7 @@
             showToast('⚡ وضع المطور مفعل');
         }
 
-        // ========== إعداد الأزرار ==========
+        // ========== SETUP BUTTONS ==========
         function setupSaveButton() {
             $('save-btn').addEventListener('click', saveStorage);
         }
@@ -1169,7 +1223,7 @@
             });
         }
 
-        // ========== إعداد البحث ==========
+        // ========== SETUP SEARCH ==========
         function setupSearch() {
             const btn = $('search-btn');
             const box = $('search-container');
@@ -1195,7 +1249,7 @@
             });
         }
 
-        // ========== إعداد القائمة للجوال ==========
+        // ========== SETUP MOBILE ==========
         function setupMobile() {
             $('mobile-btn').addEventListener('click', () => {
                 $('mobile-menu').classList.toggle('hidden');
@@ -1206,7 +1260,7 @@
             $('mobile-menu').classList.add('hidden');
         };
 
-        // ========== عرض الصفحات ==========
+        // ========== VIEW SWITCHING ==========
         window.showView = function(view) {
             const home = $('home-view');
             const ach = $('achievements-view');
@@ -1226,7 +1280,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // ========== دوال الإنجازات (كما هي) ==========
+        // ========== GALLERY FUNCTIONS (للإنجازات) ==========
         let galleryImages = [];
         let pendingUploads = [];
         let lbIndex = 0;
@@ -1238,7 +1292,7 @@
                 { t:'🥋 تدريبات الفريق',        h:260, c1:'#1a1010', c2:'#0d0808' },
                 { t:'⭐ ميدالية ذهبية',         h:340, c1:'#10101a', c2:'#08080d' },
                 { t:'💪 بطولة إقليمية',         h:280, c1:'#1a1a0f', c2:'#0d0d08' },
-                { t:'🏅 إنجاز 2024',            h:320, c1:'#0f1a1a', c2:'#080d0d' }
+                { t:'🏅 إنجاز 2024',            h:320, c1:'#0f1a1a', c2:'#080d0d' },
             ];
             return items.map(function(item) {
                 var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="'+item.h+'">'
@@ -1342,7 +1396,7 @@
             $('upload-preview').appendChild(d);
         }
 
-        // ========== Lightbox ==========
+        // ========== LIGHTBOX ==========
         window.lbOpen = function(i) {
             var all = galleryImages.concat(pendingUploads);
             lbIndex = i;
@@ -1371,7 +1425,7 @@
             if (e.key === 'ArrowRight') lbNav(-1);
         });
 
-        // ========== التهيئة ==========
+        // ========== INIT ==========
         function init() {
             loadStorage();
             renderSportsCards();
