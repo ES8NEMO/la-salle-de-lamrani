@@ -975,7 +975,10 @@
                 
                 // حفظ فقط البيانات النصية (الروابط وليس الصور)
                 localStorage.setItem('gymData', JSON.stringify({ sports }));
-                showToast('✅ تم الحفظ بنجاح');
+                
+                // رسالة تأكيد عند الضغط على زر الحفظ
+                showToast('✅ تم حفظ المعلومات بنجاح');
+                
             } catch(e) {
                 console.warn('Save error:', e);
                 showToast('❌ فشل في الحفظ');
