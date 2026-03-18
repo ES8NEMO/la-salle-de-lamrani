@@ -1297,15 +1297,15 @@
             $('add-area').classList.add('show');
         };
 
-        // ========== حفظ الصورة ==========
+             // ========== حفظ الصورة (نسخة بدون تحقق) ==========
         window.saveLink = function() {
             const urlInput = $('image-url');
             if (!urlInput) { alert('❌ خطأ'); return; }
             
             let url = urlInput.value.trim();
-            if (!url) { alert('❌ الرابط مطلوب'); urlInput.focus(); return; }
             
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            // إضافة https:// تلقائياً إذا كان هناك نص
+            if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'https://' + url;
             }
             
@@ -1328,7 +1328,6 @@
             
             if (typeof saveToCloud === 'function') setTimeout(saveToCloud, 500);
         };
-
         // ========== حذف الصورة ==========
         window.deleteImage = function(index) {
             if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
