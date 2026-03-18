@@ -134,13 +134,6 @@
             border: 2px solid #D4AF37;
             box-shadow: 0 0 50px rgba(212,175,55,0.3);
             background: #111;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23111"/><text x="50" y="50" font-size="14" text-anchor="middle" fill="%23D4AF37" font-family="Cairo" dy=".3em">جاري التحميل...</text></svg>');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 100px;
-        }
-        .lightbox img.loaded {
-            background-image: none;
         }
         .lightbox-close {
             position: absolute;
@@ -578,6 +571,9 @@
         .preview-image.show {
             display: block;
         }
+        .preview-image.loaded {
+            background: transparent;
+        }
         .form-buttons {
             display: flex;
             gap: 0.5rem;
@@ -595,10 +591,6 @@
             transition: all 0.3s ease;
             cursor: pointer;
             background: #111;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50"><rect width="50" height="50" fill="%23111"/><text x="25" y="25" font-size="10" text-anchor="middle" fill="%23D4AF37" font-family="Cairo" dy=".3em">تحميل...</text></svg>');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 50px;
         }
         .gallery-item:hover {
             border-color: #D4AF37;
@@ -609,14 +601,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0;
+            opacity: 1;
             transition: opacity 0.3s ease;
         }
-        .gallery-item img.loaded {
-            opacity: 1;
-        }
         .gallery-item img.error-image {
-            opacity: 1;
             object-fit: contain;
             background: #111;
         }
@@ -773,7 +761,7 @@
         <div class="lightbox-nav next" onclick="navigateLightbox(1)">
             <i class="fas fa-chevron-left"></i>
         </div>
-        <img id="lightbox-img" src="" alt="" onload="this.classList.add('loaded')">
+        <img id="lightbox-img" src="" alt="">
         <div id="lightbox-counter" class="lightbox-counter"></div>
         <div id="lightbox-caption" class="lightbox-caption"></div>
     </div>
@@ -787,18 +775,6 @@
                 <button class="admin-btn save" onclick="saveCaption()">حفظ</button>
                 <button class="admin-btn" onclick="closeCaptionModal()">إلغاء</button>
             </div>
-        </div>
-    </div>
-
-    <!-- ======================== نموذج إضافة الرابط ======================== -->
-    <div id="link-form" class="link-form" style="display: none;">
-        <h3 style="color: #D4AF37; margin-bottom: 1rem;">إضافة صورة برابط</h3>
-        <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا (مثال: https://example.com/image.jpg)" dir="ltr">
-        <img id="preview" class="preview-image" alt="معاينة">
-        <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
-        <div class="form-buttons">
-            <button class="admin-btn save" onclick="saveLink()">حفظ</button>
-            <button class="admin-btn" onclick="cancelAdd()">إلغاء</button>
         </div>
     </div>
 
@@ -1028,7 +1004,7 @@
                 <!-- منطقة الإضافة -->
                 <div id="add-area" class="add-area">
                     <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا" dir="ltr">
-                    <img id="preview" class="preview-image" alt="معاينة" onload="this.classList.add('loaded')">
+                    <img id="preview" class="preview-image" alt="معاينة">
                     <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
                     <div class="form-buttons">
                         <button class="admin-btn save" onclick="saveLink()">حفظ</button>
@@ -1042,7 +1018,7 @@
         </div>
     </div>
 
-    <!-- ======================== JAVASCRIPT المحسّن بالكامل ======================== -->
+    <!-- ======================== JAVASCRIPT المصحح بالكامل ======================== -->
     <script>
     (function() {
         'use strict';
@@ -1165,7 +1141,7 @@
         ];
 
         // ========== نظام Toast المحسّن ==========
-        function showToast(message, type = 'default', duration = 3000) {
+        window.showToast = function(message, type = 'default', duration = 3000) {
             const container = document.getElementById('toast-container');
             if (!container) return;
             
@@ -1184,17 +1160,15 @@
             
             container.appendChild(toast);
             
-            // تأخير بسيط لتفعيل الأنيميشن
             setTimeout(() => toast.classList.add('show'), 10);
             
-            // إزالة التوست بعد المدة المحددة
             setTimeout(() => {
                 toast.classList.remove('show');
                 setTimeout(() => toast.remove(), 400);
             }, duration);
-        }
+        };
 
-        // ========== دوال Lightbox المحسّنة ==========
+        // ========== دوال Lightbox ==========
         window.openLightbox = function(images, index) {
             if (!images || images.length === 0) return;
             
@@ -1223,11 +1197,7 @@
             if (!currentLightboxImages || currentLightboxImages.length === 0) return;
             const img = currentLightboxImages[currentLightboxIndex];
             const imgUrl = img.url || img;
-            const imgElement = document.getElementById('lightbox-img');
-            
-            imgElement.classList.remove('loaded');
-            imgElement.src = imgUrl;
-            
+            document.getElementById('lightbox-img').src = imgUrl;
             document.getElementById('lightbox-counter').textContent = `${currentLightboxIndex + 1} / ${currentLightboxImages.length}`;
             document.getElementById('lightbox-caption').textContent = img.caption || '';
         }
@@ -1261,7 +1231,7 @@
                 currentSport.images[currentEditIndex].caption = newCaption;
                 renderSportGallery();
                 closeCaptionModal();
-                showToast('✅ تم تعديل الوصف بنجاح', 'success');
+                window.showToast('✅ تم تعديل الوصف بنجاح', 'success');
             }
         };
 
@@ -1286,11 +1256,11 @@
                         }
                     });
                 }
-                showToast('✅ تم تحميل البيانات من السحابة', 'success');
+                window.showToast('✅ تم تحميل البيانات من السحابة', 'success');
             } catch(e) {
                 console.warn('فشل تحميل البيانات من السحابة');
                 loadLocalStorage();
-                showToast('⚠️ تم التحميل من التخزين المحلي', 'warning');
+                window.showToast('⚠️ تم التحميل من التخزين المحلي', 'warning');
             }
         }
 
@@ -1305,14 +1275,14 @@
                     body: JSON.stringify({ sports })
                 });
                 if (response.ok) {
-                    showToast('✅ تم حفظ المعلومات في السحابة', 'success');
+                    window.showToast('✅ تم حفظ المعلومات في السحابة', 'success');
                 } else {
-                    showToast('❌ فشل في حفظ المعلومات في السحابة', 'error');
+                    window.showToast('❌ فشل في حفظ المعلومات في السحابة', 'error');
                 }
             } catch(e) {
                 console.warn('فشل حفظ البيانات في السحابة');
                 saveLocalStorage();
-                showToast('✅ تم حفظ المعلومات محلياً', 'success');
+                window.showToast('✅ تم حفظ المعلومات محلياً', 'success');
             }
         }
 
@@ -1462,21 +1432,24 @@
             const caption = document.getElementById('image-caption').value.trim();
             
             if (!url) {
-                showToast('❌ الرجاء إدخال رابط الصورة', 'error');
+                window.showToast('❌ الرجاء إدخال رابط الصورة', 'error');
                 return;
             }
             
-            if (!currentSport) return;
+            if (!currentSport) {
+                window.showToast('❌ لم يتم تحديد الرياضة', 'error');
+                return;
+            }
             
             if (editImageIndex !== null) {
                 // تعديل صورة موجودة
                 currentSport.images[editImageIndex] = { url, caption };
-                showToast('✅ تم تعديل الصورة بنجاح', 'success');
+                window.showToast('✅ تم تعديل الصورة بنجاح', 'success');
                 editImageIndex = null;
             } else {
                 // إضافة صورة جديدة
                 currentSport.images.push({ url, caption });
-                showToast('✅ تم إضافة الصورة بنجاح', 'success');
+                window.showToast('✅ تم إضافة الصورة بنجاح', 'success');
             }
             
             renderSportGallery();
@@ -1502,11 +1475,11 @@
             if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                 currentSport.images.splice(index, 1);
                 renderSportGallery();
-                showToast('✅ تم حذف الصورة', 'success');
+                window.showToast('✅ تم حذف الصورة', 'success');
             }
         };
 
-        // ========== عرض معرض الصور المحسّن ==========
+        // ========== عرض معرض الصور ==========
         function renderSportGallery() {
             const gallery = document.getElementById('sport-gallery');
             if (!currentSport) return;
@@ -1520,10 +1493,9 @@
                         <div class="gallery-item" data-index="${index}">
                             <img src="${imageUrl}" 
                                  alt="صورة" 
-                                 onload="this.classList.add('loaded')"
+                                 onclick="openLightbox(currentSport.images, ${index})"
                                  onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23333\'/%3E%3Ctext x=\'100\' y=\'100\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23D4AF37\' font-family=\'Cairo\'%3Eصورة غير متوفرة%3C/text%3E%3C/svg%3E'; 
-                                 this.classList.add('error-image', 'loaded');"
-                                 onclick="openLightbox(currentSport.images, ${index})">
+                                 this.classList.add('error-image');">
                             <div class="image-caption ${caption ? '' : 'empty'}">${caption}</div>
                             ${isAdmin ? `
                                 <div class="image-overlay" onclick="event.stopPropagation()">
@@ -1562,7 +1534,7 @@
                     if (password === 'افتح يا سم سم') {
                         activateAdmin();
                     } else if (password) {
-                        showToast('❌ كلمة المرور غير صحيحة', 'error');
+                        window.showToast('❌ كلمة المرور غير صحيحة', 'error');
                     }
                 }
             });
@@ -1593,7 +1565,7 @@
                 updateEditMode();
             }
             
-            showToast('⚡ وضع المطور مفعل', 'success');
+            window.showToast('⚡ وضع المطور مفعل', 'success');
         }
 
         // ========== أزرار الحفظ والخروج ==========
@@ -1625,7 +1597,7 @@
                 
                 if (currentSport) renderSportGallery();
                 
-                showToast('✅ تم الخروج من وضع المطور', 'success');
+                window.showToast('✅ تم الخروج من وضع المطور', 'success');
             });
         }
 
@@ -1710,8 +1682,8 @@
             ).join('');
         }
 
-        window.resetGallery = function() { if (isAdmin) { galleryImages = []; pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); showToast('🗑️ تم مسح جميع الصور', 'success'); } };
-        window.resetDefaults = function() { if (isAdmin) { galleryImages = defaultImages.slice(); pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); showToast('✅ تم استعادة الصور الافتراضية', 'success'); } };
+        window.resetGallery = function() { if (isAdmin) { galleryImages = []; pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); window.showToast('🗑️ تم مسح جميع الصور', 'success'); } };
+        window.resetDefaults = function() { if (isAdmin) { galleryImages = defaultImages.slice(); pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); window.showToast('✅ تم استعادة الصور الافتراضية', 'success'); } };
 
         // ========== السحب والإفلات ==========
         function setupDragDrop() {
@@ -1736,7 +1708,7 @@
                     pendingUploads.push(url);
                     renderAchievementsGallery();
                     addPreview(url);
-                    showToast('📷 تم تحميل الصورة', 'success');
+                    window.showToast('📷 تم تحميل الصورة', 'success');
                 });
             });
         }
@@ -1795,8 +1767,7 @@
             
             setTimeout(() => document.getElementById('loader').style.display = 'none', 1800);
             
-            // رسالة ترحيبية
-            setTimeout(() => showToast('🌟 مرحباً بك في Five Stars Gym', 'default'), 2000);
+            setTimeout(() => window.showToast('🌟 مرحباً بك في Five Stars Gym', 'default'), 2000);
         }
 
         document.addEventListener('DOMContentLoaded', init);
