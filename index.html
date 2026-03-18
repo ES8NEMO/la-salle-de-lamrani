@@ -1776,5 +1776,131 @@
 
     })();
     </script>
+
+    <!-- ======================== أدوات التصحيح (مؤقتة) ======================== -->
+    <!-- زر اختبار مؤقت (للتأكد من عمل الرابط) -->
+    <div style="position: fixed; bottom: 100px; left: 20px; z-index: 10000; display: flex; gap: 10px; flex-direction: column;">
+        <button onclick="testLinkInput()" style="background: #D4AF37; color: #0a0a0a; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            🧪 اختبار الرابط
+        </button>
+        <button onclick="checkDevMode()" style="background: #333; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            🔍 فحص الوضع
+        </button>
+        <button onclick="fixSaveLink()" style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+            🔧 إصلاح الحفظ
+        </button>
+    </div>
+
+    <script>
+    // ========== أدوات التصحيح لحل مشكلة الرابط ==========
+    (function() {
+        'use strict';
+        
+        // دالة اختبار سريعة
+        window.testLinkInput = function() {
+            const urlInput = document.getElementById('image-url');
+            if (!urlInput) {
+                alert('❌ خانة الرابط غير موجودة');
+                console.error('عنصر image-url غير موجود في الصفحة');
+                return;
+            }
+            
+            const url = urlInput.value.trim();
+            if (!url) {
+                alert('❌ الخانة فارغة');
+                return;
+            }
+            
+            alert('✅ الرابط الذي أدخلته هو:\n' + url);
+            console.log('✅ الرابط:', url);
+        };
+
+        // دالة للتحقق من حالة وضع المطور
+        window.checkDevMode = function() {
+            console.log('👤 هل أنت في وضع المطور؟', typeof isAdmin !== 'undefined' ? (isAdmin ? 'نعم' : 'لا') : 'غير معروف');
+            console.log('🏋️ الرياضة الحالية:', typeof currentSport !== 'undefined' && currentSport ? currentSport.nameAr : 'لا توجد');
+            console.log('🔗 عنصر الرابط موجود؟', document.getElementById('image-url') ? 'نعم' : 'لا');
+            console.log('📝 عنصر الوصف موجود؟', document.getElementById('image-caption') ? 'نعم' : 'لا');
+            console.log('🖼️ عدد الصور الحالي:', typeof currentSport !== 'undefined' && currentSport && currentSport.images ? currentSport.images.length : 0);
+            
+            alert('✅ تم تسجيل المعلومات في الـ Console (اضغط F12)');
+        };
+
+        // دالة إصلاح مشكلة الحفظ
+        window.fixSaveLink = function() {
+            console.log('🔧 محاولة إصلاح مشكلة الحفظ...');
+            
+            // إعادة تعريف دالة saveLink بشكل محسن
+            window.saveLink = function() {
+                console.log('🔍 محاولة حفظ الرابط...');
+                
+                // التأكد من وجود العناصر
+                const urlInput = document.getElementById('image-url');
+                const captionInput = document.getElementById('image-caption');
+                
+                if (!urlInput) {
+                    alert('❌ خطأ: لم يتم العثور على خانة الرابط');
+                    console.error('عنصر image-url غير موجود في الصفحة');
+                    return;
+                }
+                
+                let url = urlInput.value.trim();
+                console.log('📝 الرابط المدخل:', url);
+                
+                if (!url) {
+                    alert('❌ الرابط مطلوب');
+                    return;
+                }
+                
+                // التحقق من صحة الرابط وإضافة https:// إذا لزم الأمر
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                    console.log('🔗 تم إضافة https://:', url);
+                }
+                
+                const caption = captionInput ? captionInput.value.trim() : '';
+                console.log('📝 الوصف:', caption || '(فارغ)');
+                
+                // التأكد من وجود currentSport
+                if (typeof currentSport === 'undefined' || !currentSport) {
+                    alert('❌ خطأ: لم يتم تحديد الرياضة الحالية');
+                    console.error('currentSport غير موجود');
+                    return;
+                }
+                
+                const imageData = { url, caption };
+                console.log('🖼️ بيانات الصورة:', imageData);
+                
+                if (typeof editImageIndex !== 'undefined' && editImageIndex !== null) {
+                    currentSport.images[editImageIndex] = imageData;
+                    console.log('✏️ تم تعديل الصورة في الفهرس:', editImageIndex);
+                } else {
+                    currentSport.images.push(imageData);
+                    console.log('➕ تم إضافة صورة جديدة، العدد الآن:', currentSport.images.length);
+                }
+                
+                // استدعاء دالة renderSportGallery إذا كانت موجودة
+                if (typeof renderSportGallery === 'function') {
+                    renderSportGallery();
+                } else if (typeof window.renderSportGallery === 'function') {
+                    window.renderSportGallery();
+                }
+                
+                // إلغاء الإضافة
+                if (typeof cancelAdd === 'function') {
+                    cancelAdd();
+                } else if (typeof window.cancelAdd === 'function') {
+                    window.cancelAdd();
+                }
+                
+                alert('✅ تمت إضافة الصورة بنجاح');
+            };
+            
+            alert('✅ تم إصلاح دالة الحفظ! جرب إضافة الصورة الآن.');
+        };
+
+        console.log('✅ تم تحميل أدوات التصحيح بنجاح');
+    })();
+    </script>
 </body>
 </html>
