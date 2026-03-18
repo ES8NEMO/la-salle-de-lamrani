@@ -1321,22 +1321,24 @@
             currentSport = null;
         };
 
-        // ========== TOGGLE ADD AREA ==========
-        window.toggleAddArea = function() {
-            const addArea = $('add-area');
-            if (addArea.classList.contains('show')) {
-                addArea.classList.remove('show');
-            } else {
-                $('image-url').value = '';
-                $('image-caption').value = '';
-                $('preview').classList.remove('show');
-                editImageIndex = null;
-                addArea.classList.add('show');
-                
-                // إعادة تفعيل مستمع حدث الإدخال عند فتح منطقة الإضافة
-                setupPreviewListener();
-            }
-        };
+     // ========== TOGGLE ADD AREA ==========
+window.toggleAddArea = function() {
+    const addArea = $('add-area');
+    if (addArea.classList.contains('show')) {
+        addArea.classList.remove('show');
+    } else {
+        $('image-url').value = '';
+        $('image-caption').value = '';
+        $('preview').classList.remove('show');
+        editImageIndex = null;
+        addArea.classList.add('show');
+        
+        // تأخير بسيط للتأكد من أن العنصر ظهر في DOM
+        setTimeout(() => {
+            setupPreviewListener();
+        }, 100);
+    }
+};
 
         // ========== CANCEL ADD ==========
         window.cancelAdd = function() {
@@ -1347,33 +1349,35 @@
             editImageIndex = null;
         };
 
-        // دالة لإعداد مستمع معاينة الرابط
-        function setupPreviewListener() {
-            const urlInput = $('image-url');
-            const previewImg = $('preview');
-            
-            if (!urlInput || !previewImg) return;
-            
-            // إزالة المستمع القديم إذا كان موجوداً
-            urlInput.removeEventListener('input', handlePreviewInput);
-            // إضافة المستمع الجديد
-            urlInput.addEventListener('input', handlePreviewInput);
-        }
+      // دالة لإعداد مستمع معاينة الرابط
+function setupPreviewListener() {
+    const urlInput = $('image-url');
+    const previewImg = $('preview');
+    
+    if (!urlInput || !previewImg) return;
+    
+    // إزالة المستمع القديم إذا كان موجوداً
+    urlInput.removeEventListener('input', handlePreviewInput);
+    // إضافة المستمع الجديد
+    urlInput.addEventListener('input', handlePreviewInput);
+}
 
-        // دالة معالجة الإدخال للمعاينة
-        function handlePreviewInput(e) {
-            const previewImg = $('preview');
-            if (!previewImg) return;
-            
-            const url = e.target.value.trim();
-            if (url) {
-                previewImg.src = url;
-                previewImg.classList.add('show');
-            } else {
-                previewImg.classList.remove('show');
-            }
-        }
-
+      // دالة معالجة الإدخال للمعاينة
+function handlePreviewInput(e) {
+    const previewImg = $('preview');
+    if (!previewImg) return;
+    
+    const url = e.target.value.trim();
+    console.log('📝 كتابة الرابط:', url);
+    
+    if (url) {
+        previewImg.src = url;
+        previewImg.classList.add('show');
+        console.log('🖼️ تم تحديث المعاينة');
+    } else {
+        previewImg.classList.remove('show');
+    }
+}
         // ========== RENDER SPORT GALLERY ==========
         function renderSportGallery() {
             const gallery = $('sport-gallery');
@@ -1433,19 +1437,21 @@
             }
         };
 
-        // ========== EDIT IMAGE ==========
-        window.editImage = function(index) {
-            editImageIndex = index;
-            const img = currentSport.images[index];
-            $('image-url').value = img.url;
-            $('image-caption').value = img.caption || '';
-            $('preview').src = img.url;
-            $('preview').classList.add('show');
-            $('add-area').classList.add('show');
-            
-            // إعادة تفعيل مستمع حدث الإدخال عند فتح منطقة الإضافة
-            setupPreviewListener();
-        };
+      // ========== EDIT IMAGE ==========
+window.editImage = function(index) {
+    editImageIndex = index;
+    const img = currentSport.images[index];
+    $('image-url').value = img.url;
+    $('image-caption').value = img.caption || '';
+    $('preview').src = img.url;
+    $('preview').classList.add('show');
+    $('add-area').classList.add('show');
+    
+    // إعادة تفعيل مستمع حدث الإدخال عند فتح منطقة الإضافة
+    setTimeout(() => {
+        setupPreviewListener();
+    }, 100);
+};
 
         // ========== SAVE LINK ==========
         window.saveLink = function() {
@@ -2041,5 +2047,44 @@
     // التحقق عند تحميل الصفحة
     setTimeout(toggleDebugTools, 500);
     </script>
+    <script>
+// حل طارئ لمشكلة المعاينة
+document.addEventListener('DOMContentLoaded', function() {
+    // مراقبة ظهور منطقة الإضافة
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.target.id === 'add-area' && 
+                mutation.target.classList.contains('show')) {
+                setTimeout(function() {
+                    const input = document.getElementById('image-url');
+                    const preview = document.getElementById('preview');
+                    
+                    if (input && preview) {
+                        // إزالة المستمع القديم
+                        input.removeEventListener('input', window.emergencyPreview);
+                        // إضافة مستمع جديد
+                        window.emergencyPreview = function(e) {
+                            const url = e.target.value.trim();
+                            if (url) {
+                                preview.src = url;
+                                preview.classList.add('show');
+                            } else {
+                                preview.classList.remove('show');
+                            }
+                        };
+                        input.addEventListener('input', window.emergencyPreview);
+                        console.log('🚑 تم تفعيل المعاينة الطارئة');
+                    }
+                }, 200);
+            }
+        });
+    });
+    
+    const addArea = document.getElementById('add-area');
+    if (addArea) {
+        observer.observe(addArea, { attributes: true, attributeFilter: ['class'] });
+    }
+});
+</script>
 </body>
 </html>
