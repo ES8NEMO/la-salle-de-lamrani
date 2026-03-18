@@ -1901,5 +1901,17 @@
         console.log('✅ تم تحميل أدوات التصحيح بنجاح');
     })();
     </script>
+    <script>
+// تصحيح مؤقت لمشكلة الرابط
+window.testLinkNow = function() {
+    const input = document.getElementById('image-url');
+    if (!input) {
+        alert('❌ خانة الرابط غير موجودة');
+        return;
+    }
+    const val = input.value;
+    alert('قيمة الرابط: "' + val + '"' + (val ? '' : ' (فارغة)'));
+};
+</script>
 </body>
 </html>
