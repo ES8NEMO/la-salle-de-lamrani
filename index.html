@@ -900,7 +900,7 @@
         </div>
     </div>
 
-    <!-- ======================== JAVASCRIPT (نسخة جديدة كاملة) ======================== -->
+    <!-- ======================== JAVASCRIPT (نسخة محسنة مع إصلاح الأخطاء) ======================== -->
     <script>
     (function() {
         'use strict';
@@ -1122,12 +1122,15 @@
                     },
                     body: JSON.stringify({ sports })
                 });
-                if (response.ok) alert('✅ تم حفظ المعلومات في السحابة');
-                else alert('❌ فشل في حفظ المعلومات في السحابة');
+                if (response.ok) {
+                    showToast('✅ تم حفظ المعلومات في السحابة');
+                } else {
+                    showToast('❌ فشل في حفظ المعلومات في السحابة');
+                }
             } catch(e) {
                 console.warn('فشل حفظ البيانات في السحابة');
                 saveLocalStorage();
-                alert('✅ تم حفظ المعلومات محلياً');
+                showToast('✅ تم حفظ المعلومات محلياً');
             }
         }
 
@@ -1237,6 +1240,16 @@
             currentSport = null;
         };
 
+        // ========== تحديث وضع التحرير ==========
+        function updateEditMode() {
+            if (isAdmin && currentSport) {
+                $('add-image-btn').style.display = 'inline-flex';
+            } else {
+                $('add-image-btn').style.display = 'none';
+            }
+            renderSportGallery();
+        }
+
         // ========== فتح/إغلاق منطقة الإضافة ==========
         window.toggleAddArea = function() {
             const addArea = $('add-area');
@@ -1260,6 +1273,55 @@
             editImageIndex = null;
         };
 
+        // ========== حفظ الصورة ==========
+        window.saveLink = function() {
+            const url = $('image-url').value.trim();
+            const caption = $('image-caption').value.trim();
+            
+            if (!url) {
+                showToast('❌ الرجاء إدخال رابط الصورة');
+                return;
+            }
+            
+            if (!currentSport) return;
+            
+            if (editImageIndex !== null) {
+                // تعديل صورة موجودة
+                currentSport.images[editImageIndex] = { url, caption };
+                editImageIndex = null;
+            } else {
+                // إضافة صورة جديدة
+                currentSport.images.push({ url, caption });
+            }
+            
+            renderSportGallery();
+            cancelAdd();
+            showToast('✅ تم حفظ الصورة');
+        };
+
+        // ========== تعديل الصورة ==========
+        window.editImage = function(index) {
+            if (!currentSport || !currentSport.images[index]) return;
+            
+            const img = currentSport.images[index];
+            $('image-url').value = img.url;
+            $('image-caption').value = img.caption || '';
+            $('preview').src = img.url;
+            $('preview').classList.add('show');
+            editImageIndex = index;
+            $('add-area').classList.add('show');
+        };
+
+        // ========== حذف الصورة ==========
+        window.deleteImage = function(index) {
+            if (!currentSport || !currentSport.images) return;
+            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
+                currentSport.images.splice(index, 1);
+                renderSportGallery();
+                showToast('✅ تم حذف الصورة');
+            }
+        };
+
         // ========== عرض معرض الصور ==========
         function renderSportGallery() {
             const gallery = $('sport-gallery');
@@ -1268,9 +1330,16 @@
             if (currentSport.images && currentSport.images.length > 0) {
                 gallery.innerHTML = currentSport.images.map((img, index) => {
                     const caption = img.caption || '';
+                    // التحقق من أن الرابط موجود
+                    const imageUrl = img.url && img.url.trim() ? img.url : '';
+                    
                     return `
                         <div class="gallery-item" data-index="${index}" onclick="openLightbox(currentSport.images, ${index})">
-                            <img src="${img.url}" alt="صورة" onerror="this.src='https://via.placeholder.com/400?text=صورة+غير+متوفرة'">
+                            <img src="${imageUrl}" 
+                                 alt="صورة" 
+                                 onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23333\'/%3E%3Ctext x=\'100\' y=\'100\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23D4AF37\' font-family=\'Cairo\'%3Eصورة غير متوفرة%3C/text%3E%3C/svg%3E'; 
+                                 this.classList.add('error-image');"
+                                 onload="this.classList.add('loaded')">
                             <div class="image-caption ${caption ? '' : 'empty'}">${caption}</div>
                             ${isAdmin ? `
                                 <div class="image-overlay" onclick="event.stopPropagation()">
@@ -1286,73 +1355,13 @@
             }
         }
 
-        // ========== تعديل الصورة ==========
-        window.editImage = function(index) {
-            editImageIndex = index;
-            const img = currentSport.images[index];
-            $('image-url').value = img.url;
-            $('image-caption').value = img.caption || '';
-            $('preview').src = img.url;
-            $('preview').classList.add('show');
-            $('add-area').classList.add('show');
-        };
-
-             // ========== حفظ الصورة (نسخة بدون تحقق) ==========
-        window.saveLink = function() {
-            const urlInput = $('image-url');
-            if (!urlInput) { alert('❌ خطأ'); return; }
-            
-            let url = urlInput.value.trim();
-            
-            // إضافة https:// تلقائياً إذا كان هناك نص
-            if (url && !url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
-            }
-            
-            const caption = $('image-caption')?.value.trim() || '';
-            
-            if (!currentSport) { alert('❌ خطأ'); return; }
-            if (!currentSport.images) currentSport.images = [];
-            
-            const imageData = { url, caption };
-            
-            if (editImageIndex !== null && editImageIndex !== undefined) {
-                currentSport.images[editImageIndex] = imageData;
-            } else {
-                currentSport.images.push(imageData);
-            }
-            
-            renderSportGallery();
-            cancelAdd();
-            alert('✅ تمت إضافة الصورة');
-            
-            if (typeof saveToCloud === 'function') setTimeout(saveToCloud, 500);
-        };
-        // ========== حذف الصورة ==========
-        window.deleteImage = function(index) {
-            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-                currentSport.images.splice(index, 1);
-                renderSportGallery();
-                alert('🗑️ تم حذف الصورة');
-            }
-        };
-
-        // ========== تحديث وضع التحرير ==========
-        function updateEditMode() {
-            if (isAdmin && currentSport) {
-                $('add-image-btn').style.display = 'inline-flex';
-            } else {
-                $('add-image-btn').style.display = 'none';
-            }
-            renderSportGallery();
-        }
-
         // ========== وضع المطور ==========
         function setupAdminTrigger() {
             const trigger = $('admin-trigger');
             if (!trigger) return;
             
-            trigger.addEventListener('click', function() {
+            trigger.addEventListener('click', function(e) {
+                e.stopPropagation();
                 if (isAdmin) return;
                 
                 adminClickCount++;
@@ -1381,11 +1390,6 @@
             $('admin-toolbar').style.display = 'flex';
             $$('.editable').forEach(el => el.setAttribute('contenteditable', 'true'));
             
-            if (currentSport) {
-                $('add-image-btn').style.display = 'inline-flex';
-                renderSportGallery();
-            }
-            
             // تفعيل معاينة الرابط
             const urlInput = $('image-url');
             if (urlInput) {
@@ -1400,7 +1404,11 @@
                 });
             }
             
-            alert('⚡ وضع المطور مفعل');
+            if (currentSport) {
+                updateEditMode();
+            }
+            
+            showToast('⚡ وضع المطور مفعل');
         }
 
         // ========== أزرار الحفظ والخروج ==========
@@ -1432,7 +1440,7 @@
                 
                 if (currentSport) renderSportGallery();
                 
-                alert('✅ تم الخروج من وضع المطور');
+                showToast('✅ تم الخروج من وضع المطور');
             });
         }
 
