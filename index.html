@@ -149,13 +149,12 @@
             cursor: grab;
             transform-origin: center center;
             will-change: transform;
+            -webkit-user-select: none;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
         .lightbox img.dragging {
             cursor: grabbing;
-        }
-        .lightbox img.zoomed {
-            max-width: none;
-            max-height: none;
         }
         .lightbox-close {
             position: absolute;
@@ -596,6 +595,7 @@
             object-fit: cover;
             opacity: 1;
             transition: opacity 0.3s ease;
+            pointer-events: auto; /* التأكد من أن الصورة قابلة للنقر */
         }
         .gallery-item img.error-image {
             object-fit: contain;
@@ -615,9 +615,11 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             z-index: 2;
+            pointer-events: none; /* حتى لا تمنع النقر على الصورة */
         }
         .admin-active .gallery-item:hover .image-overlay {
             opacity: 1;
+            pointer-events: auto;
         }
         .image-overlay button {
             width: 40px; height: 40px;
@@ -647,6 +649,7 @@
             transform: translateY(100%);
             transition: transform 0.3s ease;
             z-index: 1;
+            pointer-events: none;
         }
         .gallery-item:hover .image-caption {
             transform: translateY(0);
@@ -1005,7 +1008,7 @@
         </div>
     </div>
 
-    <!-- ======================== JAVASCRIPT المصحح بالكامل مع إضافة التكبير والتنقل المحسّن ======================== -->
+    <!-- ======================== JAVASCRIPT المصحح بالكامل مع تحسين التفاعل ======================== -->
     <script>
     (function() {
         'use strict';
@@ -1031,6 +1034,7 @@
         let isDragging = false;
         let startDragX, startDragY, startTranslateX, startTranslateY;
         let hammerManager = null;
+        let wheelHandler = null;
 
         // بيانات الرياضات (نفس المحتوى)
         const sports = [
@@ -1187,13 +1191,18 @@
             // إزالة أي مدير سابق
             if (hammerManager) {
                 hammerManager.destroy();
+                hammerManager = null;
+            }
+            // إزالة معالج العجلة القديم
+            if (wheelHandler) {
+                img.removeEventListener('wheel', wheelHandler);
             }
 
             // تهيئة Hammer على الصورة
             hammerManager = new Hammer.Manager(img);
             const pinch = new Hammer.Pinch();
-            const pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL });
-            const swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_HORIZONTAL });
+            const pan = new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, threshold: 5 });
+            const swipe = new Hammer.Swipe({ direction: Hammer.DIRECTION_HORIZONTAL, threshold: 10, velocity: 0.3 });
 
             hammerManager.add([pinch, pan, swipe]);
 
@@ -1206,7 +1215,6 @@
                 if (lastTouchDistance) {
                     const delta = e.scale / lastTouchDistance;
                     scale *= delta;
-                    // تحديد حد أقصى وأدنى للتكبير
                     scale = Math.min(Math.max(scale, 1), 5);
                     lastTouchDistance = e.scale;
                     applyTransform();
@@ -1254,20 +1262,16 @@
                     }
                 }
             });
-        }
 
-        // دالة لتهيئة أحداث الفأرة (عجلة التكبير)
-        function setupMouseWheel() {
-            const img = document.getElementById('lightbox-img');
-            if (!img) return;
-
-            img.addEventListener('wheel', (e) => {
+            // دالة لعجلة الفأرة للتكبير/التصغير
+            wheelHandler = (e) => {
                 e.preventDefault();
                 const delta = e.deltaY > 0 ? 0.9 : 1.1;
                 scale *= delta;
                 scale = Math.min(Math.max(scale, 1), 5);
                 applyTransform();
-            });
+            };
+            img.addEventListener('wheel', wheelHandler, { passive: false });
         }
 
         window.openLightbox = function(images, index) {
@@ -1284,11 +1288,10 @@
             document.body.style.overflow = 'hidden';
             showLightboxNav();
             
-            // إعداد الإيماءات بعد فتح اللايت بوكس
+            // إعداد الإيماءات بعد فتح اللايت بوكس مع تأخير بسيط لضمان تحميل الصورة
             setTimeout(() => {
                 setupLightboxGestures();
-                setupMouseWheel();
-            }, 100);
+            }, 200);
         };
 
         window.closeLightbox = function() {
@@ -1298,6 +1301,10 @@
             if (hammerManager) {
                 hammerManager.destroy();
                 hammerManager = null;
+            }
+            if (wheelHandler) {
+                const img = document.getElementById('lightbox-img');
+                if (img) img.removeEventListener('wheel', wheelHandler);
             }
         };
 
@@ -1310,6 +1317,11 @@
             
             updateLightbox();
             showLightboxNav();
+
+            // إعادة ربط الإيماءات بعد تغيير الصورة
+            setTimeout(() => {
+                setupLightboxGestures();
+            }, 200);
         };
 
         function updateLightbox() {
@@ -1770,7 +1782,6 @@
         // ========== دوال الإنجازات ==========
         let galleryImages = [];
         let pendingUploads = [];
-        let lbIndex = 0;
 
         function makeDefaults() {
             const items = [
