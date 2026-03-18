@@ -72,7 +72,7 @@
             position: absolute;
             top: 0; left: 0; right: 0;
             height: 2px;
-            background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+            background: linear-gradient(90deg, transparent, #D4AF37, transparent); 
             opacity: 0;
             transition: opacity 0.5s ease;
         }
@@ -1345,39 +1345,70 @@
             $('add-area').classList.add('show');
         };
 
-        window.saveLink = function() {
+                window.saveLink = function() {
+            console.log('🔄 محاولة حفظ الصورة...');
+            
             const urlInput = $('image-url');
-            if (!urlInput) { alert('❌ خطأ'); return; }
+            const captionInput = $('image-caption');
+            
+            if (!urlInput) { 
+                alert('❌ خطأ: خانة الرابط غير موجودة'); 
+                return; 
+            }
             
             let url = urlInput.value.trim();
-            if (!url) { alert('❌ الرابط مطلوب'); urlInput.focus(); return; }
+            console.log('📝 الرابط المدخل:', url);
             
-            if (!url.startsWith('http://') && !url.startsWith('https://')) url = 'https://' + url;
+            if (!url) { 
+                alert('❌ الرابط مطلوب'); 
+                urlInput.focus(); 
+                return; 
+            }
             
-            const caption = $('image-caption')?.value.trim() || '';
+            // إضافة https:// تلقائياً إذا لزم الأمر
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'https://' + url;
+                console.log('🔗 تم إضافة https://:', url);
+            }
             
-            if (!currentSport) { alert('❌ خطأ'); return; }
+            const caption = captionInput ? captionInput.value.trim() : '';
+            
+            if (!currentSport) { 
+                alert('❌ خطأ: لم يتم تحديد الرياضة'); 
+                return; 
+            }
+            
             if (!currentSport.images) currentSport.images = [];
             
             const imageData = { url, caption };
+            console.log('🖼️ بيانات الصورة:', imageData);
             
-            if (editImageIndex !== null) currentSport.images[editImageIndex] = imageData;
-            else currentSport.images.push(imageData);
+            if (editImageIndex !== null && editImageIndex !== undefined) {
+                currentSport.images[editImageIndex] = imageData;
+                console.log('✏️ تم تعديل الصورة في الفهرس:', editImageIndex);
+            } else {
+                currentSport.images.push(imageData);
+                console.log('➕ تم إضافة صورة جديدة');
+            }
             
-            renderSportGallery();
-            cancelAdd();
-            alert('✅ تمت إضافة الصورة');
-            if (typeof saveToCloud === 'function') setTimeout(saveToCloud, 500);
-        };
-
-        window.deleteImage = function(index) {
-            if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
-                currentSport.images.splice(index, 1);
+            // تحديث المعرض
+            if (typeof renderSportGallery === 'function') {
                 renderSportGallery();
-                alert('🗑️ تم حذف الصورة');
+                console.log('🖼️ تم تحديث المعرض');
+            }
+            
+            // إغلاق منطقة الإضافة
+            if (typeof cancelAdd === 'function') {
+                cancelAdd();
+            }
+            
+            alert('✅ تمت إضافة الصورة بنجاح');
+            
+            // حفظ في السحابة
+            if (typeof saveToCloud === 'function') {
+                setTimeout(saveToCloud, 500);
             }
         };
-
         function updateEditMode() {
             if (isAdmin && currentSport) $('add-image-btn').style.display = 'inline-flex';
             else $('add-image-btn').style.display = 'none';
