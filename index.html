@@ -1777,19 +1777,18 @@
     })();
     </script>
 
-    <!-- ======================== أدوات التصحيح (مؤقتة) ======================== -->
-    <!-- زر اختبار مؤقت (للتأكد من عمل الرابط) -->
-    <div style="position: fixed; bottom: 100px; left: 20px; z-index: 10000; display: flex; gap: 10px; flex-direction: column;">
-        <button onclick="testLinkInput()" style="background: #D4AF37; color: #0a0a0a; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-            🧪 اختبار الرابط
-        </button>
-        <button onclick="checkDevMode()" style="background: #333; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-            🔍 فحص الوضع
-        </button>
-        <button onclick="fixSaveLink()" style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
-            🔧 إصلاح الحفظ
-        </button>
-    </div>
+   <!-- ======================== أدوات التصحيح (تظهر فقط في وضع المطور) ======================== -->
+<div id="debug-tools" style="position: fixed; bottom: 100px; left: 20px; z-index: 10000; display: none; gap: 10px; flex-direction: column;">
+    <button onclick="testLinkInput()" style="background: #D4AF37; color: #0a0a0a; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        🧪 اختبار الرابط
+    </button>
+    <button onclick="checkDevMode()" style="background: #333; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        🔍 فحص الوضع
+    </button>
+    <button onclick="fixSaveLink()" style="background: #4CAF50; color: white; border: none; padding: 10px 15px; border-radius: 5px; font-family: Cairo; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5);">
+        🔧 إصلاح الحفظ
+    </button>
+</div>
 
     <script>
     // ========== أدوات التصحيح لحل مشكلة الرابط ==========
