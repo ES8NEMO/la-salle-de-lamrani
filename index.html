@@ -1094,12 +1094,32 @@
                 clearTimeout(lightboxTimer);
             }
             
-            // إخفاء الأزرار بعد 4 ثوانٍ
+            // إخفاء الأزرار بعد 3 ثوانٍ
             lightboxTimer = setTimeout(() => {
                 navButtons.forEach(btn => btn.classList.remove('visible'));
                 lightboxTimer = null;
-            }, 1000);
+            }, 3000); // يمكنك تغيير الرقم حسب رغبتك
         }
+
+        // دالة جديدة لإخفاء الأزرار فوراً عند الزوم
+        function hideLightboxNavImmediately() {
+            const navButtons = document.querySelectorAll('.lightbox-nav');
+            navButtons.forEach(btn => btn.classList.remove('visible'));
+            
+            // إلغاء المؤقت إذا كان موجوداً
+            if (lightboxTimer) {
+                clearTimeout(lightboxTimer);
+                lightboxTimer = null;
+            }
+        }
+
+        // إضافة مستمع حدث resize (للكشف عن الزوم)
+        window.addEventListener('resize', function() {
+            // التحقق مما إذا كان الـ Lightbox مفتوحاً
+            if ($('lightbox') && $('lightbox').classList.contains('active')) {
+                hideLightboxNavImmediately();
+            }
+        });
 
         // ========== STORAGE ==========
         const BIN_ID = '69b99a0aaa77b81da9f2cebf';
