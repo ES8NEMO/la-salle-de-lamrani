@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط كما هي - مع إضافة أنماط الخلفية المتحركة */
+        /* جميع الأنماط كما هي - مع إضافة أنماط الخلفية المتحركة وقائمة اللغات */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -43,25 +43,29 @@
         }
         .bg-icon {
             position: absolute;
-            color: rgba(212, 175, 55, 0.15); /* ذهبي شفاف */
-            font-size: 1.5rem;
+            color: #D4AF37; /* لون ذهبي بارز */
+            font-size: 2rem;
             user-select: none;
-            animation: float 20s linear infinite;
-            transform: translateY(100vh) rotate(0deg);
+            animation: floatDiagonal 25s linear infinite;
+            transform: translate(100vw, -100px) rotate(0deg);
+            -webkit-text-stroke: 1px #D4AF37; /* إطار حول الأيقونة (يجعلها تبدو مجوفة) */
+            text-stroke: 1px #D4AF37;
+            opacity: 0.7; /* شفافية خفيفة مع إبقاء اللون بارز */
+            filter: drop-shadow(0 0 5px rgba(212,175,55,0.5));
         }
-        @keyframes float {
+        @keyframes floatDiagonal {
             0% {
-                transform: translateY(100vh) rotate(0deg);
+                transform: translate(100vw, -100px) rotate(0deg);
                 opacity: 0;
             }
             10% {
-                opacity: 0.8;
+                opacity: 0.9;
             }
             90% {
-                opacity: 0.8;
+                opacity: 0.9;
             }
             100% {
-                transform: translateY(-100px) rotate(360deg);
+                transform: translate(-100px, 100vh) rotate(720deg);
                 opacity: 0;
             }
         }
@@ -866,8 +870,9 @@
             opacity: 0.8;
         }
         
-        /* زر تغيير اللغة */
+        /* زر تغيير اللغة - تعديل ليصبح قائمة منسدلة */
         .lang-switch {
+            position: relative;
             background: transparent;
             border: 1px solid #D4AF37;
             color: #D4AF37;
@@ -884,6 +889,35 @@
         .lang-switch:hover {
             background: #D4AF37;
             color: #0a0a0a;
+        }
+        .lang-dropdown {
+            position: absolute;
+            top: 50px;
+            left: 0;
+            background: #111;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            min-width: 120px;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .lang-dropdown.show {
+            display: block;
+        }
+        .lang-dropdown-item {
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            text-align: center;
+        }
+        .lang-dropdown-item:hover {
+            background: rgba(212,175,55,0.2);
+            color: #D4AF37;
+        }
+        .lang-dropdown-item:not(:last-child) {
+            border-bottom: 1px solid rgba(212,175,55,0.1);
         }
         
         /* بطاقة السعر */
@@ -985,9 +1019,14 @@
                 
                 <!-- أيقونات البحث والترس والقائمة -->
                 <div class="flex items-center gap-3">
-                    <!-- زر تغيير اللغة (الترس) -->
-                    <div class="lang-switch" id="lang-switch" onclick="toggleLanguage()">
+                    <!-- زر تغيير اللغة (الترس) مع قائمة منسدلة -->
+                    <div class="lang-switch" id="lang-switch" onclick="toggleLangDropdown()">
                         <i class="fas fa-cog"></i>
+                        <div id="lang-dropdown" class="lang-dropdown">
+                            <div class="lang-dropdown-item" onclick="setLanguage('ar'); event.stopPropagation();">العربية</div>
+                            <div class="lang-dropdown-item" onclick="setLanguage('en'); event.stopPropagation();">English</div>
+                            <div class="lang-dropdown-item" onclick="setLanguage('fr'); event.stopPropagation();">Français</div>
+                        </div>
                     </div>
                     
                     <div class="flex items-center gap-2">
@@ -1312,7 +1351,7 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة
+        // أيقونات الخلفية المتحركة (نستخدم أيقونات regular للحصول على شكل فارغ)
         const bgIcons = [
             'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
             'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
@@ -1326,9 +1365,10 @@
             const iconCount = window.innerWidth < 768 ? 25 : 50;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
-                icon.className = `fas ${bgIcons[Math.floor(Math.random() * bgIcons.length)]} bg-icon`;
+                // استخدام far (regular) بدلاً من fas للحصول على أيقونة مجوفة
+                icon.className = `far ${bgIcons[Math.floor(Math.random() * bgIcons.length)]} bg-icon`;
                 const left = Math.random() * 100;
-                const size = 1 + Math.random() * 2; // 1rem to 3rem
+                const size = 1.5 + Math.random() * 2.5; // 1.5rem to 4rem
                 const duration = 15 + Math.random() * 20; // 15s to 35s
                 const delay = Math.random() * 20;
                 icon.style.left = left + '%';
@@ -1463,14 +1503,24 @@
             }, duration);
         };
 
-        // ========== دوال اللغة ==========
-        window.toggleLanguage = function() {
-            const langs = ['ar', 'en', 'fr'];
-            const currentIndex = langs.indexOf(currentLang);
-            const nextIndex = (currentIndex + 1) % langs.length;
-            currentLang = langs[nextIndex];
+        // ========== دوال اللغة مع القائمة المنسدلة ==========
+        window.toggleLangDropdown = function() {
+            const dropdown = document.getElementById('lang-dropdown');
+            dropdown.classList.toggle('show');
+            // إغلاق القائمة إذا نقر خارجها
+            document.addEventListener('click', function closeMenu(e) {
+                if (!e.target.closest('.lang-switch')) {
+                    dropdown.classList.remove('show');
+                    document.removeEventListener('click', closeMenu);
+                }
+            });
+        };
+        
+        window.setLanguage = function(lang) {
+            currentLang = lang;
             applyLanguage();
             localStorage.setItem('preferredLang', currentLang);
+            document.getElementById('lang-dropdown').classList.remove('show');
         };
         
         function applyLanguage() {
@@ -1492,7 +1542,7 @@
             // تحديث الـ placeholder للبحث
             document.getElementById('search-input').placeholder = texts.search;
             
-            // تحديث النصوص في البطاقات (المواعيد والأسعار) - سيتم إعادة الرسم
+            // تحديث النصوص في البطاقات
             renderSportsCards();
             
             // تحديث صفحة الرياضة المفتوحة
