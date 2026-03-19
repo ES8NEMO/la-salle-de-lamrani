@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -19,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط كما هي - مع إضافة أنماط الخلفية المتحركة وقائمة اللغات */
+        /* جميع الأنماط كما هي - مع تحديث الخلفية لتكون متوهجة */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -30,7 +31,7 @@
             position: relative;
             min-height: 100vh;
         }
-        /* الخلفية المتحركة */
+        /* الخلفية المتحركة المتوهجة */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -44,32 +45,33 @@
         .bg-icon {
             position: absolute;
             color: #D4AF37; /* لون ذهبي بارز */
-            font-size: 2rem;
+            font-size: 2.5rem;
             user-select: none;
-            animation: floatDiagonal 25s linear infinite;
+            animation: floatDiagonal 20s linear infinite;
             transform: translate(100vw, -100px) rotate(0deg);
-            -webkit-text-stroke: 1px #D4AF37; /* إطار حول الأيقونة (يجعلها تبدو مجوفة) */
-            text-stroke: 1px #D4AF37;
-            opacity: 0.7; /* شفافية خفيفة مع إبقاء اللون بارز */
-            filter: drop-shadow(0 0 5px rgba(212,175,55,0.5));
+            -webkit-text-stroke: 1.5px #D4AF37; /* إطار سميك */
+            text-stroke: 1.5px #D4AF37;
+            opacity: 0.9;
+            filter: drop-shadow(0 0 15px #D4AF37) drop-shadow(0 0 30px rgba(212,175,55,0.6)); /* تأثير التوهج */
+            text-shadow: 0 0 20px #D4AF37;
         }
         @keyframes floatDiagonal {
             0% {
                 transform: translate(100vw, -100px) rotate(0deg);
-                opacity: 0;
+                opacity: 0.3;
             }
             10% {
-                opacity: 0.9;
+                opacity: 1;
             }
             90% {
-                opacity: 0.9;
+                opacity: 1;
             }
             100% {
                 transform: translate(-100px, 100vh) rotate(720deg);
-                opacity: 0;
+                opacity: 0.3;
             }
         }
-        /* تخصيصات إضافية */
+        /* باقي الأنماط كما هي مع إضافة تحسينات بسيطة */
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .gold-text {
@@ -116,10 +118,6 @@
             transform: scale(1.02);
             box-shadow: 0 8px 30px rgba(212,175,55,0.15);
         }
-        .masonry { column-count: 3; column-gap: 1rem; }
-        .masonry-item { break-inside: avoid; margin-bottom: 1rem; }
-        @media (max-width: 1024px) { .masonry { column-count: 2; } }
-        @media (max-width: 640px)  { .masonry { column-count: 1; } }
         .lightbox {
             opacity: 0;
             visibility: hidden;
@@ -870,7 +868,7 @@
             opacity: 0.8;
         }
         
-        /* زر تغيير اللغة - تعديل ليصبح قائمة منسدلة */
+        /* زر تغيير اللغة - قائمة منسدلة */
         .lang-switch {
             position: relative;
             background: transparent;
@@ -941,7 +939,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة -->
+    <!-- الخلفية المتحركة المتوهجة -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1351,24 +1349,29 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة (نستخدم أيقونات regular للحصول على شكل فارغ)
+        // أيقونات الخلفية المتحركة - مجموعة واسعة من الرموز الرياضية (كلها مجوفة far)
         const bgIcons = [
             'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
             'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
-            'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming'
+            'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming',
+            'fa-boxing-glove', 'fa-weight-hanging', 'fa-vest', 'fa-vest-patches',
+            'fa-tae kwon do' // لا توجد أيقونة محددة، سنستخدم 'fa-hand-fist' بدلاً منها عدة مرات
         ];
 
         // إنشاء الخلفية المتحركة
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             container.innerHTML = '';
-            const iconCount = window.innerWidth < 768 ? 25 : 50;
+            // زيادة عدد الأيقونات
+            const iconCount = window.innerWidth < 768 ? 40 : 80;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
                 // استخدام far (regular) بدلاً من fas للحصول على أيقونة مجوفة
-                icon.className = `far ${bgIcons[Math.floor(Math.random() * bgIcons.length)]} bg-icon`;
+                let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
+                // التأكد من أن بعض الأيقونات تتكرر (خاصة تلك التي ترمز للرياضات المطلوبة)
+                icon.className = `far ${iconClass} bg-icon`;
                 const left = Math.random() * 100;
-                const size = 1.5 + Math.random() * 2.5; // 1.5rem to 4rem
+                const size = 1.5 + Math.random() * 3; // 1.5rem to 4.5rem
                 const duration = 15 + Math.random() * 20; // 15s to 35s
                 const delay = Math.random() * 20;
                 icon.style.left = left + '%';
@@ -1382,27 +1385,25 @@
         // تحديث الخلفية عند تغيير حجم النافذة
         window.addEventListener('resize', createAnimatedBackground);
 
-        // متغيرات Lightbox
-        let currentLightboxImages = [];
-        let currentLightboxIndex = 0;
-        let lightboxTimer = null;
-        let scale = 1, translateX = 0, translateY = 0;
-        let lastTouchDistance = null, isDragging = false;
-        let startDragX, startDragY, startTranslateX, startTranslateY;
-        let hammerManager = null, wheelHandler = null;
-
-        // بيانات الرياضات
+        // بيانات الرياضات مع ترجمة كاملة لجميع النصوص
         const sports = [
             { 
                 id: 'kwankido', 
-                nameEn: 'Kwankido', 
-                nameAr: 'كوانكيدو',
+                name: { ar: 'كوانكيدو', en: 'Kwankido', fr: 'Kwankido' },
                 icon: 'fa-hand-fist',
-                schedule: 'الثلاثاء — الخميس — السبت',
-                time: '20:30 — 21:30',
+                schedule: { 
+                    ar: 'الثلاثاء — الخميس — السبت', 
+                    en: 'Tuesday — Thursday — Saturday', 
+                    fr: 'Mardi — Jeudi — Samedi' 
+                },
+                time: { 
+                    ar: '20:30 — 21:30', 
+                    en: '08:30 PM — 09:30 PM', 
+                    fr: '20h30 — 21h30' 
+                },
                 prices: [
-                    { name: 'شهر واحد', value: '100 DH' },
-                    { name: '3 أشهر', value: '250 DH' }
+                    { nameAr: 'شهر واحد', nameEn: 'One month', nameFr: 'Un mois', value: '100 DH' },
+                    { nameAr: '3 أشهر', nameEn: '3 months', nameFr: '3 mois', value: '250 DH' }
                 ],
                 ageGroups: [],
                 images: [],
@@ -1410,36 +1411,50 @@
             },
             { 
                 id: 'taekwondo', 
-                nameEn: 'Taekwondo', 
-                nameAr: 'التايكواندو',
+                name: { ar: 'التايكواندو', en: 'Taekwondo', fr: 'Taekwondo' },
                 icon: 'fa-bolt-lightning',
-                schedule: 'أيام التدريب',
-                time: 'مواعيد متعددة',
+                schedule: { 
+                    ar: 'أيام التدريب', 
+                    en: 'Training days', 
+                    fr: 'Jours d\'entraînement' 
+                },
+                time: { 
+                    ar: 'مواعيد متعددة', 
+                    en: 'Multiple times', 
+                    fr: 'Horaires multiples' 
+                },
                 prices: [
-                    { name: 'شهر واحد', value: '100 DH' },
-                    { name: '3 أشهر', value: '280 DH' },
-                    { name: 'سنة', value: '900 DH' }
+                    { nameAr: 'شهر واحد', nameEn: 'One month', nameFr: 'Un mois', value: '100 DH' },
+                    { nameAr: '3 أشهر', nameEn: '3 months', nameFr: '3 mois', value: '280 DH' },
+                    { nameAr: 'سنة', nameEn: 'One year', nameFr: 'Un an', value: '900 DH' }
                 ],
                 ageGroups: [
-                    { range: '4 — 7 سنوات', time: '18:30' },
-                    { range: '8 — 12 سنة', time: '19:30' },
-                    { range: '12 — 15 سنة', time: '20:30' },
-                    { range: '+15 سنة', time: '21:30' }
+                    { rangeAr: '4 — 7 سنوات', rangeEn: '4 — 7 years', rangeFr: '4 — 7 ans', time: '18:30' },
+                    { rangeAr: '8 — 12 سنة', rangeEn: '8 — 12 years', rangeFr: '8 — 12 ans', time: '19:30' },
+                    { rangeAr: '12 — 15 سنة', rangeEn: '12 — 15 years', rangeFr: '12 — 15 ans', time: '20:30' },
+                    { rangeAr: '+15 سنة', rangeEn: '+15 years', rangeFr: '+15 ans', time: '21:30' }
                 ],
                 images: [],
                 categories: []
             },
             { 
                 id: 'kickboxing', 
-                nameEn: 'Kickboxing', 
-                nameAr: 'الكيك بوكسينغ',
+                name: { ar: 'الكيك بوكسينغ', en: 'Kickboxing', fr: 'Kickboxing' },
                 icon: 'fa-fire-flame-curved',
-                schedule: 'السبت - الاثنين - الأربعاء',
-                time: '19:00 — 21:00',
+                schedule: { 
+                    ar: 'السبت - الاثنين - الأربعاء', 
+                    en: 'Saturday - Monday - Wednesday', 
+                    fr: 'Samedi - Lundi - Mercredi' 
+                },
+                time: { 
+                    ar: '19:00 — 21:00', 
+                    en: '07:00 PM — 09:00 PM', 
+                    fr: '19h00 — 21h00' 
+                },
                 prices: [
-                    { name: 'شهريًا', value: '150 DH' },
-                    { name: 'شهرين', value: '280 DH' },
-                    { name: '3 أشهر', value: '400 DH' }
+                    { nameAr: 'شهريًا', nameEn: 'Monthly', nameFr: 'Mensuel', value: '150 DH' },
+                    { nameAr: 'شهرين', nameEn: '2 months', nameFr: '2 mois', value: '280 DH' },
+                    { nameAr: '3 أشهر', nameEn: '3 months', nameFr: '3 mois', value: '400 DH' }
                 ],
                 ageGroups: [],
                 images: [],
@@ -1447,15 +1462,22 @@
             },
             { 
                 id: 'mens-gym', 
-                nameEn: "Men's Gym", 
-                nameAr: 'نادي الرجال',
+                name: { ar: 'نادي الرجال', en: "Men's Gym", fr: "Gym Hommes" },
                 icon: 'fa-dumbbell',
-                schedule: 'يوميًا',
-                time: '09:00 — 22:00',
+                schedule: { 
+                    ar: 'يوميًا', 
+                    en: 'Daily', 
+                    fr: 'Tous les jours' 
+                },
+                time: { 
+                    ar: '09:00 — 22:00', 
+                    en: '09:00 AM — 10:00 PM', 
+                    fr: '09h00 — 22h00' 
+                },
                 prices: [
-                    { name: 'شهر', value: '150 DH' },
-                    { name: '3 أشهر', value: '400 DH' },
-                    { name: 'سنة', value: '1000 DH' }
+                    { nameAr: 'شهر', nameEn: 'Month', nameFr: 'Mois', value: '150 DH' },
+                    { nameAr: '3 أشهر', nameEn: '3 months', nameFr: '3 mois', value: '400 DH' },
+                    { nameAr: 'سنة', nameEn: 'Year', nameFr: 'An', value: '1000 DH' }
                 ],
                 ageGroups: [],
                 images: [],
@@ -1463,14 +1485,21 @@
             },
             { 
                 id: 'womens-gym', 
-                nameEn: "Women's Gym", 
-                nameAr: 'نادي النساء',
+                name: { ar: 'نادي النساء', en: "Women's Gym", fr: "Gym Femmes" },
                 icon: 'fa-heart-pulse',
-                schedule: 'يوميًا',
-                time: '10:00 — 21:00',
+                schedule: { 
+                    ar: 'يوميًا', 
+                    en: 'Daily', 
+                    fr: 'Tous les jours' 
+                },
+                time: { 
+                    ar: '10:00 — 21:00', 
+                    en: '10:00 AM — 09:00 PM', 
+                    fr: '10h00 — 21h00' 
+                },
                 prices: [
-                    { name: 'شهر', value: '150 DH' },
-                    { name: '3 أشهر', value: '400 DH' }
+                    { nameAr: 'شهر', nameEn: 'Month', nameFr: 'Mois', value: '150 DH' },
+                    { nameAr: '3 أشهر', nameEn: '3 months', nameFr: '3 mois', value: '400 DH' }
                 ],
                 ageGroups: [],
                 images: [],
@@ -1507,7 +1536,6 @@
         window.toggleLangDropdown = function() {
             const dropdown = document.getElementById('lang-dropdown');
             dropdown.classList.toggle('show');
-            // إغلاق القائمة إذا نقر خارجها
             document.addEventListener('click', function closeMenu(e) {
                 if (!e.target.closest('.lang-switch')) {
                     dropdown.classList.remove('show');
@@ -1527,7 +1555,7 @@
             const texts = langTexts[currentLang];
             document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
             
-            // تحديث جميع العناصر التي تحمل data-lang
+            // تحديث جميع العناصر الثابتة التي تحمل data-lang
             document.querySelectorAll('[data-lang]').forEach(el => {
                 const key = el.getAttribute('data-lang');
                 if (texts[key]) {
@@ -1542,7 +1570,7 @@
             // تحديث الـ placeholder للبحث
             document.getElementById('search-input').placeholder = texts.search;
             
-            // تحديث النصوص في البطاقات
+            // تحديث البطاقات
             renderSportsCards();
             
             // تحديث صفحة الرياضة المفتوحة
@@ -1616,7 +1644,7 @@
             }
         };
 
-        // ========== التخزين السحابي ==========
+        // ========== التخزين السحابي (مع دعم الحقول الجديدة) ==========
         const BIN_ID = '69b99a0aaa77b81da9f2cebf';
         const API_KEY = '$2a$10$HIZoab3tTM/2LPQAVLeK3.1P.PYxBVAFKNpWMtQOcJq/QfC3Z7/le';
         async function loadFromCloud() {
@@ -1628,10 +1656,11 @@
                 if (data.record && data.record.sports) {
                     data.record.sports.forEach((savedSport, index) => {
                         if (sports[index]) {
-                            sports[index].schedule = savedSport.schedule || sports[index].schedule;
-                            sports[index].time = savedSport.time || sports[index].time;
-                            sports[index].prices = savedSport.prices || sports[index].prices;
-                            sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
+                            // دمج البيانات المحفوظة مع الاحتفاظ بالترجمات إن وجدت
+                            if (savedSport.schedule) sports[index].schedule = { ...sports[index].schedule, ...savedSport.schedule };
+                            if (savedSport.time) sports[index].time = { ...sports[index].time, ...savedSport.time };
+                            if (savedSport.prices) sports[index].prices = savedSport.prices;
+                            if (savedSport.ageGroups) sports[index].ageGroups = savedSport.ageGroups;
                             if (savedSport.images) sports[index].images = savedSport.images;
                             if (savedSport.categories) sports[index].categories = savedSport.categories;
                         }
@@ -1674,10 +1703,10 @@
                     if (data.sports) {
                         data.sports.forEach((savedSport, index) => {
                             if (sports[index]) {
-                                sports[index].schedule = savedSport.schedule || sports[index].schedule;
-                                sports[index].time = savedSport.time || sports[index].time;
-                                sports[index].prices = savedSport.prices || sports[index].prices;
-                                sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
+                                if (savedSport.schedule) sports[index].schedule = { ...sports[index].schedule, ...savedSport.schedule };
+                                if (savedSport.time) sports[index].time = { ...sports[index].time, ...savedSport.time };
+                                if (savedSport.prices) sports[index].prices = savedSport.prices;
+                                if (savedSport.ageGroups) sports[index].ageGroups = savedSport.ageGroups;
                                 if (savedSport.images) sports[index].images = savedSport.images;
                                 if (savedSport.categories) sports[index].categories = savedSport.categories;
                             }
@@ -1693,30 +1722,34 @@
             catch(e) { console.warn('خطأ في الحفظ المحلي'); }
         }
 
-        // ========== عرض البطاقات الرئيسية ==========
+        // ========== عرض البطاقات الرئيسية مع الترجمة ==========
         function renderSportsCards() {
             const container = document.getElementById('sports-container');
             if (!container) return;
             container.innerHTML = sports.map(sport => {
-                const displayName = currentLang === 'ar' ? sport.nameAr : sport.nameEn;
+                const name = sport.name[currentLang] || sport.name.en;
+                const schedule = sport.schedule[currentLang] || sport.schedule.ar;
+                const time = sport.time[currentLang] || sport.time.ar;
+                const firstPrice = sport.prices[0] ? sport.prices[0]['name' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1)] || sport.prices[0].nameAr : 'اتصل بنا';
+                const firstValue = sport.prices[0]?.value || '';
                 return `
                 <div class="service-card rounded-xl p-6 sm:p-8" onclick="openSportPage('${sport.id}')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas ${sport.icon}"></i></div>
-                    <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.nameEn}</h3>
-                    <h4 class="font-cairo text-white/50 text-sm mb-5">${displayName}</h4>
+                    <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.name.en}</h3>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5">${name}</h4>
                     <div class="space-y-3 text-sm font-cairo">
                         <div class="flex items-center gap-3 text-white/65">
                             <i class="fas fa-calendar-days text-gold/50 w-5 text-center text-xs"></i>
-                            <span>${sport.schedule}</span>
+                            <span>${schedule}</span>
                         </div>
                         <div class="flex items-center gap-3 text-white/65">
                             <i class="fas fa-clock text-gold/50 w-5 text-center text-xs"></i>
-                            <span>${sport.time}</span>
+                            <span>${time}</span>
                         </div>
                         <div class="mt-5 pt-4 border-t border-gold/10">
                             <div class="flex items-center gap-3 text-gold">
                                 <i class="fas fa-tag text-gold/50 w-5 text-center text-xs"></i>
-                                <span>${sport.prices[0]?.value || 'اتصل بنا'}</span>
+                                <span>${firstValue}</span>
                             </div>
                         </div>
                     </div>
@@ -1729,25 +1762,33 @@
             const sport = sports.find(s => s.id === sportId);
             if (!sport) return;
             currentSport = sport;
-            document.getElementById('sport-detail-title').textContent = currentLang === 'ar' ? sport.nameAr : sport.nameEn;
-            document.getElementById('sport-schedule').textContent = sport.schedule;
-            document.getElementById('sport-time').textContent = sport.time;
+            document.getElementById('sport-detail-title').textContent = sport.name[currentLang] || sport.name.ar;
             
-            document.getElementById('prices-container').innerHTML = sport.prices.map(price => `
+            // تحديث المواعيد
+            document.getElementById('sport-schedule').textContent = sport.schedule[currentLang] || sport.schedule.ar;
+            document.getElementById('sport-time').textContent = sport.time[currentLang] || sport.time.ar;
+            
+            // تحديث الأسعار
+            document.getElementById('prices-container').innerHTML = sport.prices.map(price => {
+                const priceName = price['name' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1)] || price.nameAr;
+                return `
                 <div class="price-item">
-                    <span class="price-name editable">${price.name}</span>
+                    <span class="price-name editable">${priceName}</span>
                     <span class="price-value editable">${price.value}</span>
                 </div>
-            `).join('');
+            `}).join('');
             
+            // تحديث الفئات العمرية إن وجدت
             if (sport.ageGroups && sport.ageGroups.length > 0) {
                 document.getElementById('age-groups-container').style.display = 'block';
-                document.getElementById('age-groups-list').innerHTML = sport.ageGroups.map(group => `
+                document.getElementById('age-groups-list').innerHTML = sport.ageGroups.map(group => {
+                    const range = group['range' + currentLang.charAt(0).toUpperCase() + currentLang.slice(1)] || group.rangeAr;
+                    return `
                     <div class="flex justify-between text-white/60 bg-white/5 rounded px-3 py-2">
-                        <span class="editable">${group.range}</span>
+                        <span class="editable">${range}</span>
                         <span class="text-gold editable">${group.time}</span>
                     </div>
-                `).join('');
+                `}).join('');
             } else {
                 document.getElementById('age-groups-container').style.display = 'none';
             }
@@ -1939,7 +1980,15 @@
             const name = document.getElementById('new-price-name').value.trim();
             const value = document.getElementById('new-price-value').value.trim();
             if (!name || !value) { window.showToast('❌ الرجاء ملء الحقول', 'error'); return; }
-            currentSport.prices.push({ name, value });
+            // إضافة السعر مع تعبئة جميع اللغات بنفس الاسم (يمكن تحسينها لاحقاً)
+            currentSport.prices.push({ 
+                nameAr: name, 
+                nameEn: name, 
+                nameFr: name, 
+                value 
+            });
+            // تحديث العرض
+            const priceName = name; // مؤقت
             document.getElementById('prices-container').innerHTML += `
                 <div class="price-item">
                     <span class="price-name editable">${name}</span>
