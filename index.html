@@ -675,6 +675,138 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        
+        /* أنماط جديدة لصفحة الإشهار */
+        .showcase-section {
+            padding: 60px 20px;
+            background: #0a0a0a;
+            border-top: 1px solid rgba(212,175,55,0.2);
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .showcase-image {
+            max-width: 100%;
+            max-height: 80vh;
+            margin: 0 auto;
+            display: block;
+            border-radius: 12px;
+            border: 2px solid #D4AF37;
+            box-shadow: 0 0 30px rgba(212,175,55,0.3);
+            pointer-events: none; /* لا تتفاعل مع النقر */
+            user-select: none;
+        }
+        .showcase-caption {
+            text-align: center;
+            color: #D4AF37;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        
+        /* أنماط التصنيفات */
+        .category-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212,175,55,0.2);
+        }
+        .category-tab {
+            background: transparent;
+            border: 1px solid rgba(212,175,55,0.3);
+            color: rgba(255,255,255,0.6);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+        .category-tab.active {
+            background: #D4AF37;
+            color: #0a0a0a;
+            border-color: #D4AF37;
+        }
+        .category-tab:hover {
+            border-color: #D4AF37;
+            color: #D4AF37;
+        }
+        
+        /* القائمة المنسدلة المخصصة للتصنيفات */
+        .category-dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+        .category-select-btn {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: right;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .category-select-btn i {
+            transition: transform 0.3s ease;
+        }
+        .category-select-btn.active i {
+            transform: rotate(180deg);
+        }
+        .category-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #111;
+            border: 2px solid #D4AF37;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .category-dropdown-menu.show {
+            display: block;
+        }
+        .category-item {
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+        }
+        .category-item:hover {
+            background: rgba(212,175,55,0.2);
+        }
+        .category-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* زر الترس لتغيير اللغة */
+        .lang-switch {
+            background: transparent;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        .lang-switch:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
     </style>
 </head>
 <body>
@@ -747,14 +879,18 @@
                 
                 <!-- القائمة الرئيسية -->
                 <div class="hidden md:flex items-center gap-8">
-                    <a href="#" onclick="showView('home');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الرئيسية</a>
-                    <a href="#services-section" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الخدمات</a>
-                    <a href="#" onclick="showView('achievements');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">الإنجازات</a>
-                    <a href="#contact-section" onclick="showView('home')" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm">اتصل بنا</a>
+                    <a href="#" onclick="showView('home');return false" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm" data-lang="home">الرئيسية</a>
+                    <a href="#services-section" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm" data-lang="services">الخدمات</a>
+                    <a href="#contact-section" onclick="showView('home')" class="font-cairo text-white/60 hover:text-gold transition-colors text-sm" data-lang="contact">اتصل بنا</a>
                 </div>
                 
-                <!-- أيقونات البحث والقائمة -->
+                <!-- أيقونات البحث والترس والقائمة -->
                 <div class="flex items-center gap-3">
+                    <!-- زر تغيير اللغة (الترس) -->
+                    <div class="lang-switch" id="lang-switch" onclick="toggleLanguage()">
+                        <i class="fas fa-cog"></i>
+                    </div>
+                    
                     <div class="flex items-center gap-2">
                         <div id="search-container" class="search-box flex items-center">
                             <input id="search-input" type="text" placeholder="بحث..." autocomplete="off" spellcheck="false"
@@ -773,10 +909,9 @@
             <!-- القائمة للجوال -->
             <div id="mobile-menu" class="hidden md:hidden pb-5 pt-3 border-t border-gold/10">
                 <div class="flex flex-col gap-4">
-                    <a href="#" onclick="showView('home');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الرئيسية</a>
-                    <a href="#services-section" onclick="toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors">الخدمات</a>
-                    <a href="#" onclick="showView('achievements');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors">الإنجازات</a>
-                    <a href="#contact-section" onclick="showView('home');toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors">اتصل بنا</a>
+                    <a href="#" onclick="showView('home');toggleMobile();return false" class="font-cairo text-white/60 hover:text-gold transition-colors" data-lang="home">الرئيسية</a>
+                    <a href="#services-section" onclick="toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors" data-lang="services">الخدمات</a>
+                    <a href="#contact-section" onclick="showView('home');toggleMobile()" class="font-cairo text-white/60 hover:text-gold transition-colors" data-lang="contact">اتصل بنا</a>
                 </div>
             </div>
         </div>
@@ -801,6 +936,22 @@
             </div>
         </section>
 
+        <!-- ======================== PAGE DE SHOWCASE (صفحة الإشهار) ======================== -->
+        <section class="showcase-section">
+            <div class="max-w-6xl mx-auto">
+                <!-- الصورة (غير قابلة للتفاعل) -->
+                <img id="showcase-img" class="showcase-image" src="" alt="Showcase Image">
+                <div id="showcase-caption" class="showcase-caption"></div>
+                
+                <!-- خانات التعديل للمطور (تظهر فقط في وضع المطور) -->
+                <div id="showcase-edit" style="display: none; margin-top: 30px; text-align: center;">
+                    <input type="url" id="showcase-url" class="link-input" placeholder="رابط الصورة" dir="ltr">
+                    <input type="text" id="showcase-desc" class="link-input" placeholder="وصف الصورة">
+                    <button class="admin-btn save" onclick="saveShowcase()">حفظ التغييرات</button>
+                </div>
+            </div>
+        </section>
+
         <!-- SERVICES -->
         <section id="services-section" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div class="text-center mb-16">
@@ -810,7 +961,7 @@
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="sports-container">
-                <!-- البطاقات ستتم تعبئتها عبر JavaScript -->
+                <!-- البطاقات ستتم تعبئتها عبر JavaScript (بدون بطاقة الإنجازات) -->
             </div>
         </section>
 
@@ -864,46 +1015,7 @@
     </div>
 
     <!-- ======================== ACHIEVEMENTS VIEW ======================== -->
-    <div id="achievements-view" style="display:none;">
-        <div class="min-h-screen pt-24 pb-16 px-4 sm:px-6 lg:px-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
-                    <div>
-                        <h2 class="font-cinzel text-2xl sm:text-4xl gold-text tracking-wider">ACHIEVEMENTS</h2>
-                        <p class="font-cairo text-white/40 text-sm mt-1">الإنجازات والبطولات</p>
-                    </div>
-                    <button onclick="showView('home')" class="flex items-center gap-2 text-gold/60 hover:text-gold transition-colors font-cairo text-sm border border-gold/20 hover:border-gold/50 px-4 py-2 rounded-lg">
-                        <span>العودة للرئيسية</span>
-                        <i class="fas fa-arrow-right text-xs"></i>
-                    </button>
-                </div>
-                <div class="w-full h-px mb-10" style="background:linear-gradient(90deg,rgba(212,175,55,0.3),rgba(212,175,55,0.05),transparent);"></div>
-
-                <div id="gallery" class="masonry"></div>
-
-                <!-- Admin Upload Zone -->
-                <div id="upload-zone" style="display:none;" class="mt-12 mb-8">
-                    <div id="drop-area" class="drop-zone rounded-xl p-10 sm:p-14 text-center cursor-pointer">
-                        <i class="fas fa-cloud-arrow-up text-gold/30 text-5xl mb-4 block"></i>
-                        <p class="font-cairo text-gold/50 text-base mb-1">اسحب الصور وأفلتها هنا</p>
-                        <p class="font-cairo text-white/20 text-xs">أو انقر لاختيار ملفات — PNG, JPG, WEBP</p>
-                        <input type="file" id="file-input" multiple accept="image/*" class="hidden">
-                    </div>
-                    <div id="upload-preview" class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-2 mt-4"></div>
-                </div>
-
-                <!-- Admin Gallery Controls -->
-                <div id="admin-gallery-ctrl" style="display:none;" class="flex gap-3 mb-8 flex-wrap">
-                    <button onclick="resetGallery()" class="font-cairo text-xs bg-red-950/60 border border-red-500/25 text-red-400 px-4 py-2 rounded-lg hover:bg-red-900/60 transition-colors">
-                        <i class="fas fa-trash-alt ml-1"></i> مسح جميع الصور
-                    </button>
-                    <button onclick="resetDefaults()" class="font-cairo text-xs bg-yellow-950/40 border border-yellow-500/20 text-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-900/40 transition-colors">
-                        <i class="fas fa-rotate-left ml-1"></i> استعادة الصور الافتراضية
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <!-- تم حذفها نهائياً حسب الطلب -->
 
     <!-- ======================== SPORT DETAIL PAGE ======================== -->
     <div id="sport-detail-page" class="sport-detail-page">
@@ -947,21 +1059,37 @@
                 <div id="age-groups-list" class="space-y-2"></div>
             </div>
 
-            <!-- معرض الصور -->
+            <!-- معرض الصور مع التصنيفات -->
             <div class="info-card">
                 <h3 class="info-title"><i class="fas fa-images ml-2"></i>معرض الصور</h3>
                 
-                <!-- الأيقونة الذهبية التفاعلية -->
+                <!-- تبويبات التصنيفات -->
+                <div id="category-tabs" class="category-tabs"></div>
+                
+                <!-- الأيقونة الذهبية التفاعلية (للمطور) -->
                 <div id="add-image-btn" class="gold-icon-btn" style="display: none;" onclick="toggleAddArea()">
                     <i class="fas fa-plus"></i>
-                    إضافة رابط
+                    إضافة صورة
                 </div>
                 
-                <!-- منطقة الإضافة -->
+                <!-- منطقة الإضافة (للمطور) -->
                 <div id="add-area" class="add-area">
                     <input type="url" id="image-url" class="link-input" placeholder="أدخل رابط الصورة هنا" dir="ltr">
                     <img id="preview" class="preview-image" alt="معاينة">
                     <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
+                    
+                    <!-- حقل التصنيف مع القائمة المنسدلة المخصصة -->
+                    <div class="category-dropdown">
+                        <div class="category-select-btn" onclick="toggleCategoryDropdown()">
+                            <span id="selected-category">اختر تصنيفاً</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div id="category-dropdown-menu" class="category-dropdown-menu">
+                            <!-- تضاف العناصر هنا ديناميكياً -->
+                        </div>
+                    </div>
+                    <input type="text" id="image-category" class="link-input" placeholder="أو أدخل تصنيفاً جديداً" style="margin-top:10px;">
+                    
                     <div class="form-buttons">
                         <button class="admin-btn save" onclick="saveLink()">حفظ</button>
                         <button class="admin-btn" onclick="cancelAdd()">إلغاء</button>
@@ -974,7 +1102,7 @@
         </div>
     </div>
 
-    <!-- ======================== JAVASCRIPT النهائي مع تفويض الأحداث ======================== -->
+    <!-- ======================== JAVASCRIPT ======================== -->
     <script>
     (function() {
         'use strict';
@@ -987,6 +1115,72 @@
         let editImageIndex = null;
         let currentEditIndex = null;
         
+        // متغيرات اللغة
+        let currentLang = 'ar'; // اللغات: ar, en, fr
+        const langTexts = {
+            ar: {
+                home: 'الرئيسية',
+                services: 'الخدمات',
+                contact: 'اتصل بنا',
+                search: 'بحث...',
+                heroSubtitle: 'قاعة العمراني',
+                heroTagline: 'حيث تُصنع الأبطال — تدريب احترافي، نتائج استثنائية',
+                discover: 'اكتشف خدماتنا ↓',
+                ourServices: 'خدماتنا',
+                schedule: 'المواعيد',
+                prices: 'الأسعار',
+                ageGroups: 'الفئات العمرية',
+                gallery: 'معرض الصور',
+                addImage: 'إضافة صورة',
+                selectCategory: 'اختر تصنيفاً',
+                orNewCategory: 'أو أدخل تصنيفاً جديداً',
+                save: 'حفظ',
+                cancel: 'إلغاء',
+                back: 'العودة للرئيسية',
+                // ... يمكن إضافة المزيد
+            },
+            en: {
+                home: 'Home',
+                services: 'Services',
+                contact: 'Contact',
+                search: 'Search...',
+                heroSubtitle: 'El Amrani Gym',
+                heroTagline: 'Where champions are made — professional training, exceptional results',
+                discover: 'Discover our services ↓',
+                ourServices: 'Our Services',
+                schedule: 'Schedule',
+                prices: 'Prices',
+                ageGroups: 'Age Groups',
+                gallery: 'Gallery',
+                addImage: 'Add Image',
+                selectCategory: 'Select category',
+                orNewCategory: 'Or enter a new category',
+                save: 'Save',
+                cancel: 'Cancel',
+                back: 'Back to Home',
+            },
+            fr: {
+                home: 'Accueil',
+                services: 'Services',
+                contact: 'Contact',
+                search: 'Rechercher...',
+                heroSubtitle: 'Salle El Amrani',
+                heroTagline: 'Là où les champions sont faits — entraînement professionnel, résultats exceptionnels',
+                discover: 'Découvrez nos services ↓',
+                ourServices: 'Nos Services',
+                schedule: 'Horaires',
+                prices: 'Tarifs',
+                ageGroups: 'Groupes d\'âge',
+                gallery: 'Galerie',
+                addImage: 'Ajouter une image',
+                selectCategory: 'Choisir une catégorie',
+                orNewCategory: 'Ou entrer une nouvelle catégorie',
+                save: 'Enregistrer',
+                cancel: 'Annuler',
+                back: 'Retour à l\'accueil',
+            }
+        };
+        
         // متغيرات Lightbox
         let currentLightboxImages = [];
         let currentLightboxIndex = 0;
@@ -998,7 +1192,7 @@
         let startDragX, startDragY, startTranslateX, startTranslateY;
         let hammerManager = null, wheelHandler = null;
 
-        // بيانات الرياضات
+        // بيانات الرياضات (تم حذف achievements)
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1012,7 +1206,8 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: []
+                images: [], // كل صورة: { url, caption, category }
+                categories: [] // قائمة التصنيفات المستخدمة
             },
             { 
                 id: 'taekwondo', 
@@ -1032,7 +1227,8 @@
                     { range: '12 — 15 سنة', time: '20:30' },
                     { range: '+15 سنة', time: '21:30' }
                 ],
-                images: []
+                images: [],
+                categories: []
             },
             { 
                 id: 'kickboxing', 
@@ -1047,7 +1243,8 @@
                     { name: '3 أشهر', value: '400 DH' }
                 ],
                 ageGroups: [],
-                images: []
+                images: [],
+                categories: []
             },
             { 
                 id: 'mens-gym', 
@@ -1062,7 +1259,8 @@
                     { name: 'سنة', value: '1000 DH' }
                 ],
                 ageGroups: [],
-                images: []
+                images: [],
+                categories: []
             },
             { 
                 id: 'womens-gym', 
@@ -1076,31 +1274,16 @@
                     { name: '3 أشهر', value: '400 DH' }
                 ],
                 ageGroups: [],
-                images: []
-            },
-            { 
-                id: 'achievements', 
-                nameEn: 'Achievements', 
-                nameAr: 'الإنجازات',
-                icon: 'fa-trophy',
-                schedule: 'معرض دائم',
-                time: 'مفتوح طوال الوقت',
-                prices: [
-                    { name: 'الدخول', value: 'مجاني' }
-                ],
-                ageGroups: [],
-                images: [
-                    {
-                        url: 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=400',
-                        caption: '🥇 بطولة وطنية 2023'
-                    },
-                    {
-                        url: 'https://images.unsplash.com/photo-1599058917212-d750089bc07e?w=400',
-                        caption: '🏆 كأس المدينة'
-                    }
-                ]
+                images: [],
+                categories: []
             }
         ];
+
+        // بيانات صفحة الإشهار
+        let showcaseData = {
+            url: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200', // صورة افتراضية
+            caption: 'Five Stars Gym - حيث تتحقق الأحلام'
+        };
 
         // ========== دوال مساعدة ==========
         window.showToast = function(message, type = 'default', duration = 3000) {
@@ -1121,7 +1304,54 @@
             }, duration);
         };
 
-        // ========== دوال Lightbox مع التكبير والتصغير ==========
+        // ========== دوال اللغة ==========
+        window.toggleLanguage = function() {
+            const langs = ['ar', 'en', 'fr'];
+            const currentIndex = langs.indexOf(currentLang);
+            const nextIndex = (currentIndex + 1) % langs.length;
+            currentLang = langs[nextIndex];
+            applyLanguage();
+            // حفظ اللغة في localStorage لاستمرارها
+            localStorage.setItem('preferredLang', currentLang);
+        };
+        
+        function applyLanguage() {
+            const texts = langTexts[currentLang];
+            // تغيير اتجاه الصفحة حسب اللغة
+            if (currentLang === 'ar') {
+                document.documentElement.setAttribute('dir', 'rtl');
+            } else {
+                document.documentElement.setAttribute('dir', 'ltr');
+            }
+            
+            // تحديث النصوص الثابتة
+            document.querySelectorAll('[data-lang]').forEach(el => {
+                const key = el.getAttribute('data-lang');
+                if (texts[key]) el.textContent = texts[key];
+            });
+            
+            // تحديث الـ placeholder للبحث
+            document.getElementById('search-input').placeholder = texts.search;
+            
+            // تحديث النصوص في hero
+            document.getElementById('edit-hero-subtitle').textContent = texts.heroSubtitle;
+            document.getElementById('edit-hero-tagline').textContent = texts.heroTagline;
+            
+            // تحديث نص زر الخدمات
+            const discoverBtn = document.querySelector('a[href="#services-section"]');
+            if (discoverBtn) discoverBtn.textContent = texts.discover;
+            
+            // تحديث عناوين الخدمات (لكنها تأتي من البيانات)
+            // سيتم إعادة رسم البطاقات إذا أردنا تحديث الأسماء حسب اللغة، لكننا نفضل الاحتفاظ بالبيانات الثنائية اللغة
+            renderSportsCards(); // يعيد رسم البطاقات بالنصوص المناسبة حسب اللغة
+            
+            // تحديث صفحة الرياضة المفتوحة إن وجدت
+            if (currentSport) {
+                openSportPage(currentSport.id); // يعيد تحميل الصفحة بالنصوص الجديدة
+            }
+        }
+        
+        // ========== دوال Lightbox مع التكبير والتصغير (كما هي) ==========
         function resetZoom() {
             scale = 1; translateX = 0; translateY = 0;
             applyTransform();
@@ -1236,7 +1466,7 @@
             setTimeout(() => setupLightboxGestures(), 200);
         };
 
-        // ========== دوال تعديل الوصف ==========
+        // ========== دوال تعديل الوصف (كما هي) ==========
         window.openCaptionModal = function(index) {
             if (!currentSport || !currentSport.images[index]) return;
             currentEditIndex = index;
@@ -1257,7 +1487,7 @@
             }
         };
 
-        // ========== التخزين السحابي ==========
+        // ========== التخزين السحابي (كما هو مع تعديل بسيط) ==========
         const BIN_ID = '69b99a0aaa77b81da9f2cebf';
         const API_KEY = '$2a$10$HIZoab3tTM/2LPQAVLeK3.1P.PYxBVAFKNpWMtQOcJq/QfC3Z7/le';
         async function loadFromCloud() {
@@ -1274,8 +1504,12 @@
                             sports[index].prices = savedSport.prices || sports[index].prices;
                             sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
                             if (savedSport.images) sports[index].images = savedSport.images;
+                            if (savedSport.categories) sports[index].categories = savedSport.categories;
                         }
                     });
+                }
+                if (data.record && data.record.showcase) {
+                    showcaseData = data.record.showcase;
                 }
                 window.showToast('✅ تم تحميل البيانات من السحابة', 'success');
             } catch(e) {
@@ -1283,6 +1517,7 @@
                 loadLocalStorage();
                 window.showToast('⚠️ تم التحميل من التخزين المحلي', 'warning');
             }
+            updateShowcase();
         }
         async function saveToCloud() {
             try {
@@ -1292,7 +1527,7 @@
                         'Content-Type': 'application/json',
                         'X-Master-Key': API_KEY
                     },
-                    body: JSON.stringify({ sports })
+                    body: JSON.stringify({ sports, showcase: showcaseData })
                 });
                 if (response.ok) window.showToast('✅ تم حفظ المعلومات في السحابة', 'success');
                 else window.showToast('❌ فشل في حفظ المعلومات في السحابة', 'error');
@@ -1315,26 +1550,32 @@
                                 sports[index].prices = savedSport.prices || sports[index].prices;
                                 sports[index].ageGroups = savedSport.ageGroups || sports[index].ageGroups;
                                 if (savedSport.images) sports[index].images = savedSport.images;
+                                if (savedSport.categories) sports[index].categories = savedSport.categories;
                             }
                         });
                     }
+                    if (data.showcase) showcaseData = data.showcase;
                 }
             } catch(e) { console.warn('خطأ في التخزين المحلي'); }
+            updateShowcase();
         }
         function saveLocalStorage() {
-            try { localStorage.setItem('gymData', JSON.stringify({ sports })); }
+            try { localStorage.setItem('gymData', JSON.stringify({ sports, showcase: showcaseData })); }
             catch(e) { console.warn('خطأ في الحفظ المحلي'); }
         }
 
-        // ========== عرض البطاقات ==========
+        // ========== عرض البطاقات (بدون achievements) ==========
         function renderSportsCards() {
             const container = document.getElementById('sports-container');
             if (!container) return;
-            container.innerHTML = sports.map(sport => `
+            container.innerHTML = sports.map(sport => {
+                // اختيار الاسم حسب اللغة
+                const name = currentLang === 'ar' ? sport.nameAr : (currentLang === 'fr' ? sport.nameEn : sport.nameEn); // تبسيطاً
+                return `
                 <div class="service-card rounded-xl p-6 sm:p-8" onclick="openSportPage('${sport.id}')">
                     <div class="icon-circle text-gold text-xl mb-5"><i class="fas ${sport.icon}"></i></div>
                     <h3 class="font-cinzel text-gold text-lg mb-0.5">${sport.nameEn}</h3>
-                    <h4 class="font-cairo text-white/50 text-sm mb-5">${sport.nameAr}</h4>
+                    <h4 class="font-cairo text-white/50 text-sm mb-5">${name}</h4>
                     <div class="space-y-3 text-sm font-cairo">
                         <div class="flex items-center gap-3 text-white/65">
                             <i class="fas fa-calendar-days text-gold/50 w-5 text-center text-xs"></i>
@@ -1352,7 +1593,7 @@
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // ========== فتح وإغلاق صفحة الرياضة ==========
@@ -1360,7 +1601,7 @@
             const sport = sports.find(s => s.id === sportId);
             if (!sport) return;
             currentSport = sport;
-            document.getElementById('sport-detail-title').textContent = sport.nameAr;
+            document.getElementById('sport-detail-title').textContent = currentLang === 'ar' ? sport.nameAr : sport.nameEn;
             document.getElementById('sport-schedule').textContent = sport.schedule;
             document.getElementById('sport-time').textContent = sport.time;
             document.getElementById('prices-container').innerHTML = sport.prices.map(price => `
@@ -1380,6 +1621,8 @@
             } else {
                 document.getElementById('age-groups-container').style.display = 'none';
             }
+            // تحديث التصنيفات
+            renderCategoryTabs();
             renderSportGallery();
             document.getElementById('sport-detail-page').classList.add('active');
             document.getElementById('close-btn').style.display = 'flex';
@@ -1402,6 +1645,45 @@
             renderSportGallery();
         }
 
+        // ========== دوال التصنيفات ==========
+        let activeCategory = 'all'; // الكل
+        
+        function renderCategoryTabs() {
+            const tabsContainer = document.getElementById('category-tabs');
+            if (!currentSport) return;
+            const categories = currentSport.categories || [];
+            let html = `<button class="category-tab ${activeCategory === 'all' ? 'active' : ''}" onclick="filterCategory('all')">${langTexts[currentLang].all || 'الكل'}</button>`;
+            categories.forEach(cat => {
+                html += `<button class="category-tab ${activeCategory === cat ? 'active' : ''}" onclick="filterCategory('${cat}')">${cat}</button>`;
+            });
+            tabsContainer.innerHTML = html;
+        }
+        
+        window.filterCategory = function(category) {
+            activeCategory = category;
+            renderCategoryTabs();
+            renderSportGallery();
+        };
+        
+        // تحديث قائمة التصنيفات في القائمة المنسدلة
+        function updateCategoryDropdown() {
+            const menu = document.getElementById('category-dropdown-menu');
+            if (!currentSport) return;
+            const categories = currentSport.categories || [];
+            menu.innerHTML = categories.map(cat => `<div class="category-item" onclick="selectCategory('${cat}')">${cat}</div>`).join('');
+            // إضافة خيار "الكل"؟
+        }
+        
+        window.toggleCategoryDropdown = function() {
+            document.getElementById('category-dropdown-menu').classList.toggle('show');
+        };
+        
+        window.selectCategory = function(category) {
+            document.getElementById('selected-category').textContent = category;
+            document.getElementById('image-category').value = category;
+            document.getElementById('category-dropdown-menu').classList.remove('show');
+        };
+
         // ========== إضافة الصور عبر الرابط ==========
         window.toggleAddArea = function() {
             const addArea = document.getElementById('add-area');
@@ -1410,31 +1692,46 @@
             } else {
                 document.getElementById('image-url').value = '';
                 document.getElementById('image-caption').value = '';
+                document.getElementById('image-category').value = '';
+                document.getElementById('selected-category').textContent = langTexts[currentLang].selectCategory;
                 document.getElementById('preview').classList.remove('show');
                 editImageIndex = null;
                 addArea.classList.add('show');
+                updateCategoryDropdown(); // تحديث القائمة عند الفتح
             }
         };
         window.cancelAdd = function() {
             document.getElementById('add-area').classList.remove('show');
             document.getElementById('image-url').value = '';
             document.getElementById('image-caption').value = '';
+            document.getElementById('image-category').value = '';
             document.getElementById('preview').classList.remove('show');
             editImageIndex = null;
         };
         window.saveLink = function() {
             const url = document.getElementById('image-url').value.trim();
             const caption = document.getElementById('image-caption').value.trim();
+            let category = document.getElementById('image-category').value.trim();
             if (!url) { window.showToast('❌ الرجاء إدخال رابط الصورة', 'error'); return; }
             if (!currentSport) { window.showToast('❌ لم يتم تحديد الرياضة', 'error'); return; }
+            
+            // إذا لم يتم إدخال تصنيف، نستخدم "عام" أو نص افتراضي
+            if (!category) category = langTexts[currentLang].general || 'عام';
+            
+            // إضافة التصنيف إلى قائمة التصنيفات إذا لم يكن موجوداً
+            if (!currentSport.categories.includes(category)) {
+                currentSport.categories.push(category);
+            }
+            
             if (editImageIndex !== null) {
-                currentSport.images[editImageIndex] = { url, caption };
+                currentSport.images[editImageIndex] = { url, caption, category };
                 window.showToast('✅ تم تعديل الصورة بنجاح', 'success');
                 editImageIndex = null;
             } else {
-                currentSport.images.push({ url, caption });
+                currentSport.images.push({ url, caption, category });
                 window.showToast('✅ تم إضافة الصورة بنجاح', 'success');
             }
+            renderCategoryTabs();
             renderSportGallery();
             cancelAdd();
         };
@@ -1443,10 +1740,13 @@
             const img = currentSport.images[index];
             document.getElementById('image-url').value = img.url;
             document.getElementById('image-caption').value = img.caption || '';
+            document.getElementById('image-category').value = img.category || '';
+            document.getElementById('selected-category').textContent = img.category || langTexts[currentLang].selectCategory;
             document.getElementById('preview').src = img.url;
             document.getElementById('preview').classList.add('show');
             editImageIndex = index;
             document.getElementById('add-area').classList.add('show');
+            updateCategoryDropdown();
         };
         window.deleteImage = function(index) {
             if (!currentSport || !currentSport.images) return;
@@ -1457,16 +1757,24 @@
             }
         };
 
-        // ========== عرض معرض الصور ==========
+        // ========== عرض معرض الصور مع مراعاة التصنيف النشط ==========
         function renderSportGallery() {
             const gallery = document.getElementById('sport-gallery');
             if (!currentSport) return;
-            if (currentSport.images && currentSport.images.length > 0) {
-                gallery.innerHTML = currentSport.images.map((img, index) => {
+            
+            let imagesToShow = currentSport.images;
+            if (activeCategory !== 'all') {
+                imagesToShow = currentSport.images.filter(img => img.category === activeCategory);
+            }
+            
+            if (imagesToShow.length > 0) {
+                gallery.innerHTML = imagesToShow.map((img, index) => {
                     const caption = img.caption || '';
                     const imageUrl = img.url && img.url.trim() ? img.url : '';
+                    // نعيد الفهرس الأصلي للحذف والتعديل
+                    const originalIndex = currentSport.images.indexOf(img);
                     return `
-                        <div class="gallery-item" data-index="${index}">
+                        <div class="gallery-item" data-index="${originalIndex}">
                             <img src="${imageUrl}" 
                                  alt="صورة" 
                                  onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'200\' height=\'200\' viewBox=\'0 0 200 200\'%3E%3Crect width=\'200\' height=\'200\' fill=\'%23333\'/%3E%3Ctext x=\'100\' y=\'100\' font-size=\'14\' text-anchor=\'middle\' fill=\'%23D4AF37\' font-family=\'Cairo\'%3Eصورة غير متوفرة%3C/text%3E%3C/svg%3E'; 
@@ -1474,20 +1782,20 @@
                             <div class="image-caption ${caption ? '' : 'empty'}">${caption}</div>
                             ${isAdmin ? `
                                 <div class="image-overlay" onclick="event.stopPropagation()">
-                                    <button onclick="editImage(${index})" title="تعديل"><i class="fas fa-edit"></i></button>
-                                    <button onclick="openCaptionModal(${index})" title="تعديل الوصف"><i class="fas fa-paragraph"></i></button>
-                                    <button onclick="deleteImage(${index})" title="حذف"><i class="fas fa-trash"></i></button>
+                                    <button onclick="editImage(${originalIndex})" title="تعديل"><i class="fas fa-edit"></i></button>
+                                    <button onclick="openCaptionModal(${originalIndex})" title="تعديل الوصف"><i class="fas fa-paragraph"></i></button>
+                                    <button onclick="deleteImage(${originalIndex})" title="حذف"><i class="fas fa-trash"></i></button>
                                 </div>
                             ` : ''}
                         </div>
                     `;
                 }).join('');
             } else {
-                gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">لا توجد صور بعد</p>';
+                gallery.innerHTML = '<p style="color: #666; text-align: center; padding: 2rem;">' + (langTexts[currentLang].noImages || 'لا توجد صور بعد') + '</p>';
             }
         }
 
-        // ========== وضع المطور ==========
+        // ========== وضع المطور (كما هو مع إضافة عناصر الإشهار) ==========
         function setupAdminTrigger() {
             const trigger = document.getElementById('admin-trigger');
             if (!trigger) return;
@@ -1511,6 +1819,12 @@
             document.body.classList.add('admin-active');
             document.getElementById('admin-toolbar').style.display = 'flex';
             document.querySelectorAll('.editable').forEach(el => el.setAttribute('contenteditable', 'true'));
+            
+            // إظهار خانات تعديل الإشهار
+            document.getElementById('showcase-edit').style.display = 'block';
+            document.getElementById('showcase-url').value = showcaseData.url;
+            document.getElementById('showcase-desc').value = showcaseData.caption;
+            
             const urlInput = document.getElementById('image-url');
             if (urlInput) {
                 urlInput.addEventListener('input', function(e) {
@@ -1525,6 +1839,19 @@
             }
             if (currentSport) updateEditMode();
             window.showToast('⚡ وضع المطور مفعل', 'success');
+        }
+
+        // ========== حفظ الإشهار ==========
+        window.saveShowcase = function() {
+            showcaseData.url = document.getElementById('showcase-url').value.trim();
+            showcaseData.caption = document.getElementById('showcase-desc').value.trim();
+            updateShowcase();
+            window.showToast('✅ تم تحديث صورة الإشهار', 'success');
+        };
+        
+        function updateShowcase() {
+            document.getElementById('showcase-img').src = showcaseData.url;
+            document.getElementById('showcase-caption').textContent = showcaseData.caption;
         }
 
         // ========== أزرار الحفظ والخروج ==========
@@ -1549,6 +1876,7 @@
                 document.getElementById('admin-toolbar').style.display = 'none';
                 document.getElementById('add-image-btn').style.display = 'none';
                 document.getElementById('add-area').classList.remove('show');
+                document.getElementById('showcase-edit').style.display = 'none';
                 document.querySelectorAll('.editable').forEach(el => el.removeAttribute('contenteditable'));
                 if (currentSport) renderSportGallery();
                 window.showToast('✅ تم الخروج من وضع المطور', 'success');
@@ -1585,121 +1913,24 @@
         // ========== تبديل الصفحات ==========
         window.showView = function(view) {
             const home = document.getElementById('home-view');
-            const ach = document.getElementById('achievements-view');
+            // لا يوجد achievements view بعد الآن
             if (view === 'home') {
-                home.style.display = ''; ach.style.display = 'none';
+                home.style.display = ''; 
                 home.classList.add('view-enter');
                 setTimeout(() => home.classList.remove('view-enter'), 500);
-            } else {
-                home.style.display = 'none'; ach.style.display = '';
-                ach.classList.add('view-enter');
-                setTimeout(() => ach.classList.remove('view-enter'), 500);
-                renderAchievementsGallery();
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         };
 
-        // ========== دوال الإنجازات ==========
-        let galleryImages = [];
-        let pendingUploads = [];
-        function makeDefaults() {
-            const items = [
-                { t:'🥇 بطولة وطنية 2023', h:300, c1:'#1a1508', c2:'#0d0a04' },
-                { t:'🏆 كأس المدينة', h:380, c1:'#0f1a0f', c2:'#060d06' },
-                { t:'🥋 تدريبات الفريق', h:260, c1:'#1a1010', c2:'#0d0808' },
-                { t:'⭐ ميدالية ذهبية', h:340, c1:'#10101a', c2:'#08080d' },
-                { t:'💪 بطولة إقليمية', h:280, c1:'#1a1a0f', c2:'#0d0d08' },
-                { t:'🏅 إنجاز 2024', h:320, c1:'#0f1a1a', c2:'#080d0d' },
-            ];
-            return items.map(item => 'data:image/svg+xml,' + encodeURIComponent(`
-                <svg width="400" height="${item.h}"><rect fill="${item.c1}" width="400" height="${item.h}" rx="10"/><text fill="#D4AF37" x="200" y="${item.h/2}" text-anchor="middle" font-size="24">${item.t}</text></svg>
-            `));
-        }
-        const defaultImages = makeDefaults();
-        galleryImages = [...defaultImages];
-        function renderAchievementsGallery() {
-            const container = document.getElementById('gallery');
-            if (!container) return;
-            const all = galleryImages.concat(pendingUploads);
-            if (all.length === 0) {
-                container.innerHTML = '<div class="text-center py-20"><i class="fas fa-image text-gold/15 text-6xl mb-4"></i><p class="text-white/25">لا توجد صور بعد</p></div>';
-                return;
-            }
-            container.innerHTML = all.map(src => 
-                '<div class="masonry-item"><img src="'+src+'" class="gallery-img" loading="lazy"></div>'
-            ).join('');
-        }
-        window.resetGallery = function() { if (isAdmin) { galleryImages = []; pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); window.showToast('🗑️ تم مسح جميع الصور', 'success'); } };
-        window.resetDefaults = function() { if (isAdmin) { galleryImages = defaultImages.slice(); pendingUploads = []; document.getElementById('upload-preview').innerHTML = ''; renderAchievementsGallery(); window.showToast('✅ تم استعادة الصور الافتراضية', 'success'); } };
-
-        // ========== السحب والإفلات ==========
-        function setupDragDrop() {
-            const drop = document.getElementById('drop-area');
-            const fileIn = document.getElementById('file-input');
-            if (!drop || !fileIn) return;
-            drop.addEventListener('click', () => fileIn.click());
-            drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('dragover'); });
-            drop.addEventListener('dragleave', () => drop.classList.remove('dragover'));
-            drop.addEventListener('drop', (e) => {
-                e.preventDefault(); drop.classList.remove('dragover');
-                handleFiles(e.dataTransfer.files);
-            });
-            fileIn.addEventListener('change', () => { handleFiles(fileIn.files); fileIn.value = ''; });
-        }
-        function handleFiles(files) {
-            Array.from(files).forEach(f => {
-                if (!f.type.startsWith('image/')) return;
-                compressImg(f, url => {
-                    pendingUploads.push(url);
-                    renderAchievementsGallery();
-                    addPreview(url);
-                    window.showToast('📷 تم تحميل الصورة', 'success');
-                });
-            });
-        }
-        function compressImg(file, cb) {
-            const reader = new FileReader();
-            reader.onload = e => {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const max = 1200;
-                    let w = img.width, h = img.height;
-                    if (w > max || h > max) {
-                        if (w > h) { h = Math.round(h * max / w); w = max; }
-                        else { w = Math.round(w * max / h); h = max; }
-                    }
-                    canvas.width = w; canvas.height = h;
-                    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-                    cb(canvas.toDataURL('image/jpeg', 0.72));
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-        function addPreview(url) {
-            const div = document.createElement('div');
-            div.className = 'relative rounded-lg overflow-hidden border border-gold/15';
-            div.innerHTML = '<img src="'+url+'" class="w-full h-20 object-cover">';
-            document.getElementById('upload-preview').appendChild(div);
-        }
-
-        // ========== تفويض الأحداث: الاستماع للنقر على أي صورة داخل المعارض ==========
+        // ========== تفويض الأحداث: النقر على الصور ==========
         document.addEventListener('click', function(e) {
-            // نتحقق إذا كان العنصر الذي تم النقر عليه هو صورة داخل معرض الإنجازات
-            if (e.target.matches('#gallery .gallery-img')) {
-                const img = e.target;
-                const items = Array.from(document.querySelectorAll('#gallery .gallery-img'));
-                const index = items.indexOf(img);
-                const allImages = galleryImages.concat(pendingUploads);
-                window.openLightbox(allImages.map(url => ({ url })), index);
-            }
             // نتحقق إذا كان العنصر الذي تم النقر عليه هو صورة داخل معرض الرياضة الحالي
-            else if (e.target.matches('#sport-gallery .gallery-item img')) {
+            if (e.target.matches('#sport-gallery .gallery-item img')) {
                 const img = e.target;
                 const parent = img.closest('.gallery-item');
                 if (parent && parent.dataset.index !== undefined && currentSport) {
                     const index = parseInt(parent.dataset.index);
+                    // نمرر كل الصور (وليس فقط المصنفة) مع الاحتفاظ بالترتيب الأصلي
                     window.openLightbox(currentSport.images, index);
                 }
             }
@@ -1707,6 +1938,11 @@
 
         // ========== التهيئة ==========
         async function init() {
+            // تحميل اللغة المفضلة
+            const savedLang = localStorage.getItem('preferredLang');
+            if (savedLang && ['ar','en','fr'].includes(savedLang)) currentLang = savedLang;
+            applyLanguage();
+            
             await loadFromCloud();
             renderSportsCards();
             setupAdminTrigger();
@@ -1714,8 +1950,7 @@
             setupExitButton();
             setupSearch();
             setupMobile();
-            setupDragDrop();
-            renderAchievementsGallery(); // عرض الصور الافتراضية للإنجازات
+            updateShowcase(); // عرض صورة الإشهار
             
             document.addEventListener('keydown', function(e) {
                 if (!document.getElementById('lightbox').classList.contains('active')) return;
