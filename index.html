@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط الأساسية كما هي - مع إضافة أنماط جديدة للتبويبات والتصنيفات */
+        /* جميع الأنماط كما هي - مع إضافة أنماط الخلفية المتحركة */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -27,7 +27,45 @@
             color: #ffffff;
             font-family: 'Cairo', sans-serif;
             overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
         }
+        /* الخلفية المتحركة */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .bg-icon {
+            position: absolute;
+            color: rgba(212, 175, 55, 0.15); /* ذهبي شفاف */
+            font-size: 1.5rem;
+            user-select: none;
+            animation: float 20s linear infinite;
+            transform: translateY(100vh) rotate(0deg);
+        }
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* تخصيصات إضافية */
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .gold-text {
@@ -74,6 +112,10 @@
             transform: scale(1.02);
             box-shadow: 0 8px 30px rgba(212,175,55,0.15);
         }
+        .masonry { column-count: 3; column-gap: 1rem; }
+        .masonry-item { break-inside: avoid; margin-bottom: 1rem; }
+        @media (max-width: 1024px) { .masonry { column-count: 2; } }
+        @media (max-width: 640px)  { .masonry { column-count: 1; } }
         .lightbox {
             opacity: 0;
             visibility: hidden;
@@ -741,7 +783,7 @@
             color: #D4AF37;
         }
         
-        /* القائمة المنسدلة للتصنيفات (للمطور) */
+        /* القائمة المنسدلة للتصنيفات */
         .category-dropdown {
             position: relative;
             width: 100%;
@@ -798,7 +840,7 @@
             border-bottom: none;
         }
         
-        /* صالة العرض (showcase) */
+        /* صالة العرض */
         .showcase-section {
             padding: 60px 20px;
             background: #0a0a0a;
@@ -813,7 +855,7 @@
             border-radius: 12px;
             border: 2px solid #D4AF37;
             box-shadow: 0 0 30px rgba(212,175,55,0.3);
-            pointer-events: none; /* لا تتفاعل مع النقر */
+            pointer-events: none;
             user-select: none;
         }
         .showcase-caption {
@@ -865,6 +907,8 @@
     </style>
 </head>
 <body>
+    <!-- الخلفية المتحركة -->
+    <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
     <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center" style="background:#0a0a0a;">
@@ -985,9 +1029,9 @@
                 <h1 class="font-cinzel text-5xl sm:text-7xl lg:text-8xl font-bold mb-2 gold-shimmer tracking-wider leading-tight">FIVE STARS</h1>
                 <h2 class="font-cinzel text-3xl sm:text-5xl lg:text-6xl font-bold mb-6 gold-text tracking-widest">GYM</h2>
                 <div class="w-28 h-0.5 mx-auto mb-5" style="background:linear-gradient(90deg,transparent,#D4AF37,transparent);"></div>
-                <p class="font-cairo text-xl sm:text-2xl text-white/50 mb-2 editable" id="edit-hero-subtitle">قاعة العمراني</p>
-                <p class="font-cairo text-sm sm:text-base text-white/30 max-w-lg mx-auto editable" id="edit-hero-tagline">حيث تُصنع الأبطال — تدريب احترافي، نتائج استثنائية</p>
-                <a href="#services-section" class="inline-block mt-10 font-cairo bg-gold/10 border border-gold/40 text-gold px-8 py-3 rounded-lg hover:bg-gold/20 hover:border-gold/70 transition-all duration-300 text-sm tracking-wide">اكتشف خدماتنا ↓</a>
+                <p class="font-cairo text-xl sm:text-2xl text-white/50 mb-2 editable" id="edit-hero-subtitle" data-lang="heroSubtitle">قاعة العمراني</p>
+                <p class="font-cairo text-sm sm:text-base text-white/30 max-w-lg mx-auto editable" id="edit-hero-tagline" data-lang="heroTagline">حيث تُصنع الأبطال — تدريب احترافي، نتائج استثنائية</p>
+                <a href="#services-section" class="inline-block mt-10 font-cairo bg-gold/10 border border-gold/40 text-gold px-8 py-3 rounded-lg hover:bg-gold/20 hover:border-gold/70 transition-all duration-300 text-sm tracking-wide" data-lang="discover">اكتشف خدماتنا ↓</a>
             </div>
         </section>
 
@@ -1010,13 +1054,13 @@
         <!-- SERVICES -->
         <section id="services-section" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <h2 class="font-cinzel text-3xl sm:text-4xl gold-text mb-2 tracking-wider">OUR SERVICES</h2>
-                <p class="font-cairo text-white/40 text-base">خدماتنا</p>
+                <h2 class="font-cinzel text-3xl sm:text-4xl gold-text mb-2 tracking-wider" data-lang="ourServices">OUR SERVICES</h2>
+                <p class="font-cairo text-white/40 text-base" data-lang="ourServices">خدماتنا</p>
                 <div class="w-20 h-0.5 mx-auto mt-5" style="background:linear-gradient(90deg,transparent,#D4AF37,transparent);"></div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8" id="sports-container">
-                <!-- البطاقات ستتم تعبئتها عبر JavaScript (بدون بطاقة الإنجازات) -->
+                <!-- البطاقات ستتم تعبئتها عبر JavaScript -->
             </div>
         </section>
 
@@ -1126,7 +1170,7 @@
                         </div>
                     </div>
                     <button id="show-add-price-btn" class="gold-icon-btn" style="display: none; margin-top:15px;" onclick="toggleAddPrice()">
-                        <i class="fas fa-plus"></i> إضافة تسعيرة
+                        <i class="fas fa-plus"></i> <span data-lang="addPrice">إضافة تسعيرة</span>
                     </button>
                 </div>
             </div>
@@ -1185,8 +1229,8 @@
         let adminTimer = null;
         let editImageIndex = null;
         let currentEditIndex = null;
-        let currentSportTab = 'schedule'; // التبويب النشط
-        let activeCategory = 'all'; // التصنيف النشط في الألبوم
+        let currentSportTab = 'schedule';
+        let activeCategory = 'all';
         
         // متغيرات اللغة
         let currentLang = 'ar';
@@ -1268,6 +1312,36 @@
             }
         };
 
+        // أيقونات الخلفية المتحركة
+        const bgIcons = [
+            'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
+            'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
+            'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming'
+        ];
+
+        // إنشاء الخلفية المتحركة
+        function createAnimatedBackground() {
+            const container = document.getElementById('animated-bg');
+            container.innerHTML = '';
+            const iconCount = window.innerWidth < 768 ? 25 : 50;
+            for (let i = 0; i < iconCount; i++) {
+                const icon = document.createElement('i');
+                icon.className = `fas ${bgIcons[Math.floor(Math.random() * bgIcons.length)]} bg-icon`;
+                const left = Math.random() * 100;
+                const size = 1 + Math.random() * 2; // 1rem to 3rem
+                const duration = 15 + Math.random() * 20; // 15s to 35s
+                const delay = Math.random() * 20;
+                icon.style.left = left + '%';
+                icon.style.fontSize = size + 'rem';
+                icon.style.animationDuration = duration + 's';
+                icon.style.animationDelay = delay + 's';
+                container.appendChild(icon);
+            }
+        }
+
+        // تحديث الخلفية عند تغيير حجم النافذة
+        window.addEventListener('resize', createAnimatedBackground);
+
         // متغيرات Lightbox
         let currentLightboxImages = [];
         let currentLightboxIndex = 0;
@@ -1277,7 +1351,7 @@
         let startDragX, startDragY, startTranslateX, startTranslateY;
         let hammerManager = null, wheelHandler = null;
 
-        // بيانات الرياضات (بدون achievements)
+        // بيانات الرياضات
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1291,7 +1365,7 @@
                     { name: '3 أشهر', value: '250 DH' }
                 ],
                 ageGroups: [],
-                images: [], // { url, caption, category }
+                images: [],
                 categories: []
             },
             { 
@@ -1403,19 +1477,22 @@
             const texts = langTexts[currentLang];
             document.documentElement.setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
             
+            // تحديث جميع العناصر التي تحمل data-lang
             document.querySelectorAll('[data-lang]').forEach(el => {
                 const key = el.getAttribute('data-lang');
-                if (texts[key]) el.textContent = texts[key];
+                if (texts[key]) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = texts[key];
+                    } else {
+                        el.textContent = texts[key];
+                    }
+                }
             });
             
+            // تحديث الـ placeholder للبحث
             document.getElementById('search-input').placeholder = texts.search;
-            document.getElementById('edit-hero-subtitle').textContent = texts.heroSubtitle;
-            document.getElementById('edit-hero-tagline').textContent = texts.heroTagline;
             
-            const discoverBtn = document.querySelector('a[href="#services-section"]');
-            if (discoverBtn) discoverBtn.textContent = texts.discover;
-            
-            // تحديث البطاقات
+            // تحديث النصوص في البطاقات (المواعيد والأسعار) - سيتم إعادة الرسم
             renderSportsCards();
             
             // تحديث صفحة الرياضة المفتوحة
@@ -1424,7 +1501,7 @@
             }
         }
 
-        // ========== دوال Lightbox (مختصرة للاختصار، ولكنها موجودة كاملة في الكود الأصلي) ==========
+        // ========== دوال Lightbox (مختصرة) ==========
         function resetZoom() { scale = 1; translateX = 0; translateY = 0; applyTransform(); }
         function applyTransform() { const img = document.getElementById('lightbox-img'); if (img) img.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`; }
         function updateLightbox() {
@@ -1442,7 +1519,7 @@
                 lightboxTimer = null;
             }, 3000);
         }
-        function setupLightboxGestures() { /* نفس الكود الأصلي - اختصاراً */ }
+        function setupLightboxGestures() { /* تم حذف التفاصيل للاختصار */ }
         
         window.openLightbox = function(images, index) {
             if (!images || images.length === 0) return;
@@ -1606,7 +1683,6 @@
             document.getElementById('sport-schedule').textContent = sport.schedule;
             document.getElementById('sport-time').textContent = sport.time;
             
-            // عرض الأسعار
             document.getElementById('prices-container').innerHTML = sport.prices.map(price => `
                 <div class="price-item">
                     <span class="price-name editable">${price.name}</span>
@@ -1614,7 +1690,6 @@
                 </div>
             `).join('');
             
-            // عرض الفئات العمرية إن وجدت
             if (sport.ageGroups && sport.ageGroups.length > 0) {
                 document.getElementById('age-groups-container').style.display = 'block';
                 document.getElementById('age-groups-list').innerHTML = sport.ageGroups.map(group => `
@@ -1627,21 +1702,17 @@
                 document.getElementById('age-groups-container').style.display = 'none';
             }
             
-            // إعادة تعيين التبويب النشط
             currentSportTab = 'schedule';
             activeCategory = 'all';
             switchSportTab('schedule');
             
-            // تحديث التصنيفات
             renderCategoryTabs();
             renderSportGallery();
             
-            // إظهار الصفحة
             document.getElementById('sport-detail-page').classList.add('active');
             document.getElementById('close-btn').style.display = 'flex';
             document.body.style.overflow = 'hidden';
             
-            // تحديث وضع المطور
             updateEditMode();
         };
         
@@ -1770,7 +1841,6 @@
             if (!currentSport || !currentSport.images) return;
             if (confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                 currentSport.images.splice(index, 1);
-                // تحديث قائمة التصنيفات (يمكن ترك التصنيفات القديمة)
                 renderCategoryTabs();
                 renderSportGallery();
                 window.showToast('✅ تم حذف الصورة', 'success');
@@ -1808,7 +1878,7 @@
             }
         }
 
-        // ========== إدارة الأسعار (إضافة تسعيرة جديدة) ==========
+        // ========== إدارة الأسعار ==========
         window.toggleAddPrice = function() {
             const area = document.getElementById('add-price-area');
             area.style.display = area.style.display === 'none' ? 'flex' : 'none';
@@ -1856,7 +1926,6 @@
             document.getElementById('admin-toolbar').style.display = 'flex';
             document.querySelectorAll('.editable').forEach(el => el.setAttribute('contenteditable', 'true'));
             
-            // إظهار عناصر المطور
             document.getElementById('showcase-edit').style.display = 'block';
             document.getElementById('showcase-url').value = showcaseData.url;
             document.getElementById('showcase-desc').value = showcaseData.caption;
@@ -1864,7 +1933,6 @@
             document.getElementById('add-image-btn').style.display = 'inline-flex';
             document.getElementById('show-add-price-btn').style.display = 'inline-flex';
             
-            // معاينة الصورة عند إدخال الرابط
             document.getElementById('image-url').addEventListener('input', function(e) {
                 const preview = document.getElementById('preview');
                 if (preview && e.target.value.trim()) {
@@ -1883,7 +1951,7 @@
         }
         
         function updateEditMode() {
-            // لا حاجة لإضافة شيء إضافي هنا
+            // لا حاجة لإضافة شيء
         }
 
         // ========== حفظ الإشهار ==========
@@ -1970,7 +2038,6 @@
 
         // ========== تفويض الأحداث ==========
         document.addEventListener('click', function(e) {
-            // فتح اللايت بوكس عند النقر على صورة في الألبوم
             if (e.target.matches('#sport-gallery .gallery-item img')) {
                 const parent = e.target.closest('.gallery-item');
                 if (parent && parent.dataset.index !== undefined && currentSport) {
@@ -1984,6 +2051,8 @@
         async function init() {
             const savedLang = localStorage.getItem('preferredLang');
             if (savedLang && ['ar','en','fr'].includes(savedLang)) currentLang = savedLang;
+            
+            createAnimatedBackground();
             applyLanguage();
             
             await loadFromCloud();
