@@ -43,7 +43,7 @@
         }
         .bg-icon {
             position: absolute;
-            color: transparent; /* نجعل الداخلة شفاف */
+            color: transparent; /* نجعل الداخل شفافاً */
             font-size: 2.5rem;
             user-select: none;
             animation: floatDiagonal 25s linear infinite;
@@ -60,17 +60,17 @@
         @keyframes floatDiagonal {
             0% {
                 transform: translate(100vw, -100px) rotate(0deg);
-                opacity: 0.4;
+                opacity: 0.5;
             }
             10% {
-                opacity: 0.65;
+                opacity: 0.7;
             }
             90% {
-                opacity: 0.65;
+                opacity: 0.7;
             }
             100% {
                 transform: translate(-100px, 100vh) rotate(720deg);
-                opacity: 0.4;
+                opacity: 0.5;
             }
         }
         /* تحسين الألوان للهاتف */
@@ -168,6 +168,9 @@
             -webkit-user-select: none;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+        }
+        .lightbox img.dragging {
+            cursor: grabbing;
         }
         .lightbox-close {
             position: absolute;
@@ -953,7 +956,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة (موجودة من البداية، تمتلئ الشاشة) -->
+    <!-- الخلفية المتحركة (موجودة من البداية، تملأ الشاشة) -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1409,16 +1412,19 @@
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            const iconCount = window.innerWidth < 768 ? 60 : 120; // عدد كبير لتملأ الشاشة
+            // عدد كبير من الأيقونات لتملأ الشاشة
+            const iconCount = window.innerWidth < 768 ? 80 : 150;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
                 let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
                 icon.className = `fas ${iconClass} bg-icon`;
                 const left = Math.random() * 100;
+                const top = Math.random() * 100; // نستخدمها كقيمة ابتدائية لتوزيع أفضل
                 const size = 1.8 + Math.random() * 3.5; // 1.8rem to 5.3rem
-                const duration = 20 + Math.random() * 30; // 20s to 50s
+                const duration = 20 + Math.random() * 40; // 20s to 60s
                 const delay = Math.random() * 20;
                 icon.style.left = left + '%';
+                icon.style.top = -10 + '%'; // تبدأ من خارج الشاشة من الأعلى
                 icon.style.fontSize = size + 'rem';
                 icon.style.animationDuration = duration + 's';
                 icon.style.animationDelay = delay + 's';
