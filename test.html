@@ -46,95 +46,72 @@
             color: transparent;
             font-size: 2.5rem;
             user-select: none;
-            animation: floatDiagonal 40s linear infinite;
+            /* حركة متناغمة في اتجاه واحد من أعلى اليمين إلى أسفل اليسار */
+            animation: floatDiagonal 30s linear infinite;
+            transform: translate(100vw, -10vh) rotate(0deg);
             -webkit-text-stroke: 1.2px #D4AF37;
             text-stroke: 1.2px #D4AF37;
-            opacity: 0.6;
-            filter: drop-shadow(0 0 6px rgba(212,175,55,0.5));
+            opacity: 0.45; /* أقل حجماً للرموز */
+            filter: drop-shadow(0 0 4px rgba(212,175,55,0.4));
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            text-shadow: 0 0 8px rgba(212,175,55,0.3);
+            text-shadow: 0 0 8px rgba(212,175,55,0.2);
+            /* تصغير الحجم قليلاً */
+            font-size: 2rem;
         }
         @keyframes floatDiagonal {
             0% {
-                transform: translate(calc(100vw * var(--x)), calc(-100vh * var(--y))) rotate(0deg);
+                transform: translate(100vw, -10vh) rotate(0deg);
                 opacity: 0.3;
             }
             10% {
-                opacity: 0.6;
+                opacity: 0.5;
             }
             90% {
-                opacity: 0.6;
+                opacity: 0.5;
             }
             100% {
-                transform: translate(calc(-100vw * var(--x2)), calc(100vh * var(--y2))) rotate(720deg);
+                transform: translate(-20vw, 110vh) rotate(720deg);
                 opacity: 0.3;
             }
         }
-        /* تحسينات الهاتف - ألوان أكثر حيوية وتأثيرات */
+        /* تحسينات النصوص الذهبية بإطار حول الحروف */
+        .gold-text, .font-cinzel.gold-shimmer, h1, h2, .info-title, [class*="gold"], .gold-shimmer {
+            text-shadow: 0 0 10px #D4AF37, 0 0 20px rgba(212,175,55,0.7) !important;
+            -webkit-text-stroke: 0.8px #D4AF37;
+            text-stroke: 0.8px #D4AF37;
+            font-weight: 800;
+        }
+        /* تحسين خاص لـ FIVE STARS GYM */
+        .font-cinzel.gold-shimmer {
+            text-shadow: 0 0 15px #D4AF37, 0 0 30px #D4AF37 !important;
+            -webkit-text-stroke: 1px #D4AF37;
+            text-stroke: 1px #D4AF37;
+            letter-spacing: 2px;
+        }
+        /* تطبيق التأثير الزجاجي على كل من الهاتف والكمبيوتر */
+        .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
+            background: rgba(15,15,15,0.65) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-color: rgba(212,175,55,0.4) !important;
+            box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
+        }
+        .service-card {
+            border-width: 1.5px;
+        }
+        /* تحسينات للهاتف كما هي مع تعديل الرموز */
         @media (max-width: 768px) {
-            /* جعل الخلفيات شفافة ولكن أكثر إشراقاً */
-            .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
-                background: rgba(15,15,15,0.65) !important;
-                backdrop-filter: blur(10px) !important;
-                -webkit-backdrop-filter: blur(10px) !important;
-                border-color: rgba(212,175,55,0.4) !important;
-                box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
-            }
-            .service-card {
-                border-width: 1.5px;
-            }
-            .text-white\/65 {
-                color: rgba(255,255,255,0.95) !important;
-                text-shadow: 0 0 5px rgba(212,175,55,0.3);
-            }
-            /* تقليل حجم الرموز في الخلفية وتخفيف سطوعها */
             .bg-icon {
-                font-size: 1.8rem !important; /* تصغير الحجم */
-                opacity: 0.3 !important; /* تقليل السطوع */
-                -webkit-text-stroke: 0.8px #D4AF37; /* إطار أقل سمكاً */
-                filter: drop-shadow(0 0 3px rgba(212,175,55,0.3));
-            }
-            /* زيادة سطوع ووضوح النصوص الذهبية الرئيسية */
-            .gold-text, .font-cinzel.gold-shimmer, h1, h2, .info-title, [class*="gold"] {
-                text-shadow: 0 0 15px #D4AF37, 0 0 30px rgba(212,175,55,0.8) !important;
-                font-weight: 800 !important;
-            }
-            /* تحسين ظهور كلمة FIVE STARS GYM بشكل خاص */
-            .font-cinzel.gold-shimmer {
-                text-shadow: 0 0 20px #D4AF37, 0 0 40px #D4AF37 !important;
-                letter-spacing: 2px;
-            }
-            /* العناوين الأخرى */
-            .info-title {
-                text-shadow: 0 0 10px #D4AF37, 0 0 20px rgba(212,175,55,0.7) !important;
-            }
-            .category-tab, .sport-tab {
-                border-color: rgba(212,175,55,0.4);
-                color: rgba(255,255,255,0.9);
-            }
-            .category-tab.active, .sport-tab.active {
-                background: #D4AF37;
-                color: #0a0a0a;
-                box-shadow: 0 0 15px #D4AF37;
-            }
-            /* تحسين تباين النصوص العادية */
-            p, span, a {
-                text-shadow: 0 0 2px rgba(0,0,0,0.5);
+                font-size: 1.5rem !important; /* تصغير إضافي للهاتف */
+                opacity: 0.3 !important;
+                -webkit-text-stroke: 0.8px #D4AF37;
             }
         }
         /* باقي الأنماط كما هي مع بعض الإضافات */
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
-        .gold-text {
-            background: linear-gradient(135deg, #D4AF37 0%, #F5E6A3 45%, #D4AF37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
         .service-card {
-            background: #111111;
-            border: 1px solid rgba(212,175,55,0.12);
             transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
             position: relative;
             overflow: hidden;
@@ -1096,7 +1073,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة -->
+    <!-- الخلفية المتحركة (موجودة من البداية، تتحرك بتناغم) -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1559,37 +1536,35 @@
             'fa-tae-kwon-do', 'fa-khanda'
         ];
 
-        // إنشاء الخلفية المتحركة
+        // إنشاء الخلفية المتحركة (بحركة متناغمة من أعلى اليمين إلى أسفل اليسار)
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            const iconCount = window.innerWidth < 768 ? 100 : 200;
+            // نستخدم عدد ثابت من الأيقونات مع تأخيرات مختلفة لنفس الاتجاه
+            const iconCount = window.innerWidth < 768 ? 60 : 120;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
                 let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
                 icon.className = `fas ${iconClass} bg-icon`;
                 
-                const startX = Math.random() * 100;
-                const startY = Math.random() * 100;
-                const endX = Math.random() * 100;
-                const endY = Math.random() * 100;
-                const size = 1.5 + Math.random() * 4;
-                const duration = 30 + Math.random() * 50;
+                // تحديد موضع بداية عشوائي على الجانب الأيمن
+                const startX = 80 + Math.random() * 20; // 80% إلى 100%
+                const startY = Math.random() * 30; // أعلى 0-30%
+                const size = 1.5 + Math.random() * 2; // 1.5rem to 3.5rem
+                // تأخير مختلف لكل أيقونة لتجنب التكدس
                 const delay = Math.random() * 20;
                 
-                icon.style.setProperty('--x', startX / 100);
-                icon.style.setProperty('--y', startY / 100);
-                icon.style.setProperty('--x2', endX / 100);
-                icon.style.setProperty('--y2', endY / 100);
                 icon.style.left = startX + '%';
                 icon.style.top = startY + '%';
                 icon.style.fontSize = size + 'rem';
-                icon.style.animationDuration = duration + 's';
                 icon.style.animationDelay = delay + 's';
-                icon.style.webkitTextStroke = '1.5px #D4AF37';
-                icon.style.textStroke = '1.5px #D4AF37';
+                icon.style.webkitTextStroke = '1px #D4AF37';
+                icon.style.textStroke = '1px #D4AF37';
                 icon.style.color = 'transparent';
+                // تعيين متغيرات CSS مخصصة للحركة
+                icon.style.setProperty('--start-x', startX + '%');
+                icon.style.setProperty('--start-y', startY + '%');
                 container.appendChild(icon);
             }
         }
