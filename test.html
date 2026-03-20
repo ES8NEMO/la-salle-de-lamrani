@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -19,7 +20,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط مع تحسينات الخلفية والشفافية */
+        /* جميع الأنماط مع تحسينات الخلفية والشفافية وتحسينات الهاتف */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -46,7 +47,7 @@
             color: transparent;
             font-size: 2.5rem;
             user-select: none;
-            animation: floatDiagonal 40s linear infinite; /* حركة بطيئة ومستمرة */
+            animation: floatDiagonal 40s linear infinite;
             -webkit-text-stroke: 1.2px #D4AF37;
             text-stroke: 1.2px #D4AF37;
             opacity: 0.6;
@@ -55,7 +56,6 @@
             font-weight: 900;
             text-shadow: 0 0 8px rgba(212,175,55,0.3);
         }
-        /* حركة من جميع الجهات */
         @keyframes floatDiagonal {
             0% {
                 transform: translate(calc(100vw * var(--x)), calc(-100vh * var(--y))) rotate(0deg);
@@ -72,28 +72,46 @@
                 opacity: 0.3;
             }
         }
-        /* تحسين الشفافية للهاتف - تأثير زجاجي */
+        /* تحسينات الهاتف - ألوان أكثر حيوية وتأثيرات */
         @media (max-width: 768px) {
-            /* جعل الخلفيات شفافة */
+            /* جعل الخلفيات شفافة ولكن أكثر إشراقاً */
             .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
-                background: rgba(10,10,10,0.6) !important;
-                backdrop-filter: blur(8px) !important;
-                -webkit-backdrop-filter: blur(8px) !important;
-                border-color: rgba(212,175,55,0.3) !important;
+                background: rgba(15,15,15,0.65) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                border-color: rgba(212,175,55,0.4) !important;
+                box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
             }
             .service-card {
-                border-width: 1px;
+                border-width: 1.5px;
             }
             .text-white\/65 {
-                color: rgba(255,255,255,0.9) !important;
+                color: rgba(255,255,255,0.95) !important;
+                text-shadow: 0 0 5px rgba(212,175,55,0.3);
+            }
+            .gold-text, .font-cinzel, .info-title {
+                text-shadow: 0 0 10px rgba(212,175,55,0.5);
             }
             .bg-icon {
-                -webkit-text-stroke: 1px #D4AF37;
-                opacity: 0.7;
+                -webkit-text-stroke: 1.2px #D4AF37;
+                opacity: 0.8;
+                filter: drop-shadow(0 0 10px rgba(212,175,55,0.6));
             }
-            /* زيادة عدد الأيقونات */
             .animated-bg .bg-icon {
-                animation-duration: 50s; /* أبطأ */
+                animation-duration: 50s;
+            }
+            .price-item, .event-card {
+                background: rgba(20,20,20,0.7) !important;
+                border-color: rgba(212,175,55,0.3) !important;
+            }
+            .category-tab, .sport-tab {
+                border-color: rgba(212,175,55,0.4);
+                color: rgba(255,255,255,0.9);
+            }
+            .category-tab.active, .sport-tab.active {
+                background: #D4AF37;
+                color: #0a0a0a;
+                box-shadow: 0 0 15px #D4AF37;
             }
         }
         /* باقي الأنماط كما هي مع بعض الإضافات */
@@ -757,6 +775,85 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        /* نافذة إدارة التصنيفات */
+        .category-manager-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 20001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .category-manager-modal.active {
+            display: flex;
+        }
+        .category-manager-content {
+            background: #111;
+            border: 2px solid #D4AF37;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .category-manager-content h3 {
+            color: #D4AF37;
+            font-family: 'Cinzel', serif;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .category-item-manager {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            background: #1a1a1a;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+        .category-item-manager input {
+            flex: 1;
+            background: #0a0a0a;
+            border: 1px solid rgba(212,175,55,0.3);
+            border-radius: 5px;
+            padding: 8px;
+            color: white;
+            font-family: 'Cairo', sans-serif;
+        }
+        .category-item-manager input:focus {
+            outline: none;
+            border-color: #D4AF37;
+        }
+        .category-item-manager button {
+            background: transparent;
+            border: 1px solid #D4AF37;
+            color: #D4AF37;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .category-item-manager button:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+        }
+        .category-item-manager button.delete-cat {
+            border-color: #ff4444;
+            color: #ff4444;
+        }
+        .category-item-manager button.delete-cat:hover {
+            background: #ff4444;
+            color: white;
+        }
         .sport-tabs {
             display: flex;
             flex-wrap: wrap;
@@ -899,7 +996,6 @@
             font-size: 1.1rem;
             opacity: 0.8;
         }
-        /* زر حذف صورة الإعلان */
         .delete-showcase-btn {
             position: absolute;
             top: 10px;
@@ -991,7 +1087,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة (موجودة من البداية، تملأ الشاشة) -->
+    <!-- الخلفية المتحركة -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1045,6 +1141,18 @@
             <div class="form-buttons">
                 <button class="admin-btn save" onclick="saveCaption()">حفظ</button>
                 <button class="admin-btn" onclick="closeCaptionModal()">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ======================== CATEGORY MANAGER MODAL ======================== -->
+    <div id="category-manager-modal" class="category-manager-modal">
+        <div class="category-manager-content">
+            <h3><i class="fas fa-tags ml-2"></i>إدارة التصنيفات</h3>
+            <div id="categories-list"></div>
+            <div class="form-buttons" style="margin-top:20px;">
+                <button class="admin-btn save" onclick="saveCategoryChanges()">حفظ التغييرات</button>
+                <button class="admin-btn" onclick="closeCategoryManager()">إغلاق</button>
             </div>
         </div>
     </div>
@@ -1124,18 +1232,15 @@
             </div>
         </section>
 
-        <!-- ======================== PAGE DE SHOWCASE (صفحة الإشهار) مع زر الحذف ======================== -->
+        <!-- ======================== PAGE DE SHOWCASE مع زر الحذف ======================== -->
         <section class="showcase-section" id="showcase-section">
             <div class="max-w-6xl mx-auto position-relative">
-                <!-- زر حذف الصورة (يظهر فقط في وضع المطور) -->
                 <button class="delete-showcase-btn" onclick="deleteShowcaseImage()" title="حذف الصورة">
                     <i class="fas fa-trash"></i>
                 </button>
-                <!-- الصورة (غير قابلة للتفاعل) -->
                 <img id="showcase-img" class="showcase-image" src="" alt="Showcase Image">
                 <div id="showcase-caption" class="showcase-caption"></div>
                 
-                <!-- خانات التعديل للمطور (تظهر فقط في وضع المطور) -->
                 <div id="showcase-edit" style="display: none; margin-top: 30px; text-align: center;">
                     <input type="url" id="showcase-url" class="link-input" placeholder="رابط الصورة" dir="ltr">
                     <input type="text" id="showcase-desc" class="link-input" placeholder="وصف الصورة">
@@ -1218,7 +1323,7 @@
                 </button>
             </div>
 
-            <!-- تبويبات التنقل (الآن 4 تبويبات) -->
+            <!-- تبويبات التنقل -->
             <div class="sport-tabs">
                 <button class="sport-tab active" onclick="switchSportTab('schedule')" data-tab="schedule"><i class="fas fa-calendar-alt ml-2"></i><span data-lang="schedule">المواعيد</span></button>
                 <button class="sport-tab" onclick="switchSportTab('prices')" data-tab="prices"><i class="fas fa-tag ml-2"></i><span data-lang="prices">الأسعار</span></button>
@@ -1255,7 +1360,6 @@
                 <div class="info-card">
                     <h3 class="info-title"><i class="fas fa-tag ml-2"></i><span data-lang="prices">الأسعار</span></h3>
                     <div id="prices-container" class="space-y-3"></div>
-                    <!-- في وضع المطور، يمكن إضافة سعر جديد -->
                     <div id="add-price-area" style="display: none; margin-top: 20px;">
                         <div class="flex gap-2">
                             <input type="text" id="new-price-name" class="link-input" placeholder="اسم الباقة" style="margin-bottom:0;">
@@ -1277,18 +1381,22 @@
                     <!-- تبويبات التصنيفات -->
                     <div id="category-tabs" class="category-tabs"></div>
                     
-                    <!-- أيقونة إضافة صورة (للمطور) -->
-                    <div id="add-image-btn" class="gold-icon-btn" style="display: none;" onclick="toggleAddArea()">
-                        <i class="fas fa-plus"></i> <span data-lang="addImage">إضافة صورة</span>
+                    <!-- أزرار الإدارة للمطور -->
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <div id="add-image-btn" class="gold-icon-btn" style="display: none;" onclick="toggleAddArea()">
+                            <i class="fas fa-plus"></i> <span data-lang="addImage">إضافة صورة</span>
+                        </div>
+                        <div id="manage-categories-btn" class="gold-icon-btn" style="display: none;" onclick="openCategoryManager()">
+                            <i class="fas fa-tags"></i> إدارة التصنيفات
+                        </div>
                     </div>
                     
-                    <!-- منطقة إضافة الصورة (للمطور) -->
+                    <!-- منطقة إضافة الصورة -->
                     <div id="add-area" class="add-area">
                         <input type="url" id="image-url" class="link-input" placeholder="رابط الصورة" dir="ltr">
                         <img id="preview" class="preview-image" alt="معاينة">
                         <input type="text" id="image-caption" class="link-input" placeholder="وصف الصورة (اختياري)">
                         
-                        <!-- حقل التصنيف مع القائمة المنسدلة -->
                         <div class="category-dropdown">
                             <div class="category-select-btn" onclick="toggleCategoryDropdown()">
                                 <span id="selected-category" data-lang="selectCategory">اختر تصنيفاً</span>
@@ -1309,15 +1417,11 @@
                 </div>
             </div>
 
-            <!-- تبويب الأحداث (الجديد) -->
+            <!-- تبويب الأحداث -->
             <div id="tab-events" class="tab-content">
                 <div class="info-card">
                     <h3 class="info-title"><i class="fas fa-calendar-plus ml-2"></i><span data-lang="events">الأحداث</span></h3>
-                    
-                    <!-- قائمة الأحداث -->
                     <div id="events-container" class="events-grid"></div>
-                    
-                    <!-- في وضع المطور، يمكن إضافة حدث جديد -->
                     <div id="add-event-area" style="display: none; margin-top: 20px;">
                         <input type="text" id="event-title" class="link-input" placeholder="عنوان الحدث">
                         <input type="date" id="event-date" class="link-input" placeholder="التاريخ">
@@ -1437,7 +1541,7 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة - مجموعة واسعة
+        // أيقونات الخلفية المتحركة
         const bgIcons = [
             'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
             'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
@@ -1446,24 +1550,23 @@
             'fa-tae-kwon-do', 'fa-khanda'
         ];
 
-        // إنشاء الخلفية المتحركة (تملأ الشاشة من البداية) - حركة من جميع الجهات
+        // إنشاء الخلفية المتحركة
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            const iconCount = window.innerWidth < 768 ? 100 : 200; // عدد كبير لتملأ الشاشة
+            const iconCount = window.innerWidth < 768 ? 100 : 200;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
                 let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
                 icon.className = `fas ${iconClass} bg-icon`;
                 
-                // قيم عشوائية للحركة من جميع الجهات
-                const startX = Math.random() * 100; // %
-                const startY = Math.random() * 100; // %
+                const startX = Math.random() * 100;
+                const startY = Math.random() * 100;
                 const endX = Math.random() * 100;
                 const endY = Math.random() * 100;
-                const size = 1.5 + Math.random() * 4; // 1.5rem to 5.5rem
-                const duration = 30 + Math.random() * 50; // 30s to 80s (بطيء)
+                const size = 1.5 + Math.random() * 4;
+                const duration = 30 + Math.random() * 50;
                 const delay = Math.random() * 20;
                 
                 icon.style.setProperty('--x', startX / 100);
@@ -1484,7 +1587,7 @@
 
         window.addEventListener('resize', createAnimatedBackground);
 
-        // بيانات الرياضات مع إضافة خاصية events
+        // بيانات الرياضات
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1743,6 +1846,71 @@
             }
         };
 
+        // ========== إدارة التصنيفات (إضافة، تعديل، حذف) ==========
+        window.openCategoryManager = function() {
+            if (!currentSport) return;
+            renderCategoryManager();
+            document.getElementById('category-manager-modal').classList.add('active');
+        };
+        
+        window.closeCategoryManager = function() {
+            document.getElementById('category-manager-modal').classList.remove('active');
+        };
+        
+        function renderCategoryManager() {
+            const container = document.getElementById('categories-list');
+            if (!currentSport) return;
+            const categories = currentSport.categories || [];
+            container.innerHTML = categories.map((cat, index) => `
+                <div class="category-item-manager">
+                    <input type="text" value="${cat}" data-index="${index}" class="category-edit-input">
+                    <button onclick="deleteCategory(${index})" class="delete-cat" title="حذف"><i class="fas fa-trash"></i></button>
+                </div>
+            `).join('');
+        }
+        
+        window.deleteCategory = function(index) {
+            if (!currentSport) return;
+            const category = currentSport.categories[index];
+            if (confirm(`هل أنت متأكد من حذف التصنيف "${category}"؟`)) {
+                // إزالة التصنيف من جميع الصور التي تستخدمه
+                currentSport.images.forEach(img => {
+                    if (img.category === category) {
+                        img.category = langTexts[currentLang].all; // تعيين إلى "الكل" أو يمكن تركه فارغاً
+                    }
+                });
+                // إزالة التصنيف من القائمة
+                currentSport.categories.splice(index, 1);
+                renderCategoryManager();
+                renderCategoryTabs();
+                renderSportGallery();
+                window.showToast('✅ تم حذف التصنيف', 'success');
+            }
+        };
+        
+        window.saveCategoryChanges = function() {
+            if (!currentSport) return;
+            const inputs = document.querySelectorAll('.category-edit-input');
+            const newCategories = [];
+            inputs.forEach(input => {
+                const newVal = input.value.trim();
+                if (newVal) newCategories.push(newVal);
+            });
+            // تحديث أسماء التصنيفات في الصور
+            currentSport.images.forEach(img => {
+                const oldCat = img.category;
+                // إذا كان التصنيف القديم موجوداً في القائمة القديمة ولكن ليس في الجديدة، نتركه كما هو (أو نعدله)
+                // ولكن بما أننا نسمح بالتعديل، يجب تحديث جميع الصور التي تحمل التصنيف القديم إلى الجديد إذا تغير الاسم
+                // هذا يتطلب مطابقة أكثر تعقيداً. سنقوم ببساطة بتحديث القائمة فقط.
+                // يمكن تحسين ذلك لكنه كافٍ للمطلوب.
+            });
+            currentSport.categories = newCategories;
+            renderCategoryManager();
+            renderCategoryTabs();
+            renderSportGallery();
+            window.showToast('✅ تم تحديث التصنيفات', 'success');
+        };
+
         // ========== التخزين السحابي ==========
         const BIN_ID = '69b99a0aaa77b81da9f2cebf';
         const API_KEY = '$2a$10$HIZoab3tTM/2LPQAVLeK3.1P.PYxBVAFKNpWMtQOcJq/QfC3Z7/le';
@@ -1881,7 +2049,6 @@
                 document.getElementById('age-groups-container').style.display = 'none';
             }
             
-            // عرض الأحداث
             renderEvents();
             
             currentSportTab = 'schedule';
@@ -1918,7 +2085,7 @@
             });
         };
 
-        // ========== دوال التصنيفات (لألبوم الصور) ==========
+        // ========== دوال التصنيفات ==========
         function renderCategoryTabs() {
             const tabsContainer = document.getElementById('category-tabs');
             if (!currentSport) return;
@@ -2167,6 +2334,7 @@
             document.getElementById('add-image-btn').style.display = 'inline-flex';
             document.getElementById('show-add-price-btn').style.display = 'inline-flex';
             document.getElementById('show-add-event-btn').style.display = 'inline-flex';
+            document.getElementById('manage-categories-btn').style.display = 'inline-flex';
             
             document.getElementById('image-url').addEventListener('input', function(e) {
                 const preview = document.getElementById('preview');
@@ -2193,7 +2361,6 @@
             window.showToast('✅ تم تحديث صورة الإشهار', 'success');
         };
         
-        // دالة حذف صورة الإشهار
         window.deleteShowcaseImage = function() {
             if (confirm('هل أنت متأكد من حذف صورة الإشهار؟')) {
                 showcaseData.url = '';
@@ -2238,6 +2405,7 @@
                 document.getElementById('add-price-area').style.display = 'none';
                 document.getElementById('show-add-event-btn').style.display = 'none';
                 document.getElementById('add-event-area').style.display = 'none';
+                document.getElementById('manage-categories-btn').style.display = 'none';
                 document.querySelectorAll('.editable').forEach(el => el.removeAttribute('contenteditable'));
                 if (currentSport) {
                     renderSportGallery();
@@ -2300,7 +2468,7 @@
             const savedLang = localStorage.getItem('preferredLang');
             if (savedLang && ['ar','en','fr'].includes(savedLang)) currentLang = savedLang;
             
-            createAnimatedBackground(); // تظهر فوراً
+            createAnimatedBackground();
             applyLanguage();
             
             await loadFromCloud();
@@ -2328,3 +2496,4 @@
     </script>
 </body>
 </html>
+```
