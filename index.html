@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -20,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط كما هي - مع تحديث الخلفية لتكون متوهجة */
+        /* جميع الأنماط كما هي - مع تحسين الخلفية والألوان للهاتف */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -31,7 +30,7 @@
             position: relative;
             min-height: 100vh;
         }
-        /* الخلفية المتحركة المتوهجة */
+        /* الخلفية المتحركة - تظهر من البداية ولا تتفاعل مع اللمس */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -44,34 +43,56 @@
         }
         .bg-icon {
             position: absolute;
-            color: #D4AF37; /* لون ذهبي بارز */
+            color: #D4AF37;
             font-size: 2.5rem;
             user-select: none;
-            animation: floatDiagonal 20s linear infinite;
+            animation: floatDiagonal 25s linear infinite;
             transform: translate(100vw, -100px) rotate(0deg);
-            -webkit-text-stroke: 1.5px #D4AF37; /* إطار سميك */
-            text-stroke: 1.5px #D4AF37;
-            opacity: 0.9;
-            filter: drop-shadow(0 0 15px #D4AF37) drop-shadow(0 0 30px rgba(212,175,55,0.6)); /* تأثير التوهج */
-            text-shadow: 0 0 20px #D4AF37;
+            /* استخدام stroke لإعطاء شكل مجوف بدلاً من الاعتماد على أيقونات regular */
+            -webkit-text-stroke: 1px #D4AF37;
+            text-stroke: 1px #D4AF37;
+            opacity: 0.7; /* تقليل التوهج */
+            filter: drop-shadow(0 0 8px rgba(212,175,55,0.4)); /* توهج خفيف */
+            /* نستخدم solid icons مع stroke لضمان ظهور الأيقونات بشكل صحيح */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900; /* solid */
         }
         @keyframes floatDiagonal {
             0% {
                 transform: translate(100vw, -100px) rotate(0deg);
-                opacity: 0.3;
+                opacity: 0.2;
             }
             10% {
-                opacity: 1;
+                opacity: 0.7;
             }
             90% {
-                opacity: 1;
+                opacity: 0.7;
             }
             100% {
                 transform: translate(-100px, 100vh) rotate(720deg);
-                opacity: 0.3;
+                opacity: 0.2;
             }
         }
-        /* باقي الأنماط كما هي مع إضافة تحسينات بسيطة */
+        /* تحسين الألوان للهاتف - زيادة التباين */
+        @media (max-width: 768px) {
+            body {
+                background-color: #0a0a0a; /* لون أعمق */
+            }
+            .service-card {
+                background: #151515; /* أفتح قليلاً لتباين أفضل */
+                border-color: rgba(212,175,55,0.25);
+            }
+            .text-white\/65 {
+                color: rgba(255,255,255,0.8) !important; /* زيادة التباين */
+            }
+            .text-white\/50 {
+                color: rgba(255,255,255,0.7) !important;
+            }
+            .info-card {
+                background: #151515;
+            }
+        }
+        /* باقي الأنماط كما هي */
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .gold-text {
@@ -939,7 +960,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة المتوهجة -->
+    <!-- الخلفية المتحركة (تظهر فوراً ولا تتفاعل مع اللمس) -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1349,35 +1370,36 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة - مجموعة واسعة من الرموز الرياضية (كلها مجوفة far)
+        // أيقونات الخلفية المتحركة - مجموعة واسعة من الرموز الرياضية
         const bgIcons = [
             'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
             'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
             'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming',
-            'fa-boxing-glove', 'fa-weight-hanging', 'fa-vest', 'fa-vest-patches',
-            'fa-tae kwon do' // لا توجد أيقونة محددة، سنستخدم 'fa-hand-fist' بدلاً منها عدة مرات
+            'fa-weight-hanging', 'fa-vest', 'fa-vest-patches', 'fa-boxing-glove'
         ];
 
-        // إنشاء الخلفية المتحركة
+        // إنشاء الخلفية المتحركة (تظهر فوراً)
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
+            if (!container) return;
             container.innerHTML = '';
-            // زيادة عدد الأيقونات
-            const iconCount = window.innerWidth < 768 ? 40 : 80;
+            const iconCount = window.innerWidth < 768 ? 40 : 80; // عدد أكبر للأيقونات
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
-                // استخدام far (regular) بدلاً من fas للحصول على أيقونة مجوفة
+                // استخدام fas (solid) مع stroke لجعلها مجوفة - هذا يضمن عدم ظهور مستطيل X
                 let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
-                // التأكد من أن بعض الأيقونات تتكرر (خاصة تلك التي ترمز للرياضات المطلوبة)
-                icon.className = `far ${iconClass} bg-icon`;
+                icon.className = `fas ${iconClass} bg-icon`;
                 const left = Math.random() * 100;
                 const size = 1.5 + Math.random() * 3; // 1.5rem to 4.5rem
-                const duration = 15 + Math.random() * 20; // 15s to 35s
+                const duration = 15 + Math.random() * 25; // 15s to 40s
                 const delay = Math.random() * 20;
                 icon.style.left = left + '%';
                 icon.style.fontSize = size + 'rem';
                 icon.style.animationDuration = duration + 's';
                 icon.style.animationDelay = delay + 's';
+                // إضافة stroke قوي لضمان الشكل المجوف
+                icon.style.webkitTextStroke = '1.5px #D4AF37';
+                icon.style.textStroke = '1.5px #D4AF37';
                 container.appendChild(icon);
             }
         }
@@ -1656,7 +1678,6 @@
                 if (data.record && data.record.sports) {
                     data.record.sports.forEach((savedSport, index) => {
                         if (sports[index]) {
-                            // دمج البيانات المحفوظة مع الاحتفاظ بالترجمات إن وجدت
                             if (savedSport.schedule) sports[index].schedule = { ...sports[index].schedule, ...savedSport.schedule };
                             if (savedSport.time) sports[index].time = { ...sports[index].time, ...savedSport.time };
                             if (savedSport.prices) sports[index].prices = savedSport.prices;
@@ -1980,15 +2001,12 @@
             const name = document.getElementById('new-price-name').value.trim();
             const value = document.getElementById('new-price-value').value.trim();
             if (!name || !value) { window.showToast('❌ الرجاء ملء الحقول', 'error'); return; }
-            // إضافة السعر مع تعبئة جميع اللغات بنفس الاسم (يمكن تحسينها لاحقاً)
             currentSport.prices.push({ 
                 nameAr: name, 
                 nameEn: name, 
                 nameFr: name, 
                 value 
             });
-            // تحديث العرض
-            const priceName = name; // مؤقت
             document.getElementById('prices-container').innerHTML += `
                 <div class="price-item">
                     <span class="price-name editable">${name}</span>
