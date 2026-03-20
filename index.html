@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -20,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط مع تحسينات الخلفية والشفافية وتحسينات الهاتف */
+        /* جميع الأنماط مع تحسينات الخلفية والشفافية */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -31,7 +30,7 @@
             position: relative;
             min-height: 100vh;
         }
-        /* الخلفية المتحركة - تظهر فوراً وتملأ الشاشة */
+        /* الخلفية الثابتة مع الرموز اللامعة */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -47,85 +46,60 @@
             color: transparent;
             font-size: 2.5rem;
             user-select: none;
-            animation: floatDiagonal 40s linear infinite;
             -webkit-text-stroke: 1.2px #D4AF37;
             text-stroke: 1.2px #D4AF37;
-            opacity: 0.6;
             filter: drop-shadow(0 0 6px rgba(212,175,55,0.5));
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            text-shadow: 0 0 8px rgba(212,175,55,0.3);
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            /* منع التداخل غير مقصود */
+            pointer-events: none;
+            will-change: left, top;
         }
-        @keyframes floatDiagonal {
-            0% {
-                transform: translate(calc(100vw * var(--x)), calc(-100vh * var(--y))) rotate(0deg);
-                opacity: 0.3;
-            }
-            10% {
-                opacity: 0.6;
-            }
-            90% {
-                opacity: 0.6;
-            }
-            100% {
-                transform: translate(calc(-100vw * var(--x2)), calc(100vh * var(--y2))) rotate(720deg);
-                opacity: 0.3;
-            }
+        /* فئة للرموز المتوهجة (pulsing) */
+        .bg-icon.pulsing {
+            animation: glowPulse 3s ease-in-out infinite;
         }
-        /* تحسينات الهاتف - ألوان أكثر حيوية وتأثيرات */
-        @media (max-width: 768px) {
-            /* جعل الخلفيات شفافة ولكن أكثر إشراقاً */
-            .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
-                background: rgba(15,15,15,0.65) !important;
-                backdrop-filter: blur(10px) !important;
-                -webkit-backdrop-filter: blur(10px) !important;
-                border-color: rgba(212,175,55,0.4) !important;
-                box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
-            }
-            .service-card {
-                border-width: 1.5px;
-            }
-            .text-white\/65 {
-                color: rgba(255,255,255,0.95) !important;
-                text-shadow: 0 0 5px rgba(212,175,55,0.3);
-            }
-            .gold-text, .font-cinzel, .info-title {
-                text-shadow: 0 0 10px rgba(212,175,55,0.5);
-            }
-            .bg-icon {
-                -webkit-text-stroke: 1.2px #D4AF37;
-                opacity: 0.8;
-                filter: drop-shadow(0 0 10px rgba(212,175,55,0.6));
-            }
-            .animated-bg .bg-icon {
-                animation-duration: 50s;
-            }
-            .price-item, .event-card {
-                background: rgba(20,20,20,0.7) !important;
-                border-color: rgba(212,175,55,0.3) !important;
-            }
-            .category-tab, .sport-tab {
-                border-color: rgba(212,175,55,0.4);
-                color: rgba(255,255,255,0.9);
-            }
-            .category-tab.active, .sport-tab.active {
-                background: #D4AF37;
-                color: #0a0a0a;
-                box-shadow: 0 0 15px #D4AF37;
-            }
+        @keyframes glowPulse {
+            0% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
+            50% { opacity: 0.9; filter: drop-shadow(0 0 15px rgba(212,175,55,0.9)); }
+            100% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
         }
-        /* باقي الأنماط كما هي مع بعض الإضافات */
-        .font-cinzel { font-family: 'Cinzel', serif; }
-        .font-cairo { font-family: 'Cairo', sans-serif; }
-        .gold-text {
-            background: linear-gradient(135deg, #D4AF37 0%, #F5E6A3 45%, #D4AF37 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        /* تحسين النصوص الذهبية - أكثر إشراقاً */
+        .font-cinzel.gold-shimmer, h1, h2, .gold-text, .info-title, [class*="gold"] {
+            text-shadow: 0 0 15px #D4AF37, 0 0 30px #D4AF37, 0 0 45px rgba(212,175,55,0.8) !important;
+            -webkit-text-stroke: 0.5px #D4AF37;
+            text-stroke: 0.5px #D4AF37;
+        }
+        /* تطبيق التأثير الزجاجي على كل من الهاتف والكمبيوتر */
+        .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
+            background: rgba(15,15,15,0.65) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border-color: rgba(212,175,55,0.4) !important;
+            box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
         }
         .service-card {
-            background: #111111;
-            border: 1px solid rgba(212,175,55,0.12);
+            border-width: 1.5px;
+        }
+        /* تحسينات للهاتف - شفافية أكثر + نصوص ذهبية أقوى */
+        @media (max-width: 768px) {
+            .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
+                background: rgba(15,15,15,0.5) !important; /* أكثر شفافية */
+            }
+            .bg-icon {
+                font-size: 2rem;
+                -webkit-text-stroke: 1px #D4AF37;
+            }
+            .font-cinzel.gold-shimmer {
+                text-shadow: 0 0 20px #D4AF37, 0 0 40px #D4AF37, 0 0 60px rgba(212,175,55,0.9) !important;
+            }
+        }
+        /* باقي الأنماط كما هي */
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-cairo { font-family: 'Cairo', sans-serif; }
+        .service-card {
             transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
             position: relative;
             overflow: hidden;
@@ -1087,7 +1061,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة -->
+    <!-- الخلفية الثابتة مع الرموز اللامعة (يتم إنشاؤها بواسطة JavaScript) -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1541,53 +1515,71 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة
+        // أيقونات الخلفية المطلوبة
         const bgIcons = [
-            'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
-            'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
-            'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming',
-            'fa-weight-hanging', 'fa-vest', 'fa-vest-patches', 'fa-boxing-glove',
-            'fa-tae-kwon-do', 'fa-khanda'
+            'fa-hand-fist',          // قفاز الملاكمة (قبضة)
+            'fa-dumbbell',            // أثقال للرجال
+            'fa-heart-pulse',         // أثقال للنساء (أيقونة نبضات القلب)
+            'fa-fire-flame-curved'    // شعلة نار
         ];
 
-        // إنشاء الخلفية المتحركة
+        // إنشاء الخلفية الثابتة برموز لامعة وموزعة بشكل جميل
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            const iconCount = window.innerWidth < 768 ? 100 : 200;
-            for (let i = 0; i < iconCount; i++) {
-                const icon = document.createElement('i');
-                let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
-                icon.className = `fas ${iconClass} bg-icon`;
-                
-                const startX = Math.random() * 100;
-                const startY = Math.random() * 100;
-                const endX = Math.random() * 100;
-                const endY = Math.random() * 100;
-                const size = 1.5 + Math.random() * 4;
-                const duration = 30 + Math.random() * 50;
-                const delay = Math.random() * 20;
-                
-                icon.style.setProperty('--x', startX / 100);
-                icon.style.setProperty('--y', startY / 100);
-                icon.style.setProperty('--x2', endX / 100);
-                icon.style.setProperty('--y2', endY / 100);
-                icon.style.left = startX + '%';
-                icon.style.top = startY + '%';
-                icon.style.fontSize = size + 'rem';
-                icon.style.animationDuration = duration + 's';
-                icon.style.animationDelay = delay + 's';
-                icon.style.webkitTextStroke = '1.5px #D4AF37';
-                icon.style.textStroke = '1.5px #D4AF37';
-                icon.style.color = 'transparent';
-                container.appendChild(icon);
+            
+            // تحديد عدد الأعمدة والصفوف لتوزيع الرموز
+            const isMobile = window.innerWidth < 768;
+            const cols = isMobile ? 6 : 10;  // عدد الأعمدة
+            const rows = isMobile ? 8 : 12;  // عدد الصفوف
+            
+            const cellWidth = 100 / cols;   // % عرض الخلية
+            const cellHeight = 100 / rows;  // % ارتفاع الخلية
+            
+            // ننشئ رمزاً في كل خلية تقريباً مع بعض الخلايا الفارغة لتجنب الازدحام
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    // فرصة 70% لوجود رمز في الخلية (نسبة تغطية جيدة)
+                    if (Math.random() > 0.3) {
+                        const icon = document.createElement('i');
+                        let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
+                        icon.className = `fas ${iconClass} bg-icon`;
+                        
+                        // موقع عشوائي داخل الخلية مع إمكانية الخروج قليلاً خارج الحدود
+                        let left = c * cellWidth + (Math.random() * cellWidth * 0.8) + cellWidth * 0.1;
+                        let top = r * cellHeight + (Math.random() * cellHeight * 0.8) + cellHeight * 0.1;
+                        
+                        // إمكانية الخروج عن الحواف: إذا كانت الخلية في الحافة، نسمح بخروج جزء من الرمز
+                        // نطبق إزاحة سلبية أو إيجابية حسب الحافة
+                        if (c === 0) left -= Math.random() * 10; // خروج من اليسار
+                        if (c === cols - 1) left += Math.random() * 10; // خروج من اليمين
+                        if (r === 0) top -= Math.random() * 10; // خروج من الأعلى
+                        if (r === rows - 1) top += Math.random() * 10; // خروج من الأسفل
+                        
+                        // حجم متوسط بين 1.5rem و 4rem
+                        const size = 1.5 + Math.random() * 3;
+                        
+                        // بعض الأيقونات تتوهج (pulsing) والبعض الآخر ثابت
+                        if (Math.random() > 0.5) {
+                            icon.classList.add('pulsing');
+                        }
+                        
+                        icon.style.left = left + '%';
+                        icon.style.top = top + '%';
+                        icon.style.fontSize = size + 'rem';
+                        icon.style.webkitTextStroke = isMobile ? '1px #D4AF37' : '1.2px #D4AF37';
+                        icon.style.textStroke = isMobile ? '1px #D4AF37' : '1.2px #D4AF37';
+                        icon.style.color = 'transparent';
+                        container.appendChild(icon);
+                    }
+                }
             }
         }
 
         window.addEventListener('resize', createAnimatedBackground);
 
-        // بيانات الرياضات
+        // بيانات الرياضات (كما هي)
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1873,13 +1865,11 @@
             if (!currentSport) return;
             const category = currentSport.categories[index];
             if (confirm(`هل أنت متأكد من حذف التصنيف "${category}"؟`)) {
-                // إزالة التصنيف من جميع الصور التي تستخدمه
                 currentSport.images.forEach(img => {
                     if (img.category === category) {
-                        img.category = langTexts[currentLang].all; // تعيين إلى "الكل" أو يمكن تركه فارغاً
+                        img.category = langTexts[currentLang].all;
                     }
                 });
-                // إزالة التصنيف من القائمة
                 currentSport.categories.splice(index, 1);
                 renderCategoryManager();
                 renderCategoryTabs();
@@ -1895,14 +1885,6 @@
             inputs.forEach(input => {
                 const newVal = input.value.trim();
                 if (newVal) newCategories.push(newVal);
-            });
-            // تحديث أسماء التصنيفات في الصور
-            currentSport.images.forEach(img => {
-                const oldCat = img.category;
-                // إذا كان التصنيف القديم موجوداً في القائمة القديمة ولكن ليس في الجديدة، نتركه كما هو (أو نعدله)
-                // ولكن بما أننا نسمح بالتعديل، يجب تحديث جميع الصور التي تحمل التصنيف القديم إلى الجديد إذا تغير الاسم
-                // هذا يتطلب مطابقة أكثر تعقيداً. سنقوم ببساطة بتحديث القائمة فقط.
-                // يمكن تحسين ذلك لكنه كافٍ للمطلوب.
             });
             currentSport.categories = newCategories;
             renderCategoryManager();
@@ -2496,4 +2478,3 @@
     </script>
 </body>
 </html>
-```
