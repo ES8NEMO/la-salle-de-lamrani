@@ -15,7 +15,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Cinzel:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Hammer.js for touch gestures -->
+    <!-- Hammer.js for touch gestures (احتفظنا به) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
@@ -30,7 +30,7 @@
             position: relative;
             min-height: 100vh;
         }
-        /* الخلفية الثابتة مع الرموز اللامعة */
+        /* الخلفية الثابتة مع الرموز اللامعة (ثابتة تماماً) */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -53,9 +53,10 @@
             font-weight: 900;
             opacity: 0.5;
             transition: opacity 0.3s ease;
-            /* منع التداخل غير مقصود */
             pointer-events: none;
             will-change: left, top;
+            /* إزالة أي حركة */
+            animation: none;
         }
         /* فئة للرموز المتوهجة (pulsing) */
         .bg-icon.pulsing {
@@ -66,34 +67,45 @@
             50% { opacity: 0.9; filter: drop-shadow(0 0 15px rgba(212,175,55,0.9)); }
             100% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
         }
-        /* تحسين النصوص الذهبية - أكثر إشراقاً */
-        .font-cinzel.gold-shimmer, h1, h2, .gold-text, .info-title, [class*="gold"] {
-            text-shadow: 0 0 15px #D4AF37, 0 0 30px #D4AF37, 0 0 45px rgba(212,175,55,0.8) !important;
+        /* النصوص الذهبية بدون لمعان زائد */
+        .gold-text, .font-cinzel.gold-shimmer, h1, h2, .info-title, [class*="gold"] {
+            color: #D4AF37; /* لون ذهبي ثابت */
             -webkit-text-stroke: 0.5px #D4AF37;
             text-stroke: 0.5px #D4AF37;
+            /* إزالة التوهج */
+            text-shadow: none;
         }
-        /* تطبيق التأثير الزجاجي على كل من الهاتف والكمبيوتر */
+        /* استثناء خاص بـ FIVE STARS GYM (نفس اللون بدون لمعان) */
+        .font-cinzel.gold-shimmer {
+            color: #D4AF37;
+            background: none; /* إلغاء التدرج */
+            -webkit-text-fill-color: #D4AF37;
+            animation: none;
+            letter-spacing: 2px;
+        }
+        /* تطبيق التأثير الزجاجي - شفافية أكثر */
         .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
-            background: rgba(15,15,15,0.65) !important;
-            backdrop-filter: blur(10px) !important;
-            -webkit-backdrop-filter: blur(10px) !important;
-            border-color: rgba(212,175,55,0.4) !important;
-            box-shadow: 0 4px 20px rgba(212,175,55,0.15) !important;
+            background: rgba(15,15,15,0.4) !important; /* شفافية أكثر */
+            backdrop-filter: blur(8px) !important;
+            -webkit-backdrop-filter: blur(8px) !important;
+            border-color: rgba(212,175,55,0.3) !important;
+            box-shadow: 0 4px 15px rgba(212,175,55,0.1) !important;
         }
         .service-card {
             border-width: 1.5px;
         }
-        /* تحسينات للهاتف - شفافية أكثر + نصوص ذهبية أقوى */
+        /* تحسينات للهاتف */
         @media (max-width: 768px) {
             .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
-                background: rgba(15,15,15,0.5) !important; /* أكثر شفافية */
+                background: rgba(15,15,15,0.3) !important; /* أكثر شفافية */
             }
             .bg-icon {
                 font-size: 2rem;
                 -webkit-text-stroke: 1px #D4AF37;
             }
             .font-cinzel.gold-shimmer {
-                text-shadow: 0 0 20px #D4AF37, 0 0 40px #D4AF37, 0 0 60px rgba(212,175,55,0.9) !important;
+                color: #D4AF37;
+                -webkit-text-stroke: 0.5px #D4AF37;
             }
         }
         /* باقي الأنماط كما هي */
@@ -346,40 +358,112 @@
             background: rgba(212,175,55,0.07);
             transform: scale(1.01);
         }
+        /* ===== نظام البحث المتقدم ===== */
         .search-box {
-            max-width: 0; opacity: 0; overflow: hidden;
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
             transition: max-width 0.4s ease, opacity 0.3s ease, padding 0.4s ease;
             padding: 0;
+            position: relative;
         }
         .search-box.open {
-            max-width: 220px; opacity: 1; padding: 0;
+            max-width: 300px; /* يغطي ربع الصفحة تقريباً */
+            opacity: 1;
+            padding: 0;
         }
-        @keyframes fadeSlideIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .search-input-wrapper {
+            position: relative;
+            width: 100%;
         }
-        .view-enter { animation: fadeSlideIn 0.5s ease forwards; }
-        @keyframes starPulse {
-            0%, 100% { opacity: 0.75; text-shadow: 0 0 8px rgba(212,175,55,0.2); }
-            50%      { opacity: 1;    text-shadow: 0 0 25px rgba(212,175,55,0.5); }
+        #search-input {
+            width: 100%;
+            background: #0a0a0a;
+            border: 1px solid rgba(212,175,55,0.3);
+            color: white;
+            padding: 8px 35px 8px 12px;
+            border-radius: 30px;
+            font-family: 'Cairo', sans-serif;
+            outline: none;
+            transition: all 0.3s ease;
         }
-        .star-pulse { animation: starPulse 2.5s ease-in-out infinite; }
-        @keyframes shimmer {
-            0%   { background-position: -200% center; }
-            100% { background-position: 200% center; }
+        #search-input:focus {
+            border-color: #D4AF37;
+            box-shadow: 0 0 10px rgba(212,175,55,0.3);
         }
-        .gold-shimmer {
-            background: linear-gradient(90deg, #D4AF37 0%, #F5E6A3 25%, #D4AF37 50%, #F5E6A3 75%, #D4AF37 100%);
-            background-size: 200% auto;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: shimmer 6s linear infinite;
+        #search-clear {
+            position: absolute;
+            left: 10px; /* لأن الاتجاه RTL */
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(212,175,55,0.6);
+            cursor: pointer;
+            display: none;
+            font-size: 14px;
         }
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #F5E6A3; }
+        #search-clear:hover {
+            color: #D4AF37;
+        }
+        #search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #111;
+            border: 1px solid #D4AF37;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        #search-results.show {
+            display: block;
+        }
+        .search-result-item {
+            padding: 10px 15px;
+            color: white;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(212,175,55,0.1);
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        .search-result-item:hover {
+            background: rgba(212,175,55,0.2);
+        }
+        .search-result-item i {
+            color: #D4AF37;
+            width: 20px;
+            text-align: center;
+        }
+        /* نهاية البحث */
+        /* أيقونة البحث */
+        #search-btn {
+            background: transparent;
+            border: 1px solid rgba(212,175,55,0.3);
+            color: #D4AF37;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        #search-btn:hover {
+            background: #D4AF37;
+            color: #0a0a0a;
+            border-color: #D4AF37;
+        }
+        /* باقي الأنماط كما هي */
         .icon-circle {
             width: 3.5rem; height: 3.5rem;
             border-radius: 50%;
@@ -681,7 +765,6 @@
             gap: 1rem;
             margin-top: 1rem;
         }
-        /* أنماط الأحداث */
         .events-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -749,7 +832,6 @@
             margin-bottom: 20px;
             text-align: center;
         }
-        /* نافذة إدارة التصنيفات */
         .category-manager-modal {
             position: fixed;
             top: 0;
@@ -1161,15 +1243,20 @@
                         </div>
                     </div>
                     
+                    <!-- نظام البحث المتطور -->
                     <div class="flex items-center gap-2">
                         <div id="search-container" class="search-box flex items-center">
-                            <input id="search-input" type="text" placeholder="بحث..." autocomplete="off" spellcheck="false"
-                                class="bg-card-black border border-gold/25 text-white text-sm rounded px-3 py-1.5 w-44 sm:w-48 focus:outline-none focus:border-gold font-cairo transition-colors">
+                            <div class="search-input-wrapper">
+                                <input id="search-input" type="text" placeholder="بحث..." autocomplete="off" spellcheck="false">
+                                <i id="search-clear" class="fas fa-times"></i>
+                                <div id="search-results"></div>
+                            </div>
                         </div>
-                        <button id="search-btn" class="text-white/50 hover:text-gold transition-colors p-2" title="بحث">
+                        <button id="search-btn" class="p-2" title="بحث">
                             <i class="fas fa-magnifying-glass text-base"></i>
                         </button>
                     </div>
+                    
                     <button id="mobile-btn" class="md:hidden text-white/50 hover:text-gold transition-colors p-2">
                         <i class="fas fa-bars text-lg"></i>
                     </button>
@@ -1529,36 +1616,33 @@
             if (!container) return;
             container.innerHTML = '';
             
-            // تحديد عدد الأعمدة والصفوف لتوزيع الرموز
             const isMobile = window.innerWidth < 768;
-            const cols = isMobile ? 6 : 10;  // عدد الأعمدة
-            const rows = isMobile ? 8 : 12;  // عدد الصفوف
+            const cols = isMobile ? 8 : 12;  // عدد الأعمدة
+            const rows = isMobile ? 10 : 15;  // عدد الصفوف
             
-            const cellWidth = 100 / cols;   // % عرض الخلية
-            const cellHeight = 100 / rows;  // % ارتفاع الخلية
+            const cellWidth = 100 / cols;
+            const cellHeight = 100 / rows;
             
             // ننشئ رمزاً في كل خلية تقريباً مع بعض الخلايا الفارغة لتجنب الازدحام
             for (let r = 0; r < rows; r++) {
                 for (let c = 0; c < cols; c++) {
-                    // فرصة 70% لوجود رمز في الخلية (نسبة تغطية جيدة)
-                    if (Math.random() > 0.3) {
+                    // فرصة 50% لوجود رمز في الخلية (نسبة تغطية معتدلة)
+                    if (Math.random() > 0.5) {
                         const icon = document.createElement('i');
                         let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
                         icon.className = `fas ${iconClass} bg-icon`;
                         
-                        // موقع عشوائي داخل الخلية مع إمكانية الخروج قليلاً خارج الحدود
+                        // موقع عشوائي داخل الخلية
                         let left = c * cellWidth + (Math.random() * cellWidth * 0.8) + cellWidth * 0.1;
                         let top = r * cellHeight + (Math.random() * cellHeight * 0.8) + cellHeight * 0.1;
                         
                         // إمكانية الخروج عن الحواف: إذا كانت الخلية في الحافة، نسمح بخروج جزء من الرمز
-                        // نطبق إزاحة سلبية أو إيجابية حسب الحافة
-                        if (c === 0) left -= Math.random() * 10; // خروج من اليسار
-                        if (c === cols - 1) left += Math.random() * 10; // خروج من اليمين
-                        if (r === 0) top -= Math.random() * 10; // خروج من الأعلى
-                        if (r === rows - 1) top += Math.random() * 10; // خروج من الأسفل
+                        if (c === 0) left -= Math.random() * 15;
+                        if (c === cols - 1) left += Math.random() * 15;
+                        if (r === 0) top -= Math.random() * 15;
+                        if (r === rows - 1) top += Math.random() * 15;
                         
-                        // حجم متوسط بين 1.5rem و 4rem
-                        const size = 1.5 + Math.random() * 3;
+                        const size = isMobile ? 1.8 + Math.random() * 2.5 : 2 + Math.random() * 3;
                         
                         // بعض الأيقونات تتوهج (pulsing) والبعض الآخر ثابت
                         if (Math.random() > 0.5) {
@@ -1579,7 +1663,7 @@
 
         window.addEventListener('resize', createAnimatedBackground);
 
-        // بيانات الرياضات (كما هي)
+        // بيانات الرياضات
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1748,6 +1832,8 @@
             applyLanguage();
             localStorage.setItem('preferredLang', currentLang);
             document.getElementById('lang-dropdown').classList.remove('show');
+            // تحديث اتجاه البحث
+            updateSearchDirection();
         };
         
         function applyLanguage() {
@@ -1770,6 +1856,127 @@
             if (currentSport) {
                 openSportPage(currentSport.id);
             }
+        }
+
+        // ========== نظام البحث المتطور ==========
+        function updateSearchDirection() {
+            const searchBox = document.getElementById('search-container');
+            if (currentLang === 'ar') {
+                searchBox.style.transformOrigin = 'right center';
+            } else {
+                searchBox.style.transformOrigin = 'left center';
+            }
+        }
+
+        // بناء قاعدة بيانات البحث (أسماء الرياضات، التصنيفات، عناوين الصور)
+        function buildSearchIndex() {
+            let items = [];
+            // أسماء الرياضات
+            sports.forEach(sport => {
+                items.push({
+                    type: 'sport',
+                    title: sport.name.ar,
+                    titleEn: sport.name.en,
+                    titleFr: sport.name.fr,
+                    icon: 'fa-dumbbell',
+                    id: sport.id,
+                    action: () => openSportPage(sport.id)
+                });
+            });
+            // التصنيفات من كل رياضة (يمكن إضافتها كروابط لصفحة الرياضة مع تصفية)
+            sports.forEach(sport => {
+                if (sport.categories && sport.categories.length) {
+                    sport.categories.forEach(cat => {
+                        items.push({
+                            type: 'category',
+                            title: cat,
+                            titleEn: cat,
+                            titleFr: cat,
+                            icon: 'fa-tag',
+                            sportId: sport.id,
+                            action: () => {
+                                openSportPage(sport.id);
+                                // بعد فتح الصفحة، ننتظر قليلاً ثم نطبق التصفية
+                                setTimeout(() => {
+                                    if (currentSport && currentSport.id === sport.id) {
+                                        filterCategory(cat);
+                                    }
+                                }, 300);
+                            }
+                        });
+                    });
+                }
+            });
+            // إضافة بعض العناصر الافتراضية
+            items.push({
+                type: 'page',
+                title: 'الصفحة الرئيسية',
+                titleEn: 'Home',
+                titleFr: 'Accueil',
+                icon: 'fa-home',
+                action: () => showView('home')
+            });
+            items.push({
+                type: 'page',
+                title: 'الخدمات',
+                titleEn: 'Services',
+                titleFr: 'Services',
+                icon: 'fa-list',
+                action: () => {
+                    showView('home');
+                    setTimeout(() => {
+                        document.getElementById('services-section').scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                }
+            });
+            return items;
+        }
+
+        let searchIndex = buildSearchIndex();
+
+        function performSearch(query) {
+            if (!query) return [];
+            const lowerQuery = query.toLowerCase();
+            return searchIndex.filter(item => {
+                const title = (item.title || '').toLowerCase();
+                const titleEn = (item.titleEn || '').toLowerCase();
+                const titleFr = (item.titleFr || '').toLowerCase();
+                return title.includes(lowerQuery) || titleEn.includes(lowerQuery) || titleFr.includes(lowerQuery);
+            }).slice(0, 8); // حد أقصى 8 نتائج
+        }
+
+        function renderSearchResults(query) {
+            const resultsContainer = document.getElementById('search-results');
+            const results = performSearch(query);
+            if (results.length === 0) {
+                resultsContainer.classList.remove('show');
+                return;
+            }
+            resultsContainer.innerHTML = results.map(item => {
+                let title = item.title;
+                if (currentLang === 'en' && item.titleEn) title = item.titleEn;
+                if (currentLang === 'fr' && item.titleFr) title = item.titleFr;
+                return `<div class="search-result-item" data-action="${item.type}:${item.id || item.title}">
+                    <i class="fas ${item.icon}"></i>
+                    <span>${title}</span>
+                </div>`;
+            }).join('');
+            resultsContainer.classList.add('show');
+
+            // إضافة مستمعي الأحداث لكل نتيجة
+            resultsContainer.querySelectorAll('.search-result-item').forEach((el, index) => {
+                el.addEventListener('click', () => {
+                    results[index].action();
+                    closeSearch();
+                });
+            });
+        }
+
+        function closeSearch() {
+            document.getElementById('search-container').classList.remove('open');
+            document.getElementById('search-input').value = '';
+            document.getElementById('search-results').classList.remove('show');
+            document.getElementById('search-clear').style.display = 'none';
         }
 
         // ========== دوال Lightbox ==========
@@ -2399,21 +2606,53 @@
 
         // ========== البحث ==========
         function setupSearch() {
-            const btn = document.getElementById('search-btn');
-            const box = document.getElementById('search-container');
-            const inp = document.getElementById('search-input');
+            const searchBtn = document.getElementById('search-btn');
+            const searchContainer = document.getElementById('search-container');
+            const searchInput = document.getElementById('search-input');
+            const searchClear = document.getElementById('search-clear');
+            const searchResults = document.getElementById('search-results');
+            
             let open = false;
-            btn.addEventListener('click', (e) => {
+            
+            searchBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 open = !open;
-                if (open) { box.classList.add('open'); setTimeout(() => inp.focus(), 100); }
-                else box.classList.remove('open');
-            });
-            document.addEventListener('click', (e) => {
-                if (open && !btn.contains(e.target) && !box.contains(e.target)) {
-                    open = false; box.classList.remove('open');
+                if (open) {
+                    searchContainer.classList.add('open');
+                    searchInput.focus();
+                } else {
+                    closeSearch();
                 }
             });
+            
+            searchInput.addEventListener('input', function() {
+                const query = this.value.trim();
+                if (query) {
+                    searchClear.style.display = 'block';
+                    renderSearchResults(query);
+                } else {
+                    searchClear.style.display = 'none';
+                    searchResults.classList.remove('show');
+                }
+            });
+            
+            searchClear.addEventListener('click', function() {
+                searchInput.value = '';
+                searchInput.focus();
+                searchClear.style.display = 'none';
+                searchResults.classList.remove('show');
+            });
+            
+            // إغلاق البحث عند النقر خارج
+            document.addEventListener('click', (e) => {
+                if (open && !searchContainer.contains(e.target) && !searchBtn.contains(e.target)) {
+                    closeSearch();
+                    open = false;
+                }
+            });
+            
+            // تحديث فهرس البحث عند تغيير البيانات
+            searchIndex = buildSearchIndex();
         }
 
         // ========== القائمة للجوال ==========
@@ -2458,7 +2697,7 @@
             setupAdminTrigger();
             setupSaveButton();
             setupExitButton();
-            setupSearch();
+            setupSearch(); // إعداد البحث
             setupMobile();
             updateShowcase();
             
