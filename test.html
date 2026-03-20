@@ -19,7 +19,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 
     <style>
-        /* جميع الأنماط مع تحسينات الخلفية والشفافية وتحسينات الهاتف */
+        /* جميع الأنماط مع تحسينات الخلفية والشفافية */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body {
@@ -30,7 +30,7 @@
             position: relative;
             min-height: 100vh;
         }
-        /* الخلفية المتحركة - تظهر فوراً وتملأ الشاشة */
+        /* الخلفية الثابتة مع الرموز اللامعة */
         .animated-bg {
             position: fixed;
             top: 0;
@@ -46,47 +46,30 @@
             color: transparent;
             font-size: 2.5rem;
             user-select: none;
-            /* حركة متناغمة في اتجاه واحد من أعلى اليمين إلى أسفل اليسار */
-            animation: floatDiagonal 30s linear infinite;
-            transform: translate(100vw, -10vh) rotate(0deg);
             -webkit-text-stroke: 1.2px #D4AF37;
             text-stroke: 1.2px #D4AF37;
-            opacity: 0.45; /* أقل حجماً للرموز */
-            filter: drop-shadow(0 0 4px rgba(212,175,55,0.4));
+            filter: drop-shadow(0 0 6px rgba(212,175,55,0.5));
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            text-shadow: 0 0 8px rgba(212,175,55,0.2);
-            /* تصغير الحجم قليلاً */
-            font-size: 2rem;
+            /* تأثير لمعان ثابت (افتراضي) */
+            opacity: 0.5;
+            transition: opacity 0.3s ease;
+            /* توزيع عشوائي ثابت */
         }
-        @keyframes floatDiagonal {
-            0% {
-                transform: translate(100vw, -10vh) rotate(0deg);
-                opacity: 0.3;
-            }
-            10% {
-                opacity: 0.5;
-            }
-            90% {
-                opacity: 0.5;
-            }
-            100% {
-                transform: translate(-20vw, 110vh) rotate(720deg);
-                opacity: 0.3;
-            }
+        /* فئة للرموز المتوهجة (pulsing) */
+        .bg-icon.pulsing {
+            animation: glowPulse 3s ease-in-out infinite;
         }
-        /* تحسينات النصوص الذهبية بإطار حول الحروف */
+        @keyframes glowPulse {
+            0% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
+            50% { opacity: 0.9; filter: drop-shadow(0 0 15px rgba(212,175,55,0.9)); }
+            100% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
+        }
+        /* تحسينات النصوص الذهبية - إعادة كما كانت (بدون لمعان زائد) */
         .gold-text, .font-cinzel.gold-shimmer, h1, h2, .info-title, [class*="gold"], .gold-shimmer {
-            text-shadow: 0 0 10px #D4AF37, 0 0 20px rgba(212,175,55,0.7) !important;
-            -webkit-text-stroke: 0.8px #D4AF37;
-            text-stroke: 0.8px #D4AF37;
-            font-weight: 800;
+            /* الأنماط الأصلية */
         }
-        /* تحسين خاص لـ FIVE STARS GYM */
         .font-cinzel.gold-shimmer {
-            text-shadow: 0 0 15px #D4AF37, 0 0 30px #D4AF37 !important;
-            -webkit-text-stroke: 1px #D4AF37;
-            text-stroke: 1px #D4AF37;
             letter-spacing: 2px;
         }
         /* تطبيق التأثير الزجاجي على كل من الهاتف والكمبيوتر */
@@ -100,15 +83,14 @@
         .service-card {
             border-width: 1.5px;
         }
-        /* تحسينات للهاتف كما هي مع تعديل الرموز */
+        /* تحسينات للهاتف */
         @media (max-width: 768px) {
             .bg-icon {
-                font-size: 1.5rem !important; /* تصغير إضافي للهاتف */
-                opacity: 0.3 !important;
-                -webkit-text-stroke: 0.8px #D4AF37;
+                font-size: 2rem !important; /* متوسط الحجم */
+                -webkit-text-stroke: 1px #D4AF37;
             }
         }
-        /* باقي الأنماط كما هي مع بعض الإضافات */
+        /* باقي الأنماط كما هي */
         .font-cinzel { font-family: 'Cinzel', serif; }
         .font-cairo { font-family: 'Cairo', sans-serif; }
         .service-card {
@@ -1073,7 +1055,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية المتحركة (موجودة من البداية، تتحرك بتناغم) -->
+    <!-- الخلفية الثابتة مع الرموز اللامعة -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1527,51 +1509,49 @@
             }
         };
 
-        // أيقونات الخلفية المتحركة
+        // أيقونات الخلفية المطلوبة
         const bgIcons = [
-            'fa-dumbbell', 'fa-hand-fist', 'fa-heart-pulse', 'fa-bolt-lightning',
-            'fa-fire-flame-curved', 'fa-trophy', 'fa-medal', 'fa-star',
-            'fa-crown', 'fa-bicycle', 'fa-person-running', 'fa-person-swimming',
-            'fa-weight-hanging', 'fa-vest', 'fa-vest-patches', 'fa-boxing-glove',
-            'fa-tae-kwon-do', 'fa-khanda'
+            'fa-hand-fist',          // قفاز الملاكمة (قبضة)
+            'fa-dumbbell',            // أثقال للرجال
+            'fa-heart-pulse',         // أثقال للنساء (أيقونة نبضات القلب)
+            'fa-fire-flame-curved'    // شعلة نار
         ];
 
-        // إنشاء الخلفية المتحركة (بحركة متناغمة من أعلى اليمين إلى أسفل اليسار)
+        // إنشاء الخلفية الثابتة برموز لامعة
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            // نستخدم عدد ثابت من الأيقونات مع تأخيرات مختلفة لنفس الاتجاه
-            const iconCount = window.innerWidth < 768 ? 60 : 120;
+            // عدد الأيقونات حسب حجم الشاشة
+            const iconCount = window.innerWidth < 768 ? 40 : 80;
             for (let i = 0; i < iconCount; i++) {
                 const icon = document.createElement('i');
                 let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
                 icon.className = `fas ${iconClass} bg-icon`;
                 
-                // تحديد موضع بداية عشوائي على الجانب الأيمن
-                const startX = 80 + Math.random() * 20; // 80% إلى 100%
-                const startY = Math.random() * 30; // أعلى 0-30%
-                const size = 1.5 + Math.random() * 2; // 1.5rem to 3.5rem
-                // تأخير مختلف لكل أيقونة لتجنب التكدس
-                const delay = Math.random() * 20;
+                // توزيع عشوائي في جميع أنحاء الشاشة
+                const left = Math.random() * 100; // %
+                const top = Math.random() * 100; // %
+                // حجم متوسط بين 2rem و 4rem
+                const size = 2 + Math.random() * 3; // 2rem to 5rem
+                // بعض الأيقونات تتوهج (pulsing) والبعض الآخر ثابت
+                if (Math.random() > 0.5) {
+                    icon.classList.add('pulsing');
+                }
                 
-                icon.style.left = startX + '%';
-                icon.style.top = startY + '%';
+                icon.style.left = left + '%';
+                icon.style.top = top + '%';
                 icon.style.fontSize = size + 'rem';
-                icon.style.animationDelay = delay + 's';
-                icon.style.webkitTextStroke = '1px #D4AF37';
-                icon.style.textStroke = '1px #D4AF37';
+                icon.style.webkitTextStroke = '1.2px #D4AF37';
+                icon.style.textStroke = '1.2px #D4AF37';
                 icon.style.color = 'transparent';
-                // تعيين متغيرات CSS مخصصة للحركة
-                icon.style.setProperty('--start-x', startX + '%');
-                icon.style.setProperty('--start-y', startY + '%');
                 container.appendChild(icon);
             }
         }
 
         window.addEventListener('resize', createAnimatedBackground);
 
-        // بيانات الرياضات
+        // بيانات الرياضات (كما هي)
         const sports = [
             { 
                 id: 'kwankido', 
@@ -1857,13 +1837,11 @@
             if (!currentSport) return;
             const category = currentSport.categories[index];
             if (confirm(`هل أنت متأكد من حذف التصنيف "${category}"؟`)) {
-                // إزالة التصنيف من جميع الصور التي تستخدمه
                 currentSport.images.forEach(img => {
                     if (img.category === category) {
-                        img.category = langTexts[currentLang].all; // تعيين إلى "الكل" أو يمكن تركه فارغاً
+                        img.category = langTexts[currentLang].all;
                     }
                 });
-                // إزالة التصنيف من القائمة
                 currentSport.categories.splice(index, 1);
                 renderCategoryManager();
                 renderCategoryTabs();
@@ -1879,14 +1857,6 @@
             inputs.forEach(input => {
                 const newVal = input.value.trim();
                 if (newVal) newCategories.push(newVal);
-            });
-            // تحديث أسماء التصنيفات في الصور
-            currentSport.images.forEach(img => {
-                const oldCat = img.category;
-                // إذا كان التصنيف القديم موجوداً في القائمة القديمة ولكن ليس في الجديدة، نتركه كما هو (أو نعدله)
-                // ولكن بما أننا نسمح بالتعديل، يجب تحديث جميع الصور التي تحمل التصنيف القديم إلى الجديد إذا تغير الاسم
-                // هذا يتطلب مطابقة أكثر تعقيداً. سنقوم ببساطة بتحديث القائمة فقط.
-                // يمكن تحسين ذلك لكنه كافٍ للمطلوب.
             });
             currentSport.categories = newCategories;
             renderCategoryManager();
