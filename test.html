@@ -51,10 +51,11 @@
             filter: drop-shadow(0 0 6px rgba(212,175,55,0.5));
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
-            /* تأثير لمعان ثابت (افتراضي) */
             opacity: 0.5;
             transition: opacity 0.3s ease;
-            /* توزيع عشوائي ثابت */
+            /* منع التداخل غير مقصود */
+            pointer-events: none;
+            will-change: left, top;
         }
         /* فئة للرموز المتوهجة (pulsing) */
         .bg-icon.pulsing {
@@ -65,12 +66,11 @@
             50% { opacity: 0.9; filter: drop-shadow(0 0 15px rgba(212,175,55,0.9)); }
             100% { opacity: 0.4; filter: drop-shadow(0 0 3px rgba(212,175,55,0.3)); }
         }
-        /* تحسينات النصوص الذهبية - إعادة كما كانت (بدون لمعان زائد) */
-        .gold-text, .font-cinzel.gold-shimmer, h1, h2, .info-title, [class*="gold"], .gold-shimmer {
-            /* الأنماط الأصلية */
-        }
-        .font-cinzel.gold-shimmer {
-            letter-spacing: 2px;
+        /* تحسين النصوص الذهبية - أكثر إشراقاً */
+        .font-cinzel.gold-shimmer, h1, h2, .gold-text, .info-title, [class*="gold"] {
+            text-shadow: 0 0 15px #D4AF37, 0 0 30px #D4AF37, 0 0 45px rgba(212,175,55,0.8) !important;
+            -webkit-text-stroke: 0.5px #D4AF37;
+            text-stroke: 0.5px #D4AF37;
         }
         /* تطبيق التأثير الزجاجي على كل من الهاتف والكمبيوتر */
         .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
@@ -83,11 +83,17 @@
         .service-card {
             border-width: 1.5px;
         }
-        /* تحسينات للهاتف */
+        /* تحسينات للهاتف - شفافية أكثر + نصوص ذهبية أقوى */
         @media (max-width: 768px) {
+            .service-card, .info-card, .showcase-section, #navbar, footer, .sport-detail-page, .add-area, .category-dropdown-menu, .lang-dropdown, .toast, .lightbox {
+                background: rgba(15,15,15,0.5) !important; /* أكثر شفافية */
+            }
             .bg-icon {
-                font-size: 2rem !important; /* متوسط الحجم */
+                font-size: 2rem;
                 -webkit-text-stroke: 1px #D4AF37;
+            }
+            .font-cinzel.gold-shimmer {
+                text-shadow: 0 0 20px #D4AF37, 0 0 40px #D4AF37, 0 0 60px rgba(212,175,55,0.9) !important;
             }
         }
         /* باقي الأنماط كما هي */
@@ -1055,7 +1061,7 @@
     </style>
 </head>
 <body>
-    <!-- الخلفية الثابتة مع الرموز اللامعة -->
+    <!-- الخلفية الثابتة مع الرموز اللامعة (يتم إنشاؤها بواسطة JavaScript) -->
     <div class="animated-bg" id="animated-bg"></div>
 
     <!-- ======================== LOADER ======================== -->
@@ -1517,35 +1523,57 @@
             'fa-fire-flame-curved'    // شعلة نار
         ];
 
-        // إنشاء الخلفية الثابتة برموز لامعة
+        // إنشاء الخلفية الثابتة برموز لامعة وموزعة بشكل جميل
         function createAnimatedBackground() {
             const container = document.getElementById('animated-bg');
             if (!container) return;
             container.innerHTML = '';
-            // عدد الأيقونات حسب حجم الشاشة
-            const iconCount = window.innerWidth < 768 ? 40 : 80;
-            for (let i = 0; i < iconCount; i++) {
-                const icon = document.createElement('i');
-                let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
-                icon.className = `fas ${iconClass} bg-icon`;
-                
-                // توزيع عشوائي في جميع أنحاء الشاشة
-                const left = Math.random() * 100; // %
-                const top = Math.random() * 100; // %
-                // حجم متوسط بين 2rem و 4rem
-                const size = 2 + Math.random() * 3; // 2rem to 5rem
-                // بعض الأيقونات تتوهج (pulsing) والبعض الآخر ثابت
-                if (Math.random() > 0.5) {
-                    icon.classList.add('pulsing');
+            
+            // تحديد عدد الأعمدة والصفوف لتوزيع الرموز
+            const isMobile = window.innerWidth < 768;
+            const cols = isMobile ? 6 : 10;  // عدد الأعمدة
+            const rows = isMobile ? 8 : 12;  // عدد الصفوف
+            
+            const cellWidth = 100 / cols;   // % عرض الخلية
+            const cellHeight = 100 / rows;  // % ارتفاع الخلية
+            
+            // ننشئ رمزاً في كل خلية تقريباً مع بعض الخلايا الفارغة لتجنب الازدحام
+            for (let r = 0; r < rows; r++) {
+                for (let c = 0; c < cols; c++) {
+                    // فرصة 70% لوجود رمز في الخلية (نسبة تغطية جيدة)
+                    if (Math.random() > 0.3) {
+                        const icon = document.createElement('i');
+                        let iconClass = bgIcons[Math.floor(Math.random() * bgIcons.length)];
+                        icon.className = `fas ${iconClass} bg-icon`;
+                        
+                        // موقع عشوائي داخل الخلية مع إمكانية الخروج قليلاً خارج الحدود
+                        let left = c * cellWidth + (Math.random() * cellWidth * 0.8) + cellWidth * 0.1;
+                        let top = r * cellHeight + (Math.random() * cellHeight * 0.8) + cellHeight * 0.1;
+                        
+                        // إمكانية الخروج عن الحواف: إذا كانت الخلية في الحافة، نسمح بخروج جزء من الرمز
+                        // نطبق إزاحة سلبية أو إيجابية حسب الحافة
+                        if (c === 0) left -= Math.random() * 10; // خروج من اليسار
+                        if (c === cols - 1) left += Math.random() * 10; // خروج من اليمين
+                        if (r === 0) top -= Math.random() * 10; // خروج من الأعلى
+                        if (r === rows - 1) top += Math.random() * 10; // خروج من الأسفل
+                        
+                        // حجم متوسط بين 1.5rem و 4rem
+                        const size = 1.5 + Math.random() * 3;
+                        
+                        // بعض الأيقونات تتوهج (pulsing) والبعض الآخر ثابت
+                        if (Math.random() > 0.5) {
+                            icon.classList.add('pulsing');
+                        }
+                        
+                        icon.style.left = left + '%';
+                        icon.style.top = top + '%';
+                        icon.style.fontSize = size + 'rem';
+                        icon.style.webkitTextStroke = isMobile ? '1px #D4AF37' : '1.2px #D4AF37';
+                        icon.style.textStroke = isMobile ? '1px #D4AF37' : '1.2px #D4AF37';
+                        icon.style.color = 'transparent';
+                        container.appendChild(icon);
+                    }
                 }
-                
-                icon.style.left = left + '%';
-                icon.style.top = top + '%';
-                icon.style.fontSize = size + 'rem';
-                icon.style.webkitTextStroke = '1.2px #D4AF37';
-                icon.style.textStroke = '1.2px #D4AF37';
-                icon.style.color = 'transparent';
-                container.appendChild(icon);
             }
         }
 
