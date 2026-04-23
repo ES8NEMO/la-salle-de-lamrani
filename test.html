@@ -1868,6 +1868,31 @@
         // ===== FONCTIONS POUR LE BATCH UPLOAD (AJOUTÉES) - CORRIGÉES POUR SAUVEGARDE =====
         const IMGBB_API_KEY = '762e3a7b5b9c8f6d4a2e1c7b3f8a9d5c'; // clé publique ImgBB (gratuite)
         
+        // Fonction pour réinitialiser les champs de l'image individuelle et désactiver temporairement le bouton "Enregistrer"
+        function resetSingleImageFieldsAndDisableSave() {
+            // Vider les champs
+            document.getElementById('image-url').value = '';
+            document.getElementById('image-caption').value = '';
+            document.getElementById('image-category').value = '';
+            document.getElementById('selected-category').textContent = langTexts[currentLang].selectCategory;
+            document.getElementById('preview').classList.remove('show');
+            editImageIndex = null;
+            
+            // Désactiver temporairement le bouton "Enregistrer"
+            const saveBtn = document.querySelector('#add-area .form-buttons .admin-btn.save');
+            if (saveBtn) {
+                const originalText = saveBtn.innerHTML;
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> Terminé';
+                saveBtn.style.opacity = '0.6';
+                setTimeout(() => {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                    saveBtn.style.opacity = '1';
+                }, 2000);
+            }
+        }
+        
         async function uploadMultipleImages(files) {
             if (!currentSport) {
                 showToast('Veuillez sélectionner un sport d\'abord', 'error');
@@ -1912,9 +1937,12 @@
             }, 1500);
             renderCategoryTabs();
             renderSportGallery();
-            // === FIX: utiliser saveData() au lieu de saveLocalStorage() pour la cohérence ===
             saveData();  // sauvegarde complète (cloud + local)
-            showToast(`✅ ${completed} image(s) ajoutée(s) avec succès. Pas besoin d'appuyer sur "Enregistrer".`, 'success');
+            
+            // Réinitialiser les champs et désactiver temporairement le bouton "Enregistrer"
+            resetSingleImageFieldsAndDisableSave();
+            
+            showToast(`✅ ${completed} image(s) ajoutée(s) avec succès. Vous pouvez maintenant ajouter d'autres images via le lien ci-dessus.`, 'success');
         }
         
         function setupBatchUpload() {
@@ -2880,7 +2908,7 @@
                 if (e.key === 'ArrowRight') navigateLightbox(1);
             });
             
-            // On masque le loader après 1.8s (ou dès que tout est chargé)
+            // On masque le loader après 1.8s
             setTimeout(() => document.getElementById('loader').style.display = 'none', 1800);
             setTimeout(() => window.showToast('🌟 Bienvenue à Five Stars Gym', 'default'), 2000);
         }
