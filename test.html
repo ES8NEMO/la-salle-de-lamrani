@@ -1865,7 +1865,7 @@
             caption: 'Five Stars Gym - حيث تتحقق الأحلام'
         };
 
-        // ===== FONCTIONS POUR LE BATCH UPLOAD (AJOUTÉES) =====
+        // ===== FONCTIONS POUR LE BATCH UPLOAD (AJOUTÉES) - CORRIGÉES POUR SAUVEGARDE =====
         const IMGBB_API_KEY = '762e3a7b5b9c8f6d4a2e1c7b3f8a9d5c'; // clé publique ImgBB (gratuite)
         
         async function uploadMultipleImages(files) {
@@ -1912,8 +1912,9 @@
             }, 1500);
             renderCategoryTabs();
             renderSportGallery();
-            saveLocalStorage();
-            showToast(`✅ ${completed} image(s) ajoutée(s) avec succès`, 'success');
+            // === FIX: utiliser saveData() au lieu de saveLocalStorage() pour la cohérence ===
+            saveData();  // sauvegarde complète (cloud + local)
+            showToast(`✅ ${completed} image(s) ajoutée(s) avec succès. Pas besoin d'appuyer sur "Enregistrer".`, 'success');
         }
         
         function setupBatchUpload() {
